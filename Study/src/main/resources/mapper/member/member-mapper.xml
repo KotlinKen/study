@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="member">
+	<insert id="insertMember">
+		insert into tbl_member values (seq_member.nextval, 
+										#{mid},
+										#{mname},
+										#{pwd},
+										#{phone},
+										#{addr},
+										#{mprofile},
+										#{email},
+										#{birth},
+										#{gender},
+										#{favor, typeHandler=strArrTypeHandler},
+										default,
+										default,
+										default,
+										default
+										)
+	</insert>
+	<resultMap type="member" id="memberMap">
+		<result column="favor" property="favor" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	<select id="selectOneMember" parameterType="string" resultMap="memberMap">
+		select * from tbl_member where mid=#{userId}
+	</select>
+	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
+		select * from tbl_member where mname=#{mname} and email=#{email}
+	</select>
+	<update id="updateEmail">
+		update tbl_member set pwd=#{pwd} where mid=#{mid}
+	</update>
+	<select id="selectCntMember" parameterType="member" resultType="_int">
+		select count(*) from tbl_member where mid=#{mid} and email=#{email}
+	</select>
+	
+</mapper>
