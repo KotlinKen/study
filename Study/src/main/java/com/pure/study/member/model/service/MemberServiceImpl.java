@@ -3,8 +3,8 @@ package com.pure.study.member.model.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.spring.member.model.dao.MemberDAO;
-import com.project.spring.member.model.vo.Member;
+import com.pure.study.member.model.dao.MemberDAO;
+import com.pure.study.member.model.vo.Member;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -33,8 +33,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int selectCntMember(String mid) {
-		return memberDAO.selectCntMember(mid);
+	public int selectCntMember(Member m) {
+		return memberDAO.selectCntMember(m);
 	}
 	
 	

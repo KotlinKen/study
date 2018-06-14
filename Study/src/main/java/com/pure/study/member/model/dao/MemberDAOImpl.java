@@ -4,7 +4,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.project.spring.member.model.vo.Member;
+import com.pure.study.member.model.vo.Member;
 
 @Repository
 public class MemberDAOImpl implements MemberDAO {
@@ -32,8 +32,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int selectCntMember(String mid) {
-		return sqlSession.selectOne("member.selectCntMember", mid);
+	public int selectCntMember(Member m) {
+		return sqlSession.selectOne("member.selectCntMember", m);
 	}
 	
 	

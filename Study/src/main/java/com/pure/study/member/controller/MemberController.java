@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.spring.depart.model.service.DepartService;
+import com.pure.study.depart.model.service.DepartService;
 import com.pure.study.member.model.service.MemberService;
 import com.pure.study.member.model.vo.Member;
 
@@ -137,9 +137,8 @@ public class MemberController {
 		return mav;
 	}
 	
-	@RequestMapping("/member/memberFindIdPwd.do")
-	public ModelAndView memberFindId(@RequestParam String mname, @RequestParam String email, @RequestParam("findType") String findType, @RequestParam String mid ) {
-		
+	@RequestMapping(value="/member/memberFindIdPwd.do")
+	public ModelAndView memberFindId(@RequestParam("mname") String mname, @RequestParam("email") String email, @RequestParam("findType") String findType  ) {
 		ModelAndView mav = new ModelAndView();
 		
 		Member fm = new Member();
@@ -156,7 +155,7 @@ public class MemberController {
 		//id 찾기
 		if(m != null && findType.equals("아이디")) {
 			
-			mid = m.getMid();
+			String mid = m.getMid();
 			mid = mid.substring(0, mid.length()-2);
 			
 			mav.addObject("findType", findType);
@@ -169,14 +168,9 @@ public class MemberController {
 			mav.setViewName("common/msg");
 		} else if(findType.equals("비밀번호")) {
 			
-			//다시 써야함.
-			String pwd = "11";
-			
-			mav.addObject("pwd", pwd);
 			mav.addObject("findType", findType);
 			mav.setViewName("member/memberFind");
 		}
-		
 		
 		
 		return mav;
@@ -185,40 +179,34 @@ public class MemberController {
 	 // 임시 비밀번호 메일로 보내기
 	  @RequestMapping(value = "/member/mailSending.do")
 	  public ModelAndView mailSending(HttpServletRequest request, @RequestParam String mid, @RequestParam String email) {
-		  
 		  ModelAndView mav = new ModelAndView();
 		  String msg="";
 		  String loc="/";
-		  
-	    try {
-	      MimeMessage message = mailSender.createMimeMessage();
-	      MimeMessageHelper messageHelper 
-	                        = new MimeMessageHelper(message, true, "UTF-8");
 	      
-	      String tempPwd = "";
-	      int tempSize = 3;
-	      char[] temp = new char[tempSize];
+	      Member equalM = new Member();
+	      equalM.setMid(mid);
+	      equalM.setEmail(email);
 	      
-	      //48~57- 숫자, 65~90- 대문자, 97~122- 소문자
-	      for(int i=0; i<tempSize; i++) {
-	    	  int rnd = (int)(Math.random()*122)+48;
-	    	  if(rnd>48&&rnd<57||rnd>65&&rnd<90||rnd>97&&rnd<122) {
-	    		  temp[i] = (char)rnd;
-	    		  tempPwd += temp[i];
-	    		  System.out.println(tempPwd);
-	    	  } else {
-	    		  i--;
-	    	  }		  
-	      }
-	      
-	      int resultEqual = memberService.selectCntMember(mid);
+	      int resultEqual = memberService.selectCntMember(equalM);
 	      
 	      //디비를 통해 회원 아이디와 이메일을 비교해서 일치하는 디비 값이 없으면 일치 하지 않다고 알려주기
 	      if(resultEqual>0) {
+	    	  String tempPwd = "";
+		      int tempSize = 3;
+		      char[] temp = new char[tempSize];
+		      
+		      //48~57- 숫자, 65~90- 대문자, 97~122- 소문자
+		      for(int i=0; i<tempSize; i++) {
+		    	  int rnd = (int)(Math.random()*122)+48;
+		    	  if(rnd>48&&rnd<57||rnd>65&&rnd<90||rnd>97&&rnd<122) {
+		    		  temp[i] = (char)rnd;
+		    		  tempPwd += temp[i];
+		    	  } else {
+		    		  i--;
+		    	  }		  
+		      }
+	      
 	    	  
-	    	  msg="일치하는 아이디나 이메일이 없습니다.";
-	    	  
-	      } else {
 	    	  //이메일을 보내면서 디비의 값을 update 한다.
 	    	  Member changeM = new Member();
 	    	  String encodedPassword = bcryptPasswordEncoder.encode(tempPwd);
@@ -229,29 +217,38 @@ public class MemberController {
 	    	  
 	    	  if(result>0) {
 	    		  msg="회원 가입시 입력한 이메일로 임시 비밀번호를 발송했습니다.";
+	    		  try {
+	  		    	
+	    		      MimeMessage message = mailSender.createMimeMessage();
+	    		      MimeMessageHelper messageHelper 
+	    		                        = new MimeMessageHelper(message, true, "UTF-8");
+	    		      
+	    		      
+	    	      
+		    	      messageHelper.setFrom("kimemail2018@gmail.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
+		    	      messageHelper.setTo(email);     // 받는사람 이메일
+		    	      messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
+		    	      messageHelper.setText("당신의 임시 비밀번호는 "+tempPwd+"입니다.");  // 메일 내용
+		    	     
+		    	      mailSender.send(message);
+		    	    } catch(Exception e){
+		    	      e.getStackTrace();
+		    	    }
 	    		  
 	    	  }else {
 	    		  msg="오류 발생!!!";
 	    		  
-	    		  
 	    	  }
+	    	  
+	      } else {
+	    	  msg="일치하는 아이디나 이메일이 없습니다.";
+	    	  loc="/member/memberFindPage.do?findType=비밀번호";
 	      }
-	      
-	      mav.addObject("loc", loc);
-	      mav.addObject("msg", msg);
-	      mav.setViewName("common/msg");
-	      
-	      
-	      messageHelper.setFrom("kimemail2018@gmail.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
-	      messageHelper.setTo(email);     // 받는사람 이메일
-	      messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
-	      messageHelper.setText("당신의 임시 비밀번호는 "+tempPwd+"입니다.");  // 메일 내용
-	     
-	      mailSender.send(message);
-	    } catch(Exception e){
-	      e.getStackTrace();
-	    }
 	    
+	    mav.addObject("loc", loc);
+	    mav.addObject("msg", msg);
+	    
+	    mav.setViewName("common/msg");
 	    
 	    return mav;
 	  }

@@ -3,6 +3,10 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.pure.study.board.model.vo.Board" alias="board"/>
+		<typeAlias type="com.pure.study.common.typehandler.StringArrayTypeHandler" 
+				   alias="strArrTypeHandler"/>
+		<typeAlias type="com.pure.study.member.model.vo.Member" 
+					alias="member"/>
 	</typeAliases>
 </configuration>
 

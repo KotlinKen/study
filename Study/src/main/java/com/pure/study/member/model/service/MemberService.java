@@ -1,6 +1,6 @@
 package com.pure.study.member.model.service;
 
-import com.project.spring.member.model.vo.Member;
+import com.pure.study.member.model.vo.Member;
 
 public interface MemberService {
 
@@ -12,6 +12,6 @@ public interface MemberService {
 
 	int updateEmail(Member changeM);
 
-	int selectCntMember(String mid);
+	int selectCntMember(Member equalM);
 
 }
