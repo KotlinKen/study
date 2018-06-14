@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -176,83 +177,224 @@ public class MemberController {
 		return mav;
 	}
 	
-	 // 임시 비밀번호 메일로 보내기
+	 // 비밀번호 변경 페이지 보내주기
+	  @RequestMapping(value = "/member/mailSending.do", method=RequestMethod.POST)
+	  public ModelAndView mailSending(HttpServletRequest request, @RequestParam String mid, @RequestParam String email) {
+		  ModelAndView mav = new ModelAndView();
+		  String msg="";
+		  String loc="/";
+		  
+		  String tempPwd = "";
+		  int tempSize = 3;
+		  char[] temp = new char[tempSize];
+		  
+		  //48~57- 숫자, 65~90- 대문자, 97~122- 소문자
+		  for(int i=0; i<tempSize; i++) {
+			  int rnd = (int)(Math.random()*122)+48;
+			  if(rnd>48&&rnd<57||rnd>65&&rnd<90||rnd>97&&rnd<122) {
+				  temp[i] = (char)rnd;
+				  tempPwd += temp[i];
+			  } else {
+				  i--;
+			  }		  
+		  }
+	      
+		  //아이디와 이메일이 일치하는지 확인
+	      Member equalM = new Member();
+	      equalM.setMid(mid);
+	      equalM.setEmail(email);
+	      int resultEqual = memberService.selectCntMember(equalM);
+	      
+	      if(resultEqual>0) {
+	    	  
+	    	  try {
+	    		  
+	    		  MimeMessage message = mailSender.createMimeMessage();
+	    		  MimeMessageHelper messageHelper 
+	    		  = new MimeMessageHelper(message, true, "UTF-8");
+	    		  
+	    		  msg="비밀번호 변경을 메일로 발송하였습니다.";
+	    		  
+	    		  messageHelper.setFrom("kimemail2018@gmail.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
+	    		  messageHelper.setTo(email);     // 받는사람 이메일
+	    		  messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
+	    		  messageHelper.setText(new StringBuffer()
+	    				  				.append("<form action='http://localhost:9090/study/member/memberPwd.do' target=\"_blank\" method='post'>")
+	    				  				.append("<input type='hidden' name='mid' value='"+mid+"'/>")
+	    				  				.append("<input type='hidden' name='key' value='"+tempPwd+"'/>")
+	    				  				.append("<button type='submit'>비밀번호 변경하러 가기</button>")
+	    				  				.append("</form>")
+	    				  				.toString(),true);  // 메일 내용
+	    		  
+	    		  mailSender.send(message);
+	    	  } catch(Exception e){
+	    		  e.getStackTrace();
+	    	  }
+	    	  
+	      }else {
+	    	  msg ="일치하는 회원 정보가 없습니다.";
+	      }
+	      
+		    mav.addObject("loc", loc);
+		    mav.addObject("msg", msg);
+		    
+		    mav.setViewName("common/msg");
+		    
+		    return mav;
+		}
+	  
+	  @RequestMapping(value="/member/memberPwd.do", method=RequestMethod.POST)
+	  public ModelAndView pwd(String mid, String key, String email) {
+		  ModelAndView mav = new ModelAndView();
+		  
+		  System.out.println("mid="+mid);
+		  System.out.println("key="+key);
+		  
+		  Member changeM = new Member();
+		  String encodedPassword = bcryptPasswordEncoder.encode(key);
+		  changeM.setPwd(encodedPassword);
+		  changeM.setMid(mid);
+		  
+		  int result = memberService.updateEmail(changeM);
+		  
+		  if(result>0) {
+			  //System.out.println("임시 비밀번호로 변경!");			  
+		  } else {
+			  //System.out.println("비번 변경 실패");
+		  }
+		  
+		  mav.addObject("key", encodedPassword);
+		  mav.addObject("mid", mid);
+		  mav.setViewName("member/memberUpdatePwd");
+		  
+		  return mav;
+	  }
+	  
+	  @RequestMapping(value="/member/memberUpdatePwd.do", method=RequestMethod.POST)
+	  public String updatePwd(String pwd,String key,String mid, Model model) {
+		  String loc = "/"; 
+		  String msg = "";
+		  System.out.println("pwd="+pwd);
+		  System.out.println("key="+key);
+		  
+		  //인코딩 된 키 값과 디비에 있는 값을 비교하고 맞으면 비밀번호를 바꿔준다.
+		  Member m = memberService.selectOneMember(mid);
+		  
+		  if(m==null) {
+				msg = "잘못된 접근입니다.";
+				System.out.println("값없음");
+			}
+			else {
+				System.out.println(m.getPwd());
+				if(key.equals(m.getPwd() )) {
+					msg = "비밀번호 변경!";
+					Member changeM = new Member();
+					  String encodedPassword = bcryptPasswordEncoder.encode(pwd);
+					  changeM.setPwd(encodedPassword);
+					  changeM.setMid(mid);
+					  
+					  int result = memberService.updateEmail(changeM);
+					
+				}
+				else {
+					msg = "잘못된 접근입니다.";
+					System.out.println("값은 있지만 비번이 서로 매치가 안됨");
+				}
+				
+			}
+			
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
+		  
+		  return "common/msg";
+	  }
+	  
+	  
+	  /*@RequestMapping(value="/demo/insertDev.do"
+			   ,method=RequestMethod.POST)
+		public String insertDev(Dev dev) {
+			int result = demoService.insertDev(dev);
+			System.out.println("result@insertDev="+result);
+			return "redirect:/demo/selectDevList.do";
+		}*/
+/*	  // 임시 비밀번호 메일로 보내기
 	  @RequestMapping(value = "/member/mailSending.do")
 	  public ModelAndView mailSending(HttpServletRequest request, @RequestParam String mid, @RequestParam String email) {
 		  ModelAndView mav = new ModelAndView();
 		  String msg="";
 		  String loc="/";
-	      
-	      Member equalM = new Member();
-	      equalM.setMid(mid);
-	      equalM.setEmail(email);
-	      
-	      int resultEqual = memberService.selectCntMember(equalM);
-	      
-	      //디비를 통해 회원 아이디와 이메일을 비교해서 일치하는 디비 값이 없으면 일치 하지 않다고 알려주기
-	      if(resultEqual>0) {
-	    	  String tempPwd = "";
-		      int tempSize = 3;
-		      char[] temp = new char[tempSize];
-		      
-		      //48~57- 숫자, 65~90- 대문자, 97~122- 소문자
-		      for(int i=0; i<tempSize; i++) {
-		    	  int rnd = (int)(Math.random()*122)+48;
-		    	  if(rnd>48&&rnd<57||rnd>65&&rnd<90||rnd>97&&rnd<122) {
-		    		  temp[i] = (char)rnd;
-		    		  tempPwd += temp[i];
-		    	  } else {
-		    		  i--;
-		    	  }		  
-		      }
-	      
-	    	  
-	    	  //이메일을 보내면서 디비의 값을 update 한다.
-	    	  Member changeM = new Member();
-	    	  String encodedPassword = bcryptPasswordEncoder.encode(tempPwd);
-	    	  changeM.setPwd(encodedPassword);
-	    	  changeM.setMid(mid);
-	    	  
-	    	  int result = memberService.updateEmail(changeM);
-	    	  
-	    	  if(result>0) {
-	    		  msg="회원 가입시 입력한 이메일로 임시 비밀번호를 발송했습니다.";
-	    		  try {
-	  		    	
-	    		      MimeMessage message = mailSender.createMimeMessage();
-	    		      MimeMessageHelper messageHelper 
-	    		                        = new MimeMessageHelper(message, true, "UTF-8");
-	    		      
-	    		      
-	    	      
-		    	      messageHelper.setFrom("kimemail2018@gmail.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
-		    	      messageHelper.setTo(email);     // 받는사람 이메일
-		    	      messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
-		    	      messageHelper.setText("당신의 임시 비밀번호는 "+tempPwd+"입니다.");  // 메일 내용
-		    	     
-		    	      mailSender.send(message);
-		    	    } catch(Exception e){
-		    	      e.getStackTrace();
-		    	    }
-	    		  
-	    	  }else {
-	    		  msg="오류 발생!!!";
-	    		  
-	    	  }
-	    	  
-	      } else {
-	    	  msg="일치하는 아이디나 이메일이 없습니다.";
-	    	  loc="/member/memberFindPage.do?findType=비밀번호";
-	      }
-	    
-	    mav.addObject("loc", loc);
-	    mav.addObject("msg", msg);
-	    
-	    mav.setViewName("common/msg");
-	    
-	    return mav;
+		  
+		  Member equalM = new Member();
+		  equalM.setMid(mid);
+		  equalM.setEmail(email);
+		  
+		  int resultEqual = memberService.selectCntMember(equalM);
+		  
+		  //디비를 통해 회원 아이디와 이메일을 비교해서 일치하는 디비 값이 없으면 일치 하지 않다고 알려주기
+		  if(resultEqual>0) {
+			  String tempPwd = "";
+			  int tempSize = 3;
+			  char[] temp = new char[tempSize];
+			  
+			  //48~57- 숫자, 65~90- 대문자, 97~122- 소문자
+			  for(int i=0; i<tempSize; i++) {
+				  int rnd = (int)(Math.random()*122)+48;
+				  if(rnd>48&&rnd<57||rnd>65&&rnd<90||rnd>97&&rnd<122) {
+					  temp[i] = (char)rnd;
+					  tempPwd += temp[i];
+				  } else {
+					  i--;
+				  }		  
+			  }
+			  
+			  
+			  //이메일을 보내면서 디비의 값을 update 한다.
+			  Member changeM = new Member();
+			  String encodedPassword = bcryptPasswordEncoder.encode(tempPwd);
+			  changeM.setPwd(encodedPassword);
+			  changeM.setMid(mid);
+			  
+			  int result = memberService.updateEmail(changeM);
+			  
+			  if(result>0) {
+				  msg="회원 가입시 입력한 이메일로 임시 비밀번호를 발송했습니다.";
+				  try {
+					  
+					  MimeMessage message = mailSender.createMimeMessage();
+					  MimeMessageHelper messageHelper 
+					  = new MimeMessageHelper(message, true, "UTF-8");
+					  
+					  
+					  
+					  messageHelper.setFrom("kimemail2018@gmail.com");  // 보내는사람 생략하거나 하면 정상작동을 안함
+					  messageHelper.setTo(email);     // 받는사람 이메일
+					  messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
+					  messageHelper.setText("당신의 임시 비밀번호는 "+tempPwd+"입니다.");  // 메일 내용
+					  
+					  mailSender.send(message);
+				  } catch(Exception e){
+					  e.getStackTrace();
+				  }
+				  
+			  }else {
+				  msg="오류 발생!!!";
+				  
+			  }
+			  
+		  } else {
+			  msg="일치하는 아이디나 이메일이 없습니다.";
+			  loc="/member/memberFindPage.do?findType=비밀번호";
+		  }
+		  
+		  mav.addObject("loc", loc);
+		  mav.addObject("msg", msg);
+		  
+		  mav.setViewName("common/msg");
+		  
+		  return mav;
 	  }
-	
+*/	
+	  
 }
 
 

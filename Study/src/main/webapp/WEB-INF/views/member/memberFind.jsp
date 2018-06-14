@@ -23,7 +23,7 @@
 		<c:if test="${pwd==null and findType eq '비밀번호' }">
 			비밀번호 찾기
 			<!-- 다시 써야함.(이메일에 임시 비밀번호 발송해야함.) -->
-			<form action="${pageContext.request.contextPath }/member/mailSending.do">
+			<form action="${pageContext.request.contextPath }/member/mailSending.do" method="post">
 				<input type="text" name="mid" id="mid" placeholder="아이디" />
 				<input type="email" name="email" id="email" placeholder="이메일" />
 				<input type="hidden" name="findType" value="비밀번호" />
