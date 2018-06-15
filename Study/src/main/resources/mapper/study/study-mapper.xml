@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="study">
+ <select id="studyList" resultMap="mapList">
+ 	select * from study order by regdate desc
+ </select>
+ 
+ <resultMap type="map" id="mapList">
+ </resultMap>
+ <select id="studyTotalCount" resultType="_int">
+ 	select count(*) cnt from study
+ </select>
+ <select id="selectSubject" resultMap="mapList">
+ 	select * from subject
+ </select>
+ <select id="selectKind" resultMap="mapList">
+    select * from kind where subno=#{subno}
+ </select>
+ <select id="selectLocal" resultMap="mapList">
+ 	select * from local
+ </select>
+ <select id="selectTown" resultMap="mapList">
+ 	select * from town where lno=#{lno}
+ </select>
+ <select id="selectLv"  resultMap="mapList">
+ 	select * from diff
+ </select>
+  <insert id="insertStudy">
+  	insert into study values(SEQUENCE_STUDY.NEXTVAL,#{mno},#{kno},#{tno},#{dno},#{title},#{freq},
+  	#{content},#{price},null,#{recruit},'모집중',#{time},'study',#{ldate},#{sdate},#{edate},sysdate,${etc})
+  	<!-- 전달한 study vo 객체의 sno 프로퍼티에 결과값을 담는다. -->		
+   	<selectKey keyProperty="sno"  resultType="_int" order="AFTER"> <!-- order 앞의 쿼리 후에 해라. -->
+   		SELECT SEQUENCE_STUDY.CURRVAL FROM DUAL
+   	</selectKey>	
+  </insert>
+  
+  <update id="updateStudyImg">
+  	update study set upfile=#{upfile} where sno=#{sno}
+  </update>
+</mapper>
