@@ -113,7 +113,7 @@ div#userId-container span.error{color: red;}
 
 function validate() {
 	/* id */
-	var userId = $("#userId_");
+	/* var userId = $("#userId_");
 	if(userId.val().trim().length<4){
 		alert("아이디는 최소4자이이상이어야합니다");
 		userId.focus();
@@ -139,11 +139,11 @@ function validate() {
 	if(idcheck==0){
 		alert("아이디가 중복 됩니다.");
 		userId.focus();
-		return false;
+		return false; */
 	}
 	
 	/* password */
-	var password = $("#password_");
+	/* var password = $("#password_");
 	if(password.val()==userId.val()){
 		alert("아이디와 패스워드가 동일합니다.");
 		password.focus();
@@ -220,27 +220,27 @@ function validate() {
 		alert("전화번호를 다시 입력해 주세요.");
 		phone.focus();
 		return false;
-	}
+	} */
 	
 	/* 이메일  */
-	var email = $("#email").val();
+	/* var email = $("#email").val();
 	var emailaddr = $("#emailaddr");
 	if(emailaddr.val().search(/[.]/g)==-1){
 		alert("이메일 형식이 바르지 않습니다.");
 		emailaddr.focus();
 		return false;
-	}
+	}*/
 
 	/* 생년월일  */
-	var year = $("#year");
+	/* var year = $("#year");
 	if(year.val().trim().length!=4){
 		alert("생년월일을 다시 입력하세요.");
 		year.focus();
 		return false;
-	}
-	
+	} */
+	 
 	return true;
-} 
+} }
 </script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -295,6 +295,7 @@ function validate() {
             }
         }).open();
     }
+    /* 이메일 인증 번호 전송 */
     function fn_certification() {
     	var email = $("#email").val();
     	var emailaddr = $("#emailaddr").val();
@@ -315,6 +316,46 @@ function validate() {
     	
     	$.ajax({
     		url: "certification.do",
+			data: data,
+			contentType : false,
+			processData : false,
+			type: "POST",
+			dataType : "json",
+			success : function(date){
+				console.log("성공"); 
+			},
+			error:function(jqxhr,textStatus,errorThrown){
+				console.log(jqxhr);
+				console.log(textStatus);
+				console.log(errorThrown);
+			},
+			cache : false,
+			processData:false
+    		
+    	});
+    }
+    /* 이메일 인증번호 확인 */
+    function checkJoinCode() {
+    	var email = $("#email").val();
+    	var emailaddr = $("#emailaddr").val();
+    	var inputCode = $("#inputCode").val();
+    	
+    	if(email.trim().length==0){
+    		alert("이메일을 입력하세요.");
+    		email.focus();
+    	}
+    	if(emailaddr.trim().length==0){
+    		alert("이메일을 입력하세요.");
+    		emailaddr.focus();
+    	}
+    	
+    	var data = new FormData();
+		var em = email +"@"+emailaddr;
+		console.log("em : "+em); 
+		data.append("em",em);
+    	data.append("inputCode",inputCode)
+    	$.ajax({
+    		url: "checkJoinCode.do",
 			data: data,
 			contentType : false,
 			processData : false,
@@ -361,8 +402,8 @@ function validate() {
 		<button type="button" onclick="fn_certification();">인증번호</button>
 		<br />
 		
-		<input type="number" name="inputCoode" id="inputCode" placeholder="Enter code"/>
-		<input type="button" value="확인" onclick="chekJoinCode" />
+		<input type="text" id="inputCode" placeholder="인증번호를 입력하세요"/>
+		<input type="button" value="확인" onclick="checkJoinCode" />
 		<br />
 		
 		<input type="text" name="birth" id="year" placeholder="출생년도" > 

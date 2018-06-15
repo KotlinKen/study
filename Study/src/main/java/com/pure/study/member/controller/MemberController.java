@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
 import com.pure.study.member.model.service.MemberService;
+import com.pure.study.member.model.vo.Certification;
 import com.pure.study.member.model.vo.Member;
 
 @SessionAttributes({"memberLoggedIn"})
@@ -43,7 +44,7 @@ public class MemberController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private MemberService ms;
+	private MemberService memberService;
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	@Autowired
@@ -59,30 +60,65 @@ public class MemberController {
 		return "member/memberAgreement";
 	}
 	
-	/*mailSending 코드*/
+	/*mailSending 코드 전송*/
 	@RequestMapping(value = "/member/certification.do")
-	public String mailSending(HttpServletRequest request ,@RequestParam(value="em") String em) {
-		System.out.println("여기는 오는 건가???~```````````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~```");
+	@ResponseBody
+	public Map<String,Object> mailCertification(HttpServletRequest request ,@RequestParam(value="em") String em) {
+		Map<String,Object> map = new HashMap<>();
 		String setfrom = "jjsk109@gmail.com";         
 		String tomail  = em;     // 받는 사람 이메일
 		String title   =   "( 스터디 그룹트 ) 회원가입 인증번호 내역";   // 제목
-		String content =   "첫 기념 입니다~!! ";  // 내용
-		System.out.println("1.받는 사람 이메일"+tomail);
-		System.out.println("2.제목"+title);
-		System.out.println("3.내용"+content);
-	try {
-		MimeMessage message = mailSender.createMimeMessage(); 
-		MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-		messageHelper.setFrom(setfrom);  // 보내는사람 생략하거나 하면 정상작동을 안함
-		messageHelper.setTo(tomail);     // 받는사람 이메일
-		messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
-		messageHelper.setText(content);  // 메일 내용
-	     
-		mailSender.send(message);
-	} catch(Exception e){
-		System.out.println(e);
+		
+		String content =   "회원님 \n인증번호는  ";  // 내용
+		String ranstr = ""; 
+		for(int i =0; i<10 ; i++) {
+			int ran = (int)(Math.random()*10);
+			ranstr +=ran;
+		}
+		System.out.println(ranstr);
+		String encoded = bcryptPasswordEncoder.encode(ranstr);
+		content += ranstr;
+		System.out.println(content);
+		
+		int checkemail = memberService.checkEmail(tomail);
+		int result =0;
+		System.out.println("checkemail : "+checkemail);
+		if(checkemail ==0 ) {
+			System.out.println("insertMailCertification");
+			result = memberService.insertMailCertification(tomail,encoded);			
+		}else {
+			System.out.println("uploadMailCertification");
+			result = memberService.uploadMailCertification(tomail,encoded);
+		}
+		System.out.println("result : "+result);
+		try {
+			MimeMessage message = mailSender.createMimeMessage(); 
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom(setfrom);  // 보내는사람 생략하거나 하면 정상작동을 안함
+			messageHelper.setTo(tomail);     // 받는사람 이메일
+			messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
+			messageHelper.setText(content);  // 메일 내용
+		     
+			mailSender.send(message);
+		} catch(Exception e){
+			System.out.println(e);
+		}
+		return map;
 	}
-	return "member/memberEnroll";
+	
+	/*mailSending 코드 검증*/
+	@RequestMapping(value = "/member/checkJoinCode.do")
+	@ResponseBody
+	public Map<String,Object> checkJoinCode(HttpServletRequest request ,@RequestParam(value="em") String em ,@RequestParam(value="inputCode") String inputCode) {
+		Map<String,Object> map = new HashMap<>();
+		String email = em;
+		
+		Certification certification = new Certification();
+		certification = memberService.selectCheckJoinCode(email);
+		
+		System.out.println(certification);
+		
+		return map;
 	}
 	
 		
@@ -182,7 +218,7 @@ public class MemberController {
 		System.out.println("암호화후="+member.getPwd());
 	
 		
-		int result = ms.memberEnrollEnd(member);
+		int result = memberService.memberEnrollEnd(member);
 		
 		//2.처리결과에 따라 view단 분기처리
 		String loc = "/"; 
@@ -204,7 +240,7 @@ public class MemberController {
 		Map<String,Object> map = new HashMap<>();
 	
 		//업무로직
-		int count = ms.checkIdDuplicate(userId);
+		int count = memberService.checkIdDuplicate(userId);
 		logger.debug("count : "+count);
 		boolean isUsable = count==0?true:false;
 		logger.debug(""+isUsable);
