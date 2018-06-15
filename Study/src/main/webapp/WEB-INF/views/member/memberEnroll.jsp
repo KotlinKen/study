@@ -226,6 +226,8 @@ function validate() {
 	
 	var checkPoint = $("#checkPoint").val();
 	if(checkPoint==0){
+		alert("이메일 인증을 바랍니다");
+		emailaddr.focus();
 		return false;
 	}
 
