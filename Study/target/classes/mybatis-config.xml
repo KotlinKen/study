@@ -3,6 +3,7 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.pure.study.board.model.vo.Board" alias="board"/>
+		<!-- <typeAlias type="com.pure.study.board.model.vo.Member" alias="member"/> -->
 	</typeAliases>
 </configuration>
 
