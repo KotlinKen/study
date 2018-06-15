@@ -44,6 +44,13 @@
 	
 	<resultMap type="map" id="boardMap">
 	</resultMap>
-	
-	
+<select id="selectOneBoard" resultType="board">
+		SELECT * FROM BOARD WHERE BOARDNO = #{boardNo}
+	</select>
+	<resultMap type="attachment" id="attachment"></resultMap>
+	<select id="selectAttachmentList" parameterType="_int" resultMap="attachment">
+		SELECT * FROM ATTACHMENT WHERE BOARDNO = #{boardNo}
+	</select>
+
 </mapper>
+

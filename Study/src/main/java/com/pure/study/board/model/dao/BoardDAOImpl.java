@@ -54,5 +54,17 @@ public class BoardDAOImpl implements BoardDAO {
 		return sqlSession.selectList("board.selectOneAttach", boardNo); 
 	}
 
+	@Override
+	public Board selectOneBoard(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.selectOneBoard", boardNo);
+	}
+
+	@Override
+	public List<Attachment> selectAttachmentList(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.selectAttachmentList", boardNo);
+	}
+
 
 }

@@ -8,20 +8,7 @@
  
 input#btn-add{float:right; margin: 0 0 15px;}
 </style> 
-<script>
-$(function() {
-	
-	$("tr").click(function() {
-		<% if(true) {%>
-		if($(this).attr("boardWriter")!=null){
-			location.href="<%=request.getContextPath()%>/board/boardView?boardNo="+$(this).attr("boardWriter");
-		}
-		<%} else {%>
-		alert("로그인 후 이용할 수 있습니다");
-		<%}%>
-	})
-});
-	</script>
+
 <section id="board-container" class="container">
    <h2>총 게시물 수는 ${count }개 입니다.</h2>
    <input type="button" class="btn btn-outline-success"
@@ -38,7 +25,9 @@ $(function() {
     <th scope="col">조회수</th>
 </tr>
 <c:forEach var="board" items="${list }" varStatus="vs">
-<tr>
+   <tr onclick="location.href='${pageContext.request.contextPath}/board/boardView.do?no='+${board.BOARDNO}">
+
+
 <td>${board.BOARDNO }</td>
 <td>${board.BOARDTITLE }</td>
 <td>${board.BOARDWRITER }</td>

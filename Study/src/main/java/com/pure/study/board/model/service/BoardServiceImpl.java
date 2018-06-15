@@ -77,6 +77,18 @@ public class BoardServiceImpl implements BoardService {
 		
 	}
 
+	@Override
+	public Board selectOneBoard(int boardNo) {
+		// TODO Auto-generated method stub
+		return boardDAO.selectOneBoard(boardNo);
+	}
+
+	@Override
+	public List<Attachment> selectAttachmentList(int boardNo) {
+		// TODO Auto-generated method stub
+		return boardDAO.selectAttachmentList(boardNo);
+	}
+
 	
 	
 }

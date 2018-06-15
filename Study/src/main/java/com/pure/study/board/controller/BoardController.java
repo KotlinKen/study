@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,7 +130,9 @@ public class BoardController {
 			
 			if(result>0) {
 				msg = "게시물 등록 성공";
-				loc = "/board/boardView.do?boardNo="+board.getBoardNo();
+/*				loc = "/board/boardView.do?boardNo="+board.getBoardNo();
+*/				
+				loc = "/board/boardView.do?no="+boardNo;
 			}else {
 				msg = "게시물 등록 실패";
 			}
@@ -145,8 +148,8 @@ public class BoardController {
 	}
 	
 	
-	@RequestMapping("/board/boardView.do")
-	public ModelAndView selectOne(int boardNo) {
+	/*@RequestMapping("/board/boardView.do")
+	public ModelAndView selectOne(@RequestParam("no") int boardNo) {
 		logger.debug("test"+ boardNo);
 		ModelAndView mav = new ModelAndView();
 		
@@ -156,6 +159,15 @@ public class BoardController {
 		
 		mav.addObject("board", board);
 		return mav;
+	}*/
+
+	@RequestMapping("/board/boardView.do")
+	public String selectOneBoard(@RequestParam("no") int boardNo, Model model){
+		
+		model.addAttribute("board",boardService.selectOneBoard(boardNo));
+		model.addAttribute("attachmentList", boardService.selectAttachmentList(boardNo));
+		
+		return "board/boardView";
 	}
 	
 	

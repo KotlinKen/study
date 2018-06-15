@@ -22,5 +22,9 @@ public interface BoardDAO {
 
 	List<Map<String, String>> selectOneAttach(int boardNo);
 
+	Board selectOneBoard(int boardNo);
+
+	List<Attachment> selectAttachmentList(int boardNo);
+
 
 }

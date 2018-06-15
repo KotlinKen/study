@@ -13,5 +13,7 @@ public interface BoardService {
 	int selectCount();
 	int insertBoard(Board board, List<Attachment> attachList);
 	List<Map<String, String>> selectOne(int boardNo);
+	Board selectOneBoard(int boardNo);
+	List<Attachment> selectAttachmentList(int boardNo);
 	
 }
