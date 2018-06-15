@@ -21,4 +21,6 @@ public interface MemberDAO {
 
 	Map<String, String> selectCheckJoinCode(String email);
 
+	int deleteCertification(String email);
+
 }

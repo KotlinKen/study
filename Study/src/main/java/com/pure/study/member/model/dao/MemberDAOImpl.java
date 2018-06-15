@@ -56,4 +56,9 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.selectCheckJoinCode",email);
 	}
 
+	@Override
+	public int deleteCertification(String email) {
+		return sqlSession.delete("member.deleteCertification",email);
+	}
+
 }

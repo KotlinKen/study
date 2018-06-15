@@ -20,6 +20,8 @@ public interface MemberService {
 	int uploadMailCertification(String tomail, String encoded);
 
 	Map<String, String> selectCheckJoinCode(String email);
+
+	int deleteCertification(String email);
 	
 	
 

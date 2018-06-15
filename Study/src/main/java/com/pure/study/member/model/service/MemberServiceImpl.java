@@ -49,4 +49,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.selectCheckJoinCode(email);
 	}
 
+	@Override
+	public int deleteCertification(String email) {
+		return memberDAO.deleteCertification(email);
+	}
+
 }

@@ -20,4 +20,7 @@
 	<insert id="memberEnrollEnd">
 		INSERT INTO MEMBER VALUES(seq_member.nextval, #{mid} , #{mname} , #{pwd} , #{phone} , #{addr} , #{mprofile} , #{email} , TO_DATE(#{birth},'YYYY/MM/DD') , #{gender} , #{favor} , 0 , 0 , default , null )
 	</insert>
+	<delete id="deleteCertification">
+		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
+	</delete>
 </mapper>

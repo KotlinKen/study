@@ -29,36 +29,23 @@ div#userId-container span.error{color: red;}
 		var p1 = $("#password_").val();
 		var p2 = $(this).val();
 		if(p1!=p2){
-			alert("패스워드가 일치하지 않습니다.");
+			$(".pwd.error").show();
+			$(".pwd.ok").hide();
+			$("#pwdDuplicateCheck").val(0);
 			$("#password_").focus();
+		}else{
+			$(".pwd.ok").show();
+			$(".pwd.error").hide();
+			
+			$("#pwdDuplicateCheck").val(1);
 		}
 	});
 	
 	/* 아이디 */
 	$("#userId_").on("keyup",function(){
 		var userId = $(this).val().trim();
-		if(userId.length<4) return;
+		if(userId.length>11) alert("아이디가 너무 김니다.")
 		
-		$.ajax({
-			url : "checkIdDuplicate.do",
-			data : {userId:userId},
-			dataType:"json",
-			success : function(data){
-				console.log(data);
-				if(data.isUsable==true){
-					$(".guide.ok").show();
-					$(".guide.error").hide();
-					$("#idDuplicateCheck").val(1);
-				}else{
-					$(".guide.error").show();
-					$(".guide.ok").hide();
-					$("#idDuplicateCheck").val(0);
-				}
-			},
-			error :function(jqxhr,textStatus,errorThrown){
-				console.log("ajax실패",jqxhr,textStatus,errorThrown);
-			}
-		});
 	});
 	
 	/* 파일 업로드 */
@@ -104,11 +91,67 @@ div#userId-container span.error{color: red;}
 	
 });
 
+function fn_checkID() {
+	var userId = $("#userId_").val().trim();
+	if(userId.length<4){
+		alert("아이디는 4글자 이상 입니다.");
+		userId.focus();
+		return;
+	}
+	if(userId.length>11){
+		alert("아이디는 10글자 이하 입니다.");
+		userId.focus();
+		return;
+	}
+	if(userId.indexOf(" ")>=0){
+		alert("아이디는 공백을 사용할 수 없습니다");
+		userId.focus();
+		return;
+	}
+	if(userId.search(/[!@#$%^&*()?_~]/g)>=0){
+		alert("아이디는 특수문자를 사용할 수 없습니다");
+		userId.focus();
+		return;
+	}
+	if(userId.search(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g)>=0){
+		alert("아이디는 한글을 사용할 수 없습니다");
+		userId.focus();
+		return;
+	}
+	
+	$.ajax({
+		url : "checkIdDuplicate.do",
+		data : {userId:userId},
+		dataType:"json",
+		success : function(data){
+			console.log(data);
+			if(data.isUsable==true){
+				$(".guide.ok").show();
+				$(".guide.error").hide();
+				$("#idDuplicateCheck").val(1);
+			}else{
+				$(".guide.error").show();
+				$(".guide.ok").hide();
+				$("#idDuplicateCheck").val(0);
+			}
+		},
+		error :function(jqxhr,textStatus,errorThrown){
+			console.log("ajax실패",jqxhr,textStatus,errorThrown);
+		}
+	});
+}
+ 
+ 
 function validate() {
 	/* id */
 	var userId = $("#userId_");
 	if(userId.val().trim().length<4){
 		alert("아이디는 최소4자이이상이어야합니다");
+		userId.focus();
+		return false;
+	}
+	if(userId.val().trim().length>11){
+		alert("아이디는 최소11자이이하이어야합니다");
 		userId.focus();
 		return false;
 	}
@@ -128,7 +171,7 @@ function validate() {
 		return false;
 	}
 	
-	var idcheck = $("#idDuplicateCheck").val()
+	var idcheck = $("#idDuplicateCheck").val();
 	if(idcheck==0){
 		alert("아이디가 중복 됩니다.");
 		userId.focus();
@@ -137,6 +180,7 @@ function validate() {
 	
 	/* password */
 	var password = $("#password_");
+	var pwdcheck = $("#pwdDuplicateCheck").val();
 	if(password.val()==userId.val()){
 		alert("아이디와 패스워드가 동일합니다.");
 		password.focus();
@@ -168,9 +212,13 @@ function validate() {
 		password.focus();
 		return false;
 	}
+	if(pwdcheck ==0){
+		alert("비밀번호가 일치하지 않습니다");
+		password.focus();
+		return false;
+	}
 	
 	var name = $("#name");
-
 	if(name.val().trim().length<2){
 		alert("이름을 2글자 이상 입력해 주세요.");
 		name.focus();
@@ -209,7 +257,7 @@ function validate() {
 		phone.focus();
 		return false;
 	}
-	if(phone.val().trim().length<7){
+	if(phone.val().trim().length<9){
 		alert("전화번호를 다시 입력해 주세요.");
 		phone.focus();
 		return false;
@@ -233,12 +281,23 @@ function validate() {
 
 	/* 생년월일  */
 	var year = $("#year");
+	var month = $("#month");
+	var day = $("#day");
 	if(year.val().trim().length!=4){
 		alert("생년월일을 다시 입력하세요.");
 		year.focus();
 		return false;
 	} 
-	 
+	if(month.val().trim().length == 0){
+		alert("생년월일을 다시 입력하세요.");
+		year.focus();
+		return false;
+	} 
+	if(day.val().trim().length == 0){
+		alert("생년월일을 다시 입력하세요.");
+		year.focus();
+		return false;
+	} 
 	
 	return true;
 }
@@ -384,11 +443,103 @@ function validate() {
     	});
     }
 </script>
+<script >
+
+    window.onload = function() {
+        var frm = document.getElementById('mainForm');
+        
+        var nowDate        = new Date();
+        var nowYear        = nowDate.getFullYear();
+        var nowMonth    = eval(nowDate.getMonth()) +1;
+        var nowDay        = eval(nowDate.getDate());
+        
+        /***************
+         * 년 세팅
+         ***************/
+        var startYear    = nowYear-99 ;
+        for( var i=0; i<100; i++ ) {
+            frm['dateYear'].options[i] = new Option(startYear+i, startYear+i);
+        }
+    
+        /***************
+         * 월 세팅
+         **************/
+        for (var i=0; i<12; i++) {
+            frm['dateMonth'].options[i] = new Option(i+1, i+1);
+        }
+        
+        
+        /***************************************
+         * 먼저 현재 년과 월을 셋팅
+         * 윤년계산과 월의 마지막 일자를 구하기 위해
+         ***************************************/
+        frm['dateYear'].value        = nowYear;
+        frm['dateMonth'].value    = nowMonth;
+        setDay();
+        /********************************************
+         * 일(day)의 select를 생성하고 현재 일자로 초기화
+         ********************************************/
+        frm['dateDay'].value        = nowDay;
+    }
+
+    /******************
+     * 일(day) 셋팅
+     ******************/
+    function setDay() {
+        var frm = document.getElementById('mainForm');
+        
+        var year            = frm['dateYear'].value;
+        var month            = frm['dateMonth'].value;
+        var day                = frm['dateDay'].value;    
+        var dateDay        = frm['dateDay'];
+        
+        var arrayMonth    = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+        /*******************************************
+         * 윤달 체크 부분
+         * 윤달이면 2월 마지막 일자를 29일로 변경
+         *******************************************/
+        if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+            arrayMonth[1] = 29;
+        }
+
+        /**************************************
+         * 기존 일(day) select를 모두 삭제한다.
+         **************************************/
+        for( var i=dateDay.length; i>0; i--) {
+            dateDay.remove(dateDay.selectedIndex);
+        }
+            
+        /*********************************
+         * 일(day) select 옵션 생성
+         *********************************/
+        for (var i=1; i<=arrayMonth[month-1]; i++) {
+            dateDay.options[i-1] = new Option(i, i);
+        }
+
+        /*********************************************
+         * 기존에 선택된 일값 유지
+         * 기존 일값보다 현재 최대일값이 작을 경우
+         * 현재 선택 최대일값으로 세팅
+         ********************************************/
+        if( day != null || day != '' ) {
+            if( day > arrayMonth[month-1] ) {
+                dateDay.options.selectedIndex = arrayMonth[month-1]-1;
+            } else {
+                dateDay.options.selectedIndex = day-1;
+            }
+        }
+    }
+
+
+</script>
 
 <div id="enroll-container">
-	<form action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" method="post" onsubmit="return validate();">
+	<form action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" method="post" name='mainForm' id='mainForm' onsubmit="return validate();">
 		<div id="userId-container">
-			<input type="text"  name="mid" id="userId_" placeholder="아이디" required/> <br />
+			<input type="text"  name="mid" id="userId_" placeholder="아이디" required/> 
+			<button type="button" onclick="fn_checkID();">아이디 확인</button>
+			<br />
 			<span class="guide ok">중복된 아이디가 없습니다.</span>
 			<span class="guide error">중복된 아이디가 있습니다.</span>
 			<input type="hidden" id="idDuplicateCheck" value="0"/>
@@ -398,6 +549,7 @@ function validate() {
 			<input type="password" id="password2" placeholder="비밀번호 확인" required/> <br />
 			<span class="pwd ok">비밀번호가 동일합니다.</span>
 			<span class="pwd error">비밀번호가 다릅니다.</span>
+			<input type="hidden" id="pwdDuplicateCheck" value="0"/>
 		</div>
 		
 		<input type="text"  name="mname" id="name" placeholder="이름" required/> 
@@ -416,56 +568,10 @@ function validate() {
 		<input type="hidden" id="checkPoint" value="0" />
 		<br />
 		
-		<input type="text" name="birth" id="year" placeholder="출생년도" > 
-		<select name="birth" id="month">
-			<option value="" selected>출생월</option>
-			<option value="1">1월</option>
-			<option value="2">2월</option>
-			<option value="3">3월</option>
-			<option value="4">4월</option>
-			<option value="5">5월</option>
-			<option value="6">6월</option>
-			<option value="7">7월</option>
-			<option value="8">8월</option>
-			<option value="9">9월</option>
-			<option value="10">10월</option>
-			<option value="11">11월</option>
-			<option value="12">12월</option>
-		</select>
-		<select name="birth" id="day">
-			 <option value="">출생일</option>
-			 <option value="1">1</option>
-		     <option value="2">2</option>
-		     <option value="3">3</option>
-		     <option value="4">4</option>
-		     <option value="5">5</option>
-		     <option value="6">6</option>
-		     <option value="7">7</option>
-		     <option value="8">8</option>
-		     <option value="9">9</option>
-		     <option value="10">10</option>
-		     <option value="11">11</option>
-		     <option value="12">12</option>
-		     <option value="13">13</option>
-		     <option value="14">14</option>
-		     <option value="15">15</option>
-		     <option value="16">16</option>
-		     <option value="17">17</option>
-		     <option value="18">18</option>
-		     <option value="19">19</option>
-		     <option value="20">20</option>
-		     <option value="21">21</option>
-		     <option value="22">22</option>
-		     <option value="23">23</option>
-		     <option value="24">24</option>
-		     <option value="25">25</option>
-		     <option value="26">26</option>
-		     <option value="27">27</option>
-		     <option value="28">28</option>
-		     <option value="29">29</option>
-		     <option value="30">30</option>
-		     <option value="31">31</option>
-		</select>
+	
+		<select name="birth" id='dateYear' onChange='setDay()'></select>년&nbsp;
+    <select name="birth" id='dateMonth' onChange='setDay()'></select>월&nbsp;
+    <select name="birth" id='dateDay'></select>일&nbsp;
 		
 		<br />
 		
@@ -508,8 +614,9 @@ function validate() {
 			<label for="hobby4" class="form-check-input">PYTHON</label>
 		</div>
 		<!-- ======db연동으로 수정요망======= -->
-		
-
+		<br />
+		자기소계  <br />
+		<textarea rows="10" cols="50" name=""></textarea>
 		
 		<br />
 		 <button type="button" onclick="location.href='${pageContext.request.contextPath}'">취소</button>		
