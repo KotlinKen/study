@@ -71,7 +71,7 @@ public class MemberController {
 		
 		String content =   "회원님 \n인증번호는  ";  // 내용
 		String ranstr = ""; 
-		for(int i =0; i<10 ; i++) {
+		for(int i =0; i<4 ; i++) {
 			int ran = (int)(Math.random()*10);
 			ranstr +=ran;
 		}
@@ -112,12 +112,16 @@ public class MemberController {
 	public Map<String,Object> checkJoinCode(HttpServletRequest request ,@RequestParam(value="em") String em ,@RequestParam(value="inputCode") String inputCode) {
 		Map<String,Object> map = new HashMap<>();
 		String email = em;
-		
-		Certification certification = new Certification();
-		certification = memberService.selectCheckJoinCode(email);
-		
-		System.out.println(certification);
-		
+		System.out.println(email);
+		System.out.println(inputCode);
+		Map<String,String> cer = new HashMap<>();
+		cer = memberService.selectCheckJoinCode(email);
+		if(bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
+			map.put("result", true);
+		}else {
+			map.put("result", false);			
+		}
+		System.out.println(map);
 		return map;
 	}
 	
@@ -205,19 +209,22 @@ public class MemberController {
 		birth = birthArr[0]+"/"+birthArr[1]+"/"+birthArr[2];
 		member.setBirth(birth);
 		
+		/*주소값 정리 (임시 addr1/addr2필요)*/
+		String addr= member.getAddr();
+		String[] addrArr = addr.split(",");
+		addr = addrArr[0]+" "+addrArr[2]+" "+addrArr[3];
+		System.out.println(addr);
+		member.setAddr(addr);
+		
+		
 		logger.debug(""+member);
 		String rawPassword = member.getPwd();
 		System.out.println("암호화전="+rawPassword);
 		/******* password 암호화 시작 *******/
-
 		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
 		member.setPwd(encodedPassword);
-		
-
 		/******* password 암호화 끝 *******/
-		System.out.println("암호화후="+member.getPwd());
 	
-		
 		int result = memberService.memberEnrollEnd(member);
 		
 		//2.처리결과에 따라 view단 분기처리

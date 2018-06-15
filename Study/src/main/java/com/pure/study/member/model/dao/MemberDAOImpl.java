@@ -23,11 +23,7 @@ public class MemberDAOImpl implements MemberDAO {
 		System.out.println(member);
 		return sqlSession.insert("member.memberEnrollEnd",member);
 	}
-	@Override
-	public Member selectOne(String userId) {
-		System.out.println("userId="+userId);
-		return sqlSession.selectOne("member.selectOne",userId);
-	}
+	
 	@Override
 	public int memberCristal(Member member) {
 		return sqlSession.update("member.memberCristal",member);
@@ -56,7 +52,7 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.update("member.uploadMailCertification",map);
 	}
 	@Override
-	public Certification selectCheckJoinCode(String email) {
+	public Map<String, String> selectCheckJoinCode(String email) {
 		return sqlSession.selectOne("member.selectCheckJoinCode",email);
 	}
 

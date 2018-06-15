@@ -11,7 +11,13 @@
  	<update id="uploadMailCertification">
  		UPDATE CERTIFICATION SET CERTI = #{encoded} WHERE EMAIL = #{tomail}
  	</update>
- 	<select id="checkEmail" resultType="certification">
- 		SELECT *FROM CERTIFICATION WHERE EMAIL = #{email}
+ 	<select id="selectCheckJoinCode" resultType="map">
+ 		SELECT * FROM CERTIFICATION WHERE EMAIL = #{email}
  	</select>
+ 	<select id="checkIdDuplicate" resultType="_int">
+ 		SELECT COUNT (*) COUNT FROM MEMBER WHERE MID = #{userId}
+ 	</select>
+	<insert id="memberEnrollEnd">
+		INSERT INTO MEMBER VALUES(seq_member.nextval, #{mid} , #{mname} , #{pwd} , #{phone} , #{addr} , #{mprofile} , #{email} , TO_DATE(#{birth},'YYYY/MM/DD') , #{gender} , #{favor} , 0 , 0 , default , null )
+	</insert>
 </mapper>

@@ -1,13 +1,13 @@
 package com.pure.study.member.model.service;
 
+import java.util.Map;
+
 import com.pure.study.member.model.vo.Certification;
 import com.pure.study.member.model.vo.Member;
 
 public interface MemberService {
 
 	int memberEnrollEnd(Member member);
-
-	Member selectOne(String userId);
 
 	int memberCristal(Member member);
 
@@ -19,7 +19,7 @@ public interface MemberService {
 
 	int uploadMailCertification(String tomail, String encoded);
 
-	Certification selectCheckJoinCode(String email);
+	Map<String, String> selectCheckJoinCode(String email);
 	
 	
 

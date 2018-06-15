@@ -21,13 +21,10 @@ div#userId-container span.error{color: red;}
 </style>
 </head>
 <body>
-<script language="javascript">
-// opener관련 오류가 발생하는 경우 아래 주석을 해지하고, 사용자의 도메인정보를 입력합니다. ("팝업API 호출 소스"도 동일하게 적용시켜야 합니다.)
-//document.domain = "abc.go.kr";
-
 
 <script>
  $(function () {
+	 /* 패스워드 */
 	$("#password2").blur(function () {
 		var p1 = $("#password_").val();
 		var p2 = $(this).val();
@@ -37,7 +34,7 @@ div#userId-container span.error{color: red;}
 		}
 	});
 	
-	
+	/* 아이디 */
 	$("#userId_").on("keyup",function(){
 		var userId = $(this).val().trim();
 		if(userId.length<4) return;
@@ -64,6 +61,7 @@ div#userId-container span.error{color: red;}
 		});
 	});
 	
+	/* 파일 업로드 */
 	$("input:file").change(function() {
 		var ext = $("input:file").val().split(".").pop().toLowerCase();
 		if(ext.length > 0){
@@ -72,6 +70,7 @@ div#userId-container span.error{color: red;}
 				return false;  
 			}
 		} 
+		console.log(ext);
 		var data = new FormData();
 		var upFile = document.getElementById("upFile").files[0];
 		data.append("upFile",upFile);
@@ -84,14 +83,10 @@ div#userId-container span.error{color: red;}
 			type: "POST",
 			dataType : "json",
 			success : function(date){
-				console.log("???? : "+date.renamedFileName); 
-				
 				var html = "";
-				
 				html += "<img class ='call_img'   src='${pageContext.request.contextPath }/resources/upload/member/"+date.renamedFileName+"'>";
-				html += "<input type='hidden' name='profile' value='"+date.renamedFileName+"' >";
-				
 				$("#div-img-ik").before(html);
+				$("#mprofile").val(date.renamedFileName)
 				$(".fa").on("click",function () {
 					$(this).parent().remove();
 				});
@@ -105,15 +100,13 @@ div#userId-container span.error{color: red;}
 			processData:false
 		});	
 		
-		
-		
 	});
 	
 });
 
 function validate() {
 	/* id */
-	/* var userId = $("#userId_");
+	var userId = $("#userId_");
 	if(userId.val().trim().length<4){
 		alert("아이디는 최소4자이이상이어야합니다");
 		userId.focus();
@@ -139,11 +132,11 @@ function validate() {
 	if(idcheck==0){
 		alert("아이디가 중복 됩니다.");
 		userId.focus();
-		return false; */
+		return false;
 	}
 	
 	/* password */
-	/* var password = $("#password_");
+	var password = $("#password_");
 	if(password.val()==userId.val()){
 		alert("아이디와 패스워드가 동일합니다.");
 		password.focus();
@@ -220,27 +213,33 @@ function validate() {
 		alert("전화번호를 다시 입력해 주세요.");
 		phone.focus();
 		return false;
-	} */
+	}
 	
 	/* 이메일  */
-	/* var email = $("#email").val();
+	var email = $("#email").val();
 	var emailaddr = $("#emailaddr");
 	if(emailaddr.val().search(/[.]/g)==-1){
 		alert("이메일 형식이 바르지 않습니다.");
 		emailaddr.focus();
 		return false;
-	}*/
+	}
+	
+	var checkPoint = $("#checkPoint").val();
+	if(checkPoint==0){
+		return false;
+	}
 
 	/* 생년월일  */
-	/* var year = $("#year");
+	var year = $("#year");
 	if(year.val().trim().length!=4){
 		alert("생년월일을 다시 입력하세요.");
 		year.focus();
 		return false;
-	} */
+	} 
 	 
+	
 	return true;
-} }
+}
 </script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -295,6 +294,7 @@ function validate() {
             }
         }).open();
     }
+    
     /* 이메일 인증 번호 전송 */
     function fn_certification() {
     	var email = $("#email").val();
@@ -311,7 +311,6 @@ function validate() {
     	
     	var data = new FormData();
 		var em = email +"@"+emailaddr;
-		console.log("em : "+em); 
 		data.append("em",em);
     	
     	$.ajax({
@@ -323,6 +322,7 @@ function validate() {
 			dataType : "json",
 			success : function(date){
 				console.log("성공"); 
+				
 			},
 			error:function(jqxhr,textStatus,errorThrown){
 				console.log(jqxhr);
@@ -334,6 +334,7 @@ function validate() {
     		
     	});
     }
+    
     /* 이메일 인증번호 확인 */
     function checkJoinCode() {
     	var email = $("#email").val();
@@ -362,7 +363,13 @@ function validate() {
 			type: "POST",
 			dataType : "json",
 			success : function(date){
-				console.log("성공"); 
+				if(date.result==true){
+					$("#checkPoint").val(1);
+					alert("이메일 인증을 성공했습니다.")
+				}else{
+					$("#checkPoint").val(0);
+					alert("이메일 인증을 실패했습니다.")
+				}
 			},
 			error:function(jqxhr,textStatus,errorThrown){
 				console.log(jqxhr);
@@ -379,7 +386,7 @@ function validate() {
 <div id="enroll-container">
 	<form action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" method="post" onsubmit="return validate();">
 		<div id="userId-container">
-			<input type="text"  name="id" id="userId_" placeholder="아이디" required/> <br />
+			<input type="text"  name="mid" id="userId_" placeholder="아이디" required/> <br />
 			<span class="guide ok">중복된 아이디가 없습니다.</span>
 			<span class="guide error">중복된 아이디가 있습니다.</span>
 			<input type="hidden" id="idDuplicateCheck" value="0"/>
@@ -391,7 +398,7 @@ function validate() {
 			<span class="pwd error">비밀번호가 다릅니다.</span>
 		</div>
 		
-		<input type="text"  name="name" id="name" placeholder="이름" required/> 
+		<input type="text"  name="mname" id="name" placeholder="이름" required/> 
 		<br />
 		<input type="text"  name="phone" id="phone" maxlength="11" placeholder="전화번호" required/> 
 		<br />
@@ -403,7 +410,8 @@ function validate() {
 		<br />
 		
 		<input type="text" id="inputCode" placeholder="인증번호를 입력하세요"/>
-		<input type="button" value="확인" onclick="checkJoinCode" />
+		<input type="button" value="확인" onclick="checkJoinCode();" />
+		<input type="hidden" id="checkPoint" value="0" />
 		<br />
 		
 		<input type="text" name="birth" id="year" placeholder="출생년도" > 
@@ -480,10 +488,12 @@ function validate() {
 		
 		 <br />
 		 
-		 프로필사진 : <input type="file" name="upFile" id="upFile" />
-		 <div id="div-img-ik"></div>
-		 <br />
-		 <!-- ======db연동으로 수정요망======= -->
+		프로필사진 : <input type="file" name="upFile" id="upFile" />
+		<input type='hidden' name='mprofile' id="mprofile" value='no' >
+		<div id="div-img-ik"></div>
+		
+		<br />
+		<!-- ======db연동으로 수정요망======= -->
 		<div class="form-check-inline form-check">
 			관심분야 : &nbsp;
 			<input type="checkbox" class="form-check-input" value="JAVA" name="favor" id="hobby1"  />
@@ -495,7 +505,7 @@ function validate() {
 			<input type="checkbox" class="form-check-input" value="PYTHON" name="favor" id="hobby4" />
 			<label for="hobby4" class="form-check-input">PYTHON</label>
 		</div>
-		 <!-- ======db연동으로 수정요망======= -->
+		<!-- ======db연동으로 수정요망======= -->
 		
 
 		

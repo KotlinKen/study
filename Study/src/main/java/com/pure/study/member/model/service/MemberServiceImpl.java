@@ -1,5 +1,7 @@
 package com.pure.study.member.model.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,6 @@ public class MemberServiceImpl implements MemberService {
 	public int memberEnrollEnd(Member member) {
 		System.out.println("?");
 		return memberDAO.memberEnrollEnd(member);
-	}
-
-	@Override
-	public Member selectOne(String userId) {
-		System.out.println("userId="+userId);
-		return memberDAO.selectOne(userId);
 	}
 
 	@Override
@@ -49,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Certification selectCheckJoinCode(String email) {
+	public Map<String, String> selectCheckJoinCode(String email) {
 		return memberDAO.selectCheckJoinCode(email);
 	}
 

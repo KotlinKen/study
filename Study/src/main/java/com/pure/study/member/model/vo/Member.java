@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Member {
 	private int mno;
-	private String id;
-	private String name;
+	private String mid;
+	private String mname;
 	private String pwd;
 	private String phone;
 	private String addr;
-	private String profile;
+	private String mprofile;
 	private String email;
 	private String birth;
 	private String gender;
@@ -19,15 +19,16 @@ public class Member {
 	private Date regDate;
 	private Date qDate;
 	public Member() {}
-	public Member(int mno, String id, String name, String pwd, String phone, String addr, String profile, String email,
-			String birth, String gender, String favor, int exp, int point, Date regDate, Date qDate) {
+	public Member(int mno, String mid, String mname, String pwd, String phone, String addr, String mprofile,
+			String email, String birth, String gender, String favor, int exp, int point, Date regDate, Date qDate) {
+		super();
 		this.mno = mno;
-		this.id = id;
-		this.name = name;
+		this.mid = mid;
+		this.mname = mname;
 		this.pwd = pwd;
 		this.phone = phone;
 		this.addr = addr;
-		this.profile = profile;
+		this.mprofile = mprofile;
 		this.email = email;
 		this.birth = birth;
 		this.gender = gender;
@@ -43,17 +44,17 @@ public class Member {
 	public void setMno(int mno) {
 		this.mno = mno;
 	}
-	public String getId() {
-		return id;
+	public String getMid() {
+		return mid;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setMid(String mid) {
+		this.mid = mid;
 	}
-	public String getName() {
-		return name;
+	public String getMname() {
+		return mname;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setMname(String mname) {
+		this.mname = mname;
 	}
 	public String getPwd() {
 		return pwd;
@@ -73,11 +74,11 @@ public class Member {
 	public void setAddr(String addr) {
 		this.addr = addr;
 	}
-	public String getProfile() {
-		return profile;
+	public String getMprofile() {
+		return mprofile;
 	}
-	public void setProfile(String profile) {
-		this.profile = profile;
+	public void setMprofile(String mprofile) {
+		this.mprofile = mprofile;
 	}
 	public String getEmail() {
 		return email;
@@ -129,11 +130,12 @@ public class Member {
 	}
 	@Override
 	public String toString() {
-		return "Member [mno=" + mno + ", id=" + id + ", name=" + name + ", pwd=" + pwd + ", phone=" + phone + ", addr="
-				+ addr + ", profile=" + profile + ", email=" + email + ", birth=" + birth + ", gender=" + gender
-				+ ", favor=" + favor + ", exp=" + exp + ", point=" + point + ", regDate=" + regDate + ", qDate=" + qDate
-				+ "]";
+		return "Member [mno=" + mno + ", mid=" + mid + ", mname=" + mname + ", pwd=" + pwd + ", phone=" + phone
+				+ ", addr=" + addr + ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender="
+				+ gender + ", favor=" + favor + ", exp=" + exp + ", point=" + point + ", regDate=" + regDate
+				+ ", qDate=" + qDate + "]";
 	}
+	
 	
 	
 }
