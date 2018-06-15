@@ -3,5 +3,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <script>
-location.href="${pageContext.request.contextPath}${loc}";l
+	location.href="${pageContext.request.contextPath}${loc}";
 </script>

@@ -10,8 +10,8 @@
 	<bean id="dataSource-origin" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	   <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 	   <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-	   <property name="username" value="spring"/>
-	   <property name="password" value="spring"/>
+	   <property name="username" value="study"/>
+	   <property name="password" value="study"/>
 	</bean>
 	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
         <constructor-arg ref="dataSource-origin" />
@@ -40,6 +40,5 @@
 	<!-- 여러 dao에서 공유하므로 메모리관리에 있어 최적화된 테크닉. -->
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 	   <constructor-arg index="0" ref="sqlSessionFactoryBean"/>
-	</bean>
-		
+	</bean>		
 </beans>
