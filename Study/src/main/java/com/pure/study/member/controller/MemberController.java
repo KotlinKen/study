@@ -55,9 +55,23 @@ public class MemberController {
 	@RequestMapping("/member/memberAgreement.do")
 	public String memberAgreement() {
 		if(logger.isDebugEnabled()) {
+			logger.debug("회원동의홈페이지");
+		}
+		
+		return "member/memberAgreement";
+	}
+	/*정보 입력페이지 이동 시작*/
+	@RequestMapping("/member/memberEnroll.do")
+	public ModelAndView memberEnroll() {
+		if(logger.isDebugEnabled()) {
 			logger.debug("회원등록홈페이지");
 		}
-		return "member/memberAgreement";
+		ModelAndView mav = new ModelAndView();
+		List<Map<String,String>> list = memberService.selectCategory();
+		System.out.println(list);
+		
+		mav.addObject("list",list);
+		return mav;
 	}
 	
 	/*mailSending 코드 전송*/
@@ -117,14 +131,7 @@ public class MemberController {
 	
 		
 
-	/*정보 입력페이지 이동 시작*/
-	@RequestMapping("/member/memberEnroll.do")
-	public String memberEnroll() {
-		if(logger.isDebugEnabled()) {
-			logger.debug("회원등록홈페이지");
-		}
-		return "member/memberEnroll";
-	}
+
 	
 	/*주소입력*/
 	@RequestMapping("/member/jusoPopup.do")

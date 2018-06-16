@@ -1,5 +1,6 @@
 package com.pure.study.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.pure.study.member.model.vo.Certification;
@@ -22,6 +23,8 @@ public interface MemberService {
 	Map<String, String> selectCheckJoinCode(String email);
 
 	int deleteCertification(String email);
+
+	List<Map<String, String>> selectCategory();
 	
 	
 

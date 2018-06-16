@@ -3,6 +3,7 @@ package com.pure.study.member.model.dao;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -59,6 +60,11 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public int deleteCertification(String email) {
 		return sqlSession.delete("member.deleteCertification",email);
+	}
+
+	@Override
+	public List<Map<String, String>> selectCategory() {
+		return sqlSession.selectList("member.selectCategory");
 	}
 
 }

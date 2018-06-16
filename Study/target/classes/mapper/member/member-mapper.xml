@@ -23,4 +23,7 @@
 	<delete id="deleteCertification">
 		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
 	</delete>
+	<select id="selectCategory" resultType="map" >
+		select kname from kindk where klevel = 1
+	</select>
 </mapper>

@@ -601,17 +601,12 @@ function validate() {
 		<div id="div-img-ik"></div>
 		
 		<br />
-		<!-- ======db연동으로 수정요망======= -->
 		<div class="form-check-inline form-check">
-			관심분야 : &nbsp;
-			<input type="checkbox" class="form-check-input" value="JAVA" name="favor" id="hobby1"  />
-			<label for="hobby1" class="form-check-input">JAVA</label>
-			<input type="checkbox" class="form-check-input" value="C++" name="favor" id="hobby2" />
-			<label for="hobby2" class="form-check-input">C++</label>
-			<input type="checkbox" class="form-check-input" value="JAVASCRIPT" name="favor" id="hobby3" />
-			<label for="hobby3" class="form-check-input">JAVASCRIPT</label>
-			<input type="checkbox" class="form-check-input" value="PYTHON" name="favor" id="hobby4" />
-			<label for="hobby4" class="form-check-input">PYTHON</label>
+		관심분야 : &nbsp;
+		<c:forEach var = "v"  items="${list }" >
+			<input type="checkbox" class="form-check-input" value="${v.KNAME }" name="favor" id="${v.KNAME }"  />
+			<label for="${v.KNAME }" class="form-check-input">${v.KNAME }</label>
+		</c:forEach>
 		</div>
 		<!-- ======db연동으로 수정요망======= -->
 		<br />
