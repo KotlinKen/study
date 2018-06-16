@@ -2,7 +2,7 @@
 
 1234
 
-<form action="${rootPath}/adv/insertAdversting"  action="post" enctype="multipart/form-data" >
+<form action="${rootPath}/adv/insertAdversting.do"  action="post" enctype="multipart/form-data" >
 	<input type="text" name="title" />
 	<textarea name="content" id="" cols="30" rows="10"></textarea>
 	<input type="file" name="img1" />

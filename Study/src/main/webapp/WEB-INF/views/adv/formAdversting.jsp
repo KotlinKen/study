@@ -1,6 +1,6 @@
 <jsp:include page ="/WEB-INF/views/common/header.jsp"><jsp:param value="" name="pageTitle"/></jsp:include>
 
-<form action="${rootPath}/adv/insertAdversting"  name="boardFrm" method="post" enctype="multipart/form-data">
+<form action="${rootPath}/adv/insertAdversting.do"  name="boardFrm" method="post" enctype="multipart/form-data">
 	<input type="text" name="title" />
 	<input type="text" name="title" />
 	<textarea name="content" id="content" cols="30" rows="10"></textarea>

@@ -38,7 +38,7 @@ public class AdverstingController {
 		
 	}
 	
-	@RequestMapping("/adv/insertAdversting")
+	@RequestMapping("/adv/insertAdversting.do")
 	public ModelAndView insert (Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		logger.info("test 들어왔어"+ adversting);
