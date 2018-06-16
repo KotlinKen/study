@@ -75,4 +75,22 @@ public class StudyDAOImpl implements StudyDAO {
 		return sqlSession.update("study.updateStudyImg", study);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectStudyForSearch(Map<String, Object> terms) {
+		RowBounds rowBounds = new RowBounds(((int)terms.get("cPage")-1)*(int)terms.get("numPerPage"), (int)terms.get("numPerPage"));
+		return sqlSession.selectList("study.selectStudyForSearch",terms,rowBounds);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectStudyAdd(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
+		return sqlSession.selectList("study.selectStudyAdd",null,rowBounds);
+	}
+
+	@Override
+	public Map<String, Object> selectStudyOne(int sno) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("study.selectStudyOne", sno);
+	}
+
 }

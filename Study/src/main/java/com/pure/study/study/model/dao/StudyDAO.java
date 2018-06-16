@@ -27,4 +27,10 @@ public interface StudyDAO {
 
 	int updateStudyImg(Study study);
 
+	List<Map<String, Object>> selectStudyForSearch(Map<String, Object> terms);
+
+	List<Map<String, Object>> selectStudyAdd(int cPage, int numPerPage);
+
+	Map<String, Object> selectStudyOne(int sno);
+
 }

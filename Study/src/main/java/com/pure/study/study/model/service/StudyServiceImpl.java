@@ -71,4 +71,22 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.updateStudyImg(study);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectStudyForSearch(Map<String, Object> terms) {
+		// TODO Auto-generated method stub
+		return studyDAO.selectStudyForSearch(terms);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectStudyAdd(int cPage, int numPerPage) {
+		// TODO Auto-generated method stub
+		return studyDAO.selectStudyAdd(cPage,numPerPage);
+	}
+
+	@Override
+	public Map<String, Object> selectStudyOne(int sno) {
+		// TODO Auto-generated method stub
+		return studyDAO.selectStudyOne(sno);
+	}
+
 }
