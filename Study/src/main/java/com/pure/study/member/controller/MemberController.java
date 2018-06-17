@@ -199,42 +199,48 @@ public class MemberController {
 		email = emailArr[0]+"@"+emailArr[1];
 		logger.debug(email);
 		member.setEmail(email);
-		
-		/*생년월일 가져오기*/
-		String birth= member.getBirth();
-		String[] birthArr = birth.split(",");
-		birth = birthArr[0]+"/"+birthArr[1]+"/"+birthArr[2];
-		member.setBirth(birth);
-		
-		/*주소값 정리 (임시 addr1/addr2필요)*/
-		String addr= member.getAddr();
-		String[] addrArr = addr.split(",");
-		addr = addrArr[0]+" "+addrArr[2]+" "+addrArr[3];
-		member.setAddr(addr);
-		
-		
-		logger.debug(""+member);
-		String rawPassword = member.getPwd();
-		/******* password 암호화 시작 *******/
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		member.setPwd(encodedPassword);
-		/******* password 암호화 끝 *******/
-		
-		/* favor null일 경우 처리 */
-		if(member.getFavor()==null) {
-			member.setFavor("no");
-		}
-		
-		int result = memberService.memberEnrollEnd(member);
-		String email2 = member.getEmail();
-		memberService.deleteCertification(email2);
-
-		//2.처리결과에 따라 view단 분기처리
+		Map<String, String> cer = memberService.selectCheckJoinCode(email);
 		String loc = "/"; 
 		String msg = "";
-		if(result>0) msg="회원가입성공!";
-		else msg="회원가입성공!";
-		
+		if (cer == null) {
+			msg = "회원가입을 실패했습니다.";
+		}else {
+
+			/*생년월일 가져오기*/
+			String birth= member.getBirth();
+			String[] birthArr = birth.split(",");
+			birth = birthArr[0]+"/"+birthArr[1]+"/"+birthArr[2];
+			member.setBirth(birth);
+			
+			/*주소값 정리 (임시 addr1/addr2필요)*/
+			String addr= member.getAddr();
+			String[] addrArr = addr.split(",");
+			addr = addrArr[0]+" "+addrArr[2]+" "+addrArr[3];
+			member.setAddr(addr);
+			
+			
+			logger.debug(""+member);
+			String rawPassword = member.getPwd();
+			/******* password 암호화 시작 *******/
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			member.setPwd(encodedPassword);
+			/******* password 암호화 끝 *******/
+			
+			/* favor null일 경우 처리 */
+			if(member.getFavor()==null) {
+				member.setFavor("no");
+			}
+			
+			int result = memberService.memberEnrollEnd(member);
+			
+			memberService.deleteCertification(email);
+
+			//2.처리결과에 따라 view단 분기처리
+			
+			if(result>0) msg="회원가입성공!";
+			else msg="회원가입성공!";
+				
+		}
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
 		

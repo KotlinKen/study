@@ -382,7 +382,7 @@ function validate() {
 			type: "POST",
 			dataType : "json",
 			success : function(date){
-				console.log("성공"); 
+				alert("인증번호 전송"); 
 				
 			},
 			error:function(jqxhr,textStatus,errorThrown){
