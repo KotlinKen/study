@@ -19,7 +19,7 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"> 
 		<jsp:param value="내 정보 보기" name="pageTitle"/>
 	</jsp:include>
-	
+			<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp"/>
 			<form id="update-form" action="${pageContext.request.contextPath }/member/updateUser.do" method="post" enctype="multipart/form-data">
 				<c:if test="${memberLoggedIn != null }">
 						<input type="hidden" name="mno" id="mno" value="${memberLoggedIn.mno }" />

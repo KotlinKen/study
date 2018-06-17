@@ -57,4 +57,15 @@
 	<update id="updateEmail">
 		update tbl_member set email=#{email} where mid=#{mid}
 	</update>
+	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
+		select * from study s join tbl_apply a on s.sno=a.sno 
+									join tbl_kind k on k.kno=s.kno
+									join tbl_town t on t.tno=s.tno
+									join tbl_depart d on d.dno=s.dno
+        where s.mno=#{mno}
+	</select>
+	<select id="selectApplyListCnt" parameterType="_int" resultType="_int">
+		select count(*) from tbl_apply where mno=#{mno}
+	</select>
+	<resultMap type="map" id="applyList"></resultMap>
 </mapper>

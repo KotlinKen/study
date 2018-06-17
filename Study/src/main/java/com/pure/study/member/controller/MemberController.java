@@ -592,9 +592,79 @@ public class MemberController {
 			return "common/msg";
 		}
 	}
-	
-	
 	/*개인 정보 수정 끝**********************************/
+	
+	/**************************내 스터디 목록 시작*/
+	@RequestMapping("/member/memberMyStudy.do")
+	public ModelAndView memberMyStudy(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
+			, @ModelAttribute("memberLoggedIn") Member m) {
+		ModelAndView mav = new ModelAndView();
+		
+		int numPerPage = 10;
+		
+		//List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(), numPerPage, cPage);
+		
+		//int count = memberService.selectMyStudyListCnt(m.getMno());
+		
+		//mav.addObject("myStudyList", list);
+		//mav.addObject("count", count);
+		mav.addObject("count", 0);
+		mav.addObject("numPerPage", numPerPage);
+		mav.setViewName("member/memberMyStudy");
+		
+		return mav;
+	}
+	
+	/*내 스터디 목록 끝*******************************/
+	
+	/**************************스터디 신청 목록 시작*/
+	@RequestMapping("/member/memberApplyList.do")
+	public ModelAndView memberApply(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
+									, @ModelAttribute("memberLoggedIn") Member m) {
+		ModelAndView mav = new ModelAndView();
+		
+		int numPerPage = 10;
+		
+		List<Map<String,String>> list = memberService.selectApplyList(m.getMno(), numPerPage, cPage);
+		
+		int count = memberService.selectApplyListCnt(m.getMno());
+		
+		mav.addObject("applyList", list);
+		mav.addObject("count", count);
+		mav.addObject("numPerPage", numPerPage);
+		mav.setViewName("member/memberApply");
+		
+		return mav;
+	}
+	
+	/*스터디 신청 목록 끝*******************************/
+	
+	/**************************스터디 찜 목록 시작*/
+	@RequestMapping("/member/memberWish.do")
+	public ModelAndView memberWish(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
+			, @ModelAttribute("memberLoggedIn") Member m) {
+		ModelAndView mav = new ModelAndView();
+		
+		int numPerPage = 10;
+		
+		//List<Map<String,String>> list = memberService.selectWishList(m.getMno(), numPerPage, cPage);
+		
+		//int count = memberService.selectWishListCnt(m.getMno());
+		
+		//mav.addObject("wishList", list);
+		//mav.addObject("count", count);
+		mav.addObject("count", 0);
+		mav.addObject("numPerPage", numPerPage);
+		mav.setViewName("member/memberWish");
+		
+		return mav;
+	}
+	
+	/*스터디 찜 목록 끝*******************************/
+	
+	
+	
+	
 }
 
 

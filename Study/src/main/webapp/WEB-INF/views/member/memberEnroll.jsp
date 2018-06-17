@@ -44,32 +44,32 @@
 			   class="form-control" 
 			   name="phone" 
 			   id="phone"
-			   placeholder="연락처" />
+			   placeholder="연락처" required/>
 		<br />
 		<input type="text" 
 			   class="form-control" 
 			   name="addr" 
 			   id="addr"
-			   placeholder="주소" />
+			   placeholder="주소" required/>
 		<br />
 		
 		<input type="email" 
 			   class="form-control" 
 			   name="email" 
 			   id="email"
-			   placeholder="이메일"/>
+			   placeholder="이메일" required/>
 		<br />
 		생년월일 : 
 		<input type="date" 
 				class="form-control"  
 				name="birth" 
-				id="birth" />
+				id="birth" required/>
 		<hr />
 		<input type="file" 
 			   class="form-control" 
 			   name="mprofile" 
 			   id="mprofile"
-			   placeholder="프로필"/>
+			   placeholder="프로필" required/>
 		<select name="gender" 
 				id="gender"
 				class="form-control" required>
@@ -91,7 +91,7 @@
 		<br />
 		
 		자기 소개 : 
-		<textarea class="form-control" name="cover" cols="30" rows="10" placeholder="자기소개 및 특이 사항"></textarea>
+		<textarea class="form-control" name="cover" cols="30" rows="10" placeholder="자기소개 및 특이 사항" required></textarea>
 		<br/>
 		<input type="submit" value="가입" 
 			   class="btn btn-outline-success" /> 

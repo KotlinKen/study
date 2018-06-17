@@ -1,5 +1,8 @@
 package com.pure.study.member.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,36 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateEmail(Member m) {
 		return memberDAO.updateEmail(m);
+	}
+
+	@Override
+	public List<Map<String, String>> selectApplyList(int mno, int numPerPage, int cPage) {
+		return memberDAO.selectApplyList(mno, numPerPage, cPage);
+	}
+
+	@Override
+	public int selectApplyListCnt(int mno) {
+		return memberDAO.selectApplyListCnt(mno);
+	}
+
+	@Override
+	public List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage) {
+		return memberDAO.selectWishList(mno, numPerPage, cPage);
+	}
+
+	@Override
+	public int selectWishListCnt(int mno) {
+		return memberDAO.selectWishListCnt(mno);
+	}
+
+	@Override
+	public int selectMyStudyListCnt(int mno) {
+		return memberDAO.selectMyStudyListCnt(mno);
+	}
+
+	@Override
+	public List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage) {
+		return memberDAO.selectMyStudyList(mno, numPerPage, cPage);
 	}
 	
 	
