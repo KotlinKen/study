@@ -93,4 +93,16 @@ public class StudyDAOImpl implements StudyDAO {
 		return sqlSession.selectOne("study.selectStudyOne", sno);
 	}
 
+	@Override
+	public int insertApplyStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("study.insertApplyStudy", map);
+	}
+
+	@Override
+	public int insertWishStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("study.insertWishStudy", map);
+	}
+
 }

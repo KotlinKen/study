@@ -4,6 +4,7 @@
  <select id="studyList" resultMap="mapForStudy">
  	select  s.sno,s.mno,s.kno,s.tno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,to_char(s.regdate,'yyyy-mm-dd') regdate,m.profile,l.local1 lname,t.name tname, sb.name subname, k.name kname, d.name dname 
  	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+	where s.type='study'
 	order by s.regdate desc
  </select>
  <resultMap type="map" id="mapForStudy">
@@ -74,7 +75,7 @@
   <select id="selectStudyAdd" resultMap="mapList">
   	select  s.sno,s.mno,s.kno,s.tno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,to_char(s.regdate,'yyyy-mm-dd') regdate,m.profile,l.local1 lname,t.name tname, sb.name subname, k.name kname, d.name dname 
   	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
-	order by s.regdate desc
+	where s.type='study' order by s.regdate desc
   </select>
   
   <select id="selectStudyOne" resultMap="mapList">
@@ -84,8 +85,16 @@
   		m.name mname,m.cover,m.exp,m.point,m.npoint,(select count(*) cnt from apply where sno=#{sno}) cnt
   	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno 
   		  join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
-  	where s.sno=#{sno}	  
+  	where s.type='study' and s.sno=#{sno}	  
 	order by s.regdate desc
   </select>
+  
+  <insert id="insertApplyStudy">
+  	insert into apply values (SEQUENCE_APPLY.NEXTVAL,#{mno},#{sno},sysdate)
+  </insert>
+  
+  <insert id="insertWishStudy">
+  	insert into wish values(SEQUENCE_WISH.NEXTVAL,#{mno},#{sno},sysdate)
+  </insert>
   
 </mapper>

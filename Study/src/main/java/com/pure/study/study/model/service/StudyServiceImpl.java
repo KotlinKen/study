@@ -89,4 +89,16 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.selectStudyOne(sno);
 	}
 
+	@Override
+	public int insertApplyStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return studyDAO.insertApplyStudy(map);
+	}
+
+	@Override
+	public int insertWishStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return studyDAO.insertWishStudy(map);
+	}
+
 }

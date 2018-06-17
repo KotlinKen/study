@@ -88,13 +88,13 @@ public class StudyController {
 		}
 		study.setFreq(dayname);
 		String imgs="";
-		
+		i=0;
 		
 		logger.debug("upFiles.length="+upFiles.length);
 
 		if(study.getPrice()==null) study.setPrice(0+"원");
 		System.out.println("study="+study);
-		study.setMno(2); //임시로
+		study.setMno(9); //임시로
 		//스터디 생성하기 
 		int result = studyService.insertStudy(study);
 		
@@ -105,7 +105,7 @@ public class StudyController {
 				//1. 파일 업로드 처리 
 				String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/studyImg");
 				//List<Attachment> attachList = new ArrayList<>();
-				
+				System.out.println("save"+saveDirectory);
 				/********* MultipartFile을 이용한 파일 업로드 처리 로직 시작 ********/
 				for(MultipartFile f : upFiles) {
 					
@@ -213,15 +213,33 @@ public class StudyController {
 		Map<String,Object> study = studyService.selectStudyOne(sno);
 		System.out.println("study="+study);
 		
-		//
-		
-		
+		mav.addObject("study", study);
 		mav.setViewName("study/studyView");
 		return mav;
 	}
 	
 	
+	@RequestMapping("/study/applyStudy.do")
+	@ResponseBody
+	public int insertApplyStudy(@RequestParam(value="sno") int sno,@RequestParam(value="mno") int mno) {
+		Map<String,Integer> map = new HashMap<>();
+		map.put("sno", sno);
+		map.put("mno", mno);
+		int result = studyService.insertApplyStudy(map);
+		return result;
+	}
 	
+	@RequestMapping("/study/wishStudy.do")
+	@ResponseBody
+	public int insertWishStudy(@RequestParam(value="sno") int sno,@RequestParam(value="mno") int mno) {
+		Map<String,Integer> map = new HashMap<>();
+		map.put("sno", sno);
+		map.put("mno", mno);
+		
+		int result = studyService.insertWishStudy(map);
+		
+		return result;
+	}
 	
 	
 	/* ---------------------------------------study form에 필요한 select ------------------------------------------------*/

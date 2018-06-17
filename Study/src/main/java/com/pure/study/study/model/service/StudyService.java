@@ -33,4 +33,8 @@ public interface StudyService {
 
 	Map<String, Object> selectStudyOne(int sno);
 
+	int insertApplyStudy(Map<String, Integer> map);
+
+	int insertWishStudy(Map<String, Integer> map);
+
 }
