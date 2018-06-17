@@ -18,7 +18,7 @@ public class Member {
 	private int point;
 	private Date regdate;
 	private Date qdate;
-	private String etc1;
+	private String cover;
 	private String etc2;
 	public Member() {
 		super();
@@ -26,7 +26,7 @@ public class Member {
 	}
 	public Member(int mno, String mid, String mname, String pwd, String phone, String addr, String mprofile,
 			String email, Date birth, String gender, String[] favor, int exp, int point, Date regdate, Date qdate,
-			String etc1, String etc2) {
+			String cover, String etc2) {
 		super();
 		this.mno = mno;
 		this.mid = mid;
@@ -43,7 +43,7 @@ public class Member {
 		this.point = point;
 		this.regdate = regdate;
 		this.qdate = qdate;
-		this.etc1 = etc1;
+		this.cover = cover;
 		this.etc2 = etc2;
 	}
 	public int getMno() {
@@ -136,11 +136,11 @@ public class Member {
 	public void setQdate(Date qdate) {
 		this.qdate = qdate;
 	}
-	public String getEtc1() {
-		return etc1;
+	public String getCover() {
+		return cover;
 	}
-	public void setEtc1(String etc1) {
-		this.etc1 = etc1;
+	public void setCover(String cover) {
+		this.cover = cover;
 	}
 	public String getEtc2() {
 		return etc2;
@@ -153,7 +153,7 @@ public class Member {
 		return "Member [mno=" + mno + ", mid=" + mid + ", mname=" + mname + ", pwd=" + pwd + ", phone=" + phone
 				+ ", addr=" + addr + ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender="
 				+ gender + ", favor=" + favor + ", exp=" + exp + ", point=" + point + ", regdate=" + regdate
-				+ ", qdate=" + qdate + ", etc1=" + etc1 + ", etc2=" + etc2 + "]";
+				+ ", qdate=" + qdate + ", cover=" + cover + ", etc2=" + etc2 + "]";
 	}
 	
 	

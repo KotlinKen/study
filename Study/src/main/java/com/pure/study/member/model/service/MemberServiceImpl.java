@@ -28,13 +28,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int updateEmail(Member changeM) {
-		return memberDAO.updateEmail(changeM);
+	public int updatePwd(Member changeM) {
+		return memberDAO.updatePwd(changeM);
 	}
 
 	@Override
 	public int selectCntMember(Member m) {
 		return memberDAO.selectCntMember(m);
+	}
+
+	@Override
+	public int updateMember(Member member) {
+		return memberDAO.updateMember(member);
+	}
+
+	@Override
+	public int dropMember(String mid) {
+		return memberDAO.dropMember(mid);
+	}
+
+	@Override
+	public int updateEmail(Member m) {
+		return memberDAO.updateEmail(m);
 	}
 	
 	

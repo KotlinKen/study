@@ -24,7 +24,7 @@
 			    		onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원 가입</button>
 			</c:if>
 			<c:if test="${memberLoggedIn != null }">
-				<p><a href="">${memberLoggedIn.mname }</a>님</p>
+				<p><a href="${pageContext.request.contextPath }/member/memberView.do">${memberLoggedIn.mname }</a>님</p>
 				<button type="button" 
 		    		class="btn btn-outline-success"
 		    		onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
@@ -43,7 +43,7 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <form action="${pageContext.request.contextPath }/member/memberLogin.do" >
+		      <form action="${pageContext.request.contextPath }/member/memberLogin.do" method="post" >
 		      <div class="modal-body">
 		      	<input type="text" class="form-control" name="userId" id="userId" placeholder="아이디" required/>
 		      	<br />

@@ -10,9 +10,15 @@ public interface MemberDAO {
 
 	Member selectOneMember(Member fm);
 
-	int updateEmail(Member changeM);
-
 	int selectCntMember(Member m);
+
+	int updatePwd(Member changeM);
+
+	int updateMember(Member member);
+
+	int dropMember(String mid);
+
+	int updateEmail(Member m);
 
 
 }

@@ -10,8 +10,14 @@ public interface MemberService {
 
 	Member selectOneMember(Member fm);
 
-	int updateEmail(Member changeM);
+	int updatePwd(Member changeM);
 
 	int selectCntMember(Member equalM);
+
+	int updateMember(Member member);
+	
+	int dropMember(String mid);
+
+	int updateEmail(Member m);
 
 }

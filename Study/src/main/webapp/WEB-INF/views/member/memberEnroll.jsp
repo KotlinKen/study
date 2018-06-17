@@ -89,6 +89,10 @@
 			</c:forEach>
 		</div>
 		<br />
+		
+		자기 소개 : 
+		<textarea class="form-control" name="cover" cols="30" rows="10" placeholder="자기소개 및 특이 사항"></textarea>
+		<br/>
 		<input type="submit" value="가입" 
 			   class="btn btn-outline-success" /> 
 	</form>

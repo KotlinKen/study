@@ -27,13 +27,29 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int updateEmail(Member changeM) {
-		return sqlSession.update("member.updateEmail",changeM);
+	public int updatePwd(Member changeM) {
+		return sqlSession.update("member.updatePwd",changeM);
 	}
 
 	@Override
 	public int selectCntMember(Member m) {
 		return sqlSession.selectOne("member.selectCntMember", m);
+	}
+
+	@Override
+	public int updateMember(Member member) {
+		return sqlSession.update("member.updateMember", member);
+	}
+
+	@Override
+	public int dropMember(String mid) {
+		return sqlSession.update("member.dropMember", mid);
+	}
+
+	@Override
+	public int updateEmail(Member m) {
+		return sqlSession.update("member.updateEmail", m);
+
 	}
 	
 	

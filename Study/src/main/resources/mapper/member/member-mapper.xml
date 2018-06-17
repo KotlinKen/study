@@ -16,6 +16,7 @@
 										default,
 										default,
 										default,
+										null,
 										default
 										)
 	</insert>
@@ -28,11 +29,32 @@
 	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
 		select * from tbl_member where mname=#{mname} and email=#{email}
 	</select>
-	<update id="updateEmail">
+	<update id="updatePwd">
 		update tbl_member set pwd=#{pwd} where mid=#{mid}
 	</update>
 	<select id="selectCntMember" parameterType="member" resultType="_int">
 		select count(*) from tbl_member where mid=#{mid} and email=#{email}
 	</select>
-	
+	<update id="updateMember" >
+		update tbl_member set 
+						mid=#{mid}, 
+						mname=#{mname},
+						phone=#{phone},
+						addr=#{addr}, 
+						<if test="mprofile != null">
+							mprofile=#{mprofile}, 
+						</if>
+						email=#{email},
+						birth=#{birth}, 
+						gender=#{gender}, 
+						favor=#{favor, typeHandler=strArrTypeHandler}, 
+						cover=#{cover}
+						where mno=#{mno}
+	</update>
+	<update id="dropMember">
+		update tbl_member set qdate=sysdate where mid=#{mid}
+	</update>
+	<update id="updateEmail">
+		update tbl_member set email=#{email} where mid=#{mid}
+	</update>
 </mapper>

@@ -18,18 +18,20 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"> 
 		<jsp:param value="비밀번호 변경" name="pageTitle"/>
 	</jsp:include>
-	<form action="${pageContext.request.contextPath }/member/memberUpdatePwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
-		<input type="password" name="pwd" id="pwd" placeholder="비밀번호" />
-		<br />
-		<input type="password" id="pwd-check" placeholder="비밀번호 확인" />
-		<span id="check-no" >비밀번호가 불일치</span>
-		<span id="check-yes" >비밀번호가 일치</span>
-		<input type="hidden" name="key" value="${key }" />
-		<input type="hidden" name="mid" value="${mid }" />
-		<input type="hidden" id="pwd-ok" value="1" />
-		<br />
-		<button type="submit">변경</button>
-	</form>
+	<c:if test="${memberLoggedIn==null }">
+		<form action="${pageContext.request.contextPath }/member/memberUpdatePwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
+			<input type="password" name="pwd" id="pwd" placeholder="비밀번호" />
+			<br />
+			<input type="password" id="pwd-check" placeholder="비밀번호 확인" />
+			<span id="check-no" >비밀번호가 불일치</span>
+			<span id="check-yes" >비밀번호가 일치</span>
+			<input type="hidden" name="key" value="${key }" />
+			<input type="hidden" name="mid" value="${mid }" />
+			<input type="hidden" id="pwd-ok" value="1" />
+			<br />
+			<button type="submit">변경</button>
+		</form>
+	</c:if>
 	<script>
 	$(function(){
 		$("#pwd-check").on("keyup",function(){
