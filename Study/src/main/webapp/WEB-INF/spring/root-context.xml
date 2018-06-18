@@ -16,6 +16,7 @@
 		<property name="password" value="groupt"/>
 	</bean>
 	
+	
 	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
 	    <constructor-arg ref="dataSource-origin" />
 	    <property name="logFormatter">
