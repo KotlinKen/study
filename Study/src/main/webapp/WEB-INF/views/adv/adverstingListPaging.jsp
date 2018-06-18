@@ -57,9 +57,9 @@
 <td>    ${list.TITLE}</td>
 <td>    ${list.CONTENT}</td>
 <td>    ${list.POSITION}</td>
+
 <td>    ${fn:substring(list.STARTAD, 0, 10)}</td>
 <td>    ${fn:substring(list.ENDAD, 0, 10)}</td>
-
 
 
 </tr>
