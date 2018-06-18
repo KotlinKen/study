@@ -212,13 +212,6 @@ public class MemberController {
 			msg = "회원가입을 실패했습니다.";
 		}else {
 			
-			/*주소값 정리 (임시 addr1/addr2필요)*/
-			String addr= member.getAddr();
-			String[] addrArr = addr.split(",");
-			addr = addrArr[0]+", "+addrArr[1]+", "+addrArr[2]+", "+addrArr[3];
-			member.setAddr(addr);
-			
-			
 			logger.debug(""+member);
 			String rawPassword = member.getPwd();
 			/******* password 암호화 시작 *******/
@@ -618,7 +611,9 @@ public class MemberController {
 	@RequestMapping(value="/member/updateUser.do", method= RequestMethod.POST)
 	public String updateUser(@RequestParam("mno") int mno, @RequestParam("mid") String mid
 							, @RequestParam("mname") String mname, @RequestParam("phone") String phone
-							, @RequestParam("addr") String addr, @RequestParam("email")String email
+							, @RequestParam("addr") String post,@RequestParam("addr") String addr1
+							,@RequestParam("addr") String addr2,@RequestParam("addr") String addrDetail
+							,@RequestParam("email")String email
 							, @RequestParam("birth") Date birth, @RequestParam("gender") String gender
 							, @RequestParam("favor") String[] favor, @RequestParam("cover") String cover
 							, @RequestParam(value="mprofile", required=false) MultipartFile[] mprofile
@@ -658,7 +653,10 @@ public class MemberController {
 		member.setMid(mid);
 		member.setMname(mname);
 		member.setPhone(phone);
-		member.setAddr(addr);
+		member.setPost(post);
+		member.setAddr1(addr1);
+		member.setAddr2(addr2);
+		member.setAddrDetail(addrDetail);
 		member.setEmail(email);
 		member.setBirth(birth);
 		member.setGender(gender);

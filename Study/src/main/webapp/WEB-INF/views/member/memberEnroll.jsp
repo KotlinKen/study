@@ -580,16 +580,16 @@ function validate() {
              <input type="button" class="btn-primary box" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
          </div>
          <div class="input">
-             <input type="text" name="addr" id="sample4_postcode" placeholder="우편번호" required>
+             <input type="text" name="post" id="sample4_postcode" placeholder="우편번호" required>
          </div>
          <div class="input">
-             <input type="text" name="addr" id="sample4_jibunAddress" placeholder="지번주소" required>
+             <input type="text" name="addr1" id="sample4_jibunAddress" placeholder="지번주소" required>
          </div>
          <div class="input">
-             <input type="text" name="addr" id="sample4_roadAddress" placeholder="도로명주소" required>
+             <input type="text" name="addr2" id="sample4_roadAddress" placeholder="도로명주소" required>
          </div>
          <div class="input">
-             <input type="text" name="addr" id="sample4_jibunAddress" placeholder="상세정보" required>
+             <input type="text" name="addrDetail" id="sample4_jibunAddress" placeholder="상세정보" required>
          </div>
                     
 		<input type="radio" name="gender" value="M" id="male" checked/><label for="male">male</label>
