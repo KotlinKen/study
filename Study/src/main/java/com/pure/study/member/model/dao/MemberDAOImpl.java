@@ -135,6 +135,11 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.selectMyStudyList", mno);
 		//mapper 안 만들었음.
 	}
+
+	@Override
+	public List<Map<String, String>> selectKind() {
+		return sqlSession.selectList("member.selectKind");
+	}
 	
 	
 

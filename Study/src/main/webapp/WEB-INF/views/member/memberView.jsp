@@ -43,14 +43,20 @@
 						<br />
 						
 						주소 : 
-						<input type="text" name="addr" id="addr" value="${memberLoggedIn.addr }" />
+						<input type="text" name="addr1" id="addr1" value="${memberLoggedIn.addr1 }" />
+						<br />
+						<input type="text" name="addr2" id="addr2" value="${memberLoggedIn.addr2 }" />
+						<br />
+						<input type="text" name="addrDetail" id="addrDetail" value="${memberLoggedIn.addrDetail }" />
+						<br />
+						<input type="text" name="post" id="post" value="${memberLoggedIn.post }" />
 						<br />
 						
 						사진 : 
 						<img src="${pageContext.request.contextPath }/resources/upload/member/${memberLoggedIn.mprofile}" alt="${memberLoggedIn.mprofile}" style="width:100px;" /> 
 						<br />
 						<input type="file" name="post-file" id="post-file" />
-						<input type="hidden" name="pre-file" id="pre-file" value="${memberLoggedIn.mprofile }" />
+						<input type="hidden" name="pre_mprofile" id="pre-file" value="${memberLoggedIn.mprofile }" />
 						<br />
 						
 						이메일 변경 : 
@@ -58,7 +64,7 @@
 								class="btn btn-outline-success"
 					    		data-toggle="modal" 
 					    		data-target="#emailUpdate">이메일 변경</button>
-						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" /> 
+						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" disabled /> 
 						<br />
 						
 						생년월일 : 
@@ -74,15 +80,15 @@
 						
 						관심사 : 
 						<c:forEach var="f" items="${favor }" varStatus="vs">
-							<input type="checkbox" name="favor" id="favor${vs.index }" value="${f.DNAME}" ${ f.DNAME eq memberLoggedIn.favor[vs.index] ?'checked':''}/>
-							<label for="favor${vs.index }">${f.DNAME }</label>							
+							<input type="checkbox" name="favor" id="favor${vs.index }" value="${f.KINDNAME}" ${ f.KINDNAME eq memberLoggedIn.favor[vs.index] ?'checked':''}/>
+							<label for="favor${vs.index }">${f.KINDNAME }</label>							
 						</c:forEach>		
 						<br />
 						
 						자기 소개 : 
 						<textarea class="form-control" name="cover" cols="30" rows="10" placeholder="자기소개 및 특이 사항">${memberLoggedIn.cover }</textarea>
 						<br/>
-						<button type="submit" id="submit">수정</button>				
+						<button type="submit" id="submit">수정</button>						
 				</c:if>
 				
 			</form>
@@ -178,7 +184,6 @@
 					$("#submit").click(function(){
 						if($("#post-file").val()==""){
 							console.log("pre");
-							$("input[name=pre-file]").attr("name","pre_mprofile");
 						}else{
 							console.log("post");
 							$("input[name=post-file]").attr("name","mprofile");
@@ -198,7 +203,6 @@
 								success: function(data){
 									console.log(data);
 									if(data.isUsable==true){
-										$("#send").val("send");
 										//console.log(data.tempPwd);
 										$("#keyCheck").val(data.tempPwd);
 									}else{

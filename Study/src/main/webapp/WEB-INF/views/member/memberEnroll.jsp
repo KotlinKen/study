@@ -606,8 +606,8 @@ function validate() {
 		<div class="form-check-inline form-check">
 		관심분야 : &nbsp;
 		<c:forEach var = "v"  items="${list }" >
-			<input type="checkbox" class="form-check-input" value="${v.KNAME }" name="favor" id="${v.KNAME }"  />
-			<label for="${v.KNAME }" class="form-check-input">${v.KNAME }</label>
+			<input type="checkbox" class="form-check-input" value="${v.KINDNAME }" name="favor" id="${v.KNAME }"  />
+			<label for="${v.KNAME }" class="form-check-input">${v.KINDNAME }</label>
 		</c:forEach>
 		</div>
 		<!-- ======db연동으로 수정요망======= -->

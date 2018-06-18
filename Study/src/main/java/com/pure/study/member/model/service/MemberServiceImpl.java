@@ -129,5 +129,10 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage) {
 		return memberDAO.selectMyStudyList(mno, numPerPage, cPage);
 	}
+
+	@Override
+	public List<Map<String, String>> selectKind() {
+		return memberDAO.selectKind();
+	}
 	
 }

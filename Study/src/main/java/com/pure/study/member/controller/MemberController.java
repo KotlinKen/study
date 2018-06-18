@@ -262,6 +262,9 @@ public class MemberController {
 	
 	/*회원가입(장익순) 끝*********************************/
 	
+	
+	
+	
 	/**********************************************로그인 및 마이페이지(김회진) 시작*/
 	/*******************************로그인&로그아웃 시작*/
 	@RequestMapping(value="/member/memberLogin.do", method = RequestMethod.POST)
@@ -548,8 +551,9 @@ public class MemberController {
 	public ModelAndView memberView(@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
 		
-		List<Map<String, String>> favor = departService.selectDepart();
-				
+		List<Map<String, String>> favor = memberService.selectKind();
+		
+		m = memberService.selectOneMember(m);
 		
 		if(m!=null) {
 			System.out.println(m);
@@ -611,14 +615,13 @@ public class MemberController {
 	@RequestMapping(value="/member/updateUser.do", method= RequestMethod.POST)
 	public String updateUser(@RequestParam("mno") int mno, @RequestParam("mid") String mid
 							, @RequestParam("mname") String mname, @RequestParam("phone") String phone
-							, @RequestParam("addr") String post,@RequestParam("addr") String addr1
-							,@RequestParam("addr") String addr2,@RequestParam("addr") String addrDetail
+							, @RequestParam("post") String post,@RequestParam("addr1") String addr1
+							,@RequestParam("addr2") String addr2,@RequestParam("addrDetail") String addrDetail
 							,@RequestParam("email")String email
 							, @RequestParam("birth") Date birth, @RequestParam("gender") String gender
 							, @RequestParam("favor") String[] favor, @RequestParam("cover") String cover
 							, @RequestParam(value="mprofile", required=false) MultipartFile[] mprofile
 							, HttpServletRequest request, Model model, @RequestParam("pre_mprofile") String pre_mprofile) {
-		
 		Member member = new Member();
 		
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");

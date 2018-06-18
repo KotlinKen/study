@@ -20,6 +20,11 @@
 										default
 										)
 	</insert>
+	<select id="selectKind" resultMap="kindMap">
+		select * from kind
+	</select>
+	<resultMap type="map" id="kindMap"></resultMap>
+	
 	<resultMap type="member" id="memberMap">
 		<result column="favor" property="favor" typeHandler="strArrTypeHandler"/>
 	</resultMap>
@@ -40,7 +45,10 @@
 						mid=#{mid}, 
 						mname=#{mname},
 						phone=#{phone},
-						addr=#{addr}, 
+						addr1=#{addr1}, 
+						addr2=#{addr2}, 
+						addrDetail=#{addrDetail}, 
+						post=#{post}, 
 						<if test="mprofile != null">
 							mprofile=#{mprofile}, 
 						</if>
@@ -89,6 +97,6 @@
 		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
 	</delete>
 	<select id="selectCategory" resultType="map" >
-		select kname from kindk where klevel = 1
+		select kindname from kind 
 	</select>
 </mapper>
