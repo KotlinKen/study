@@ -235,7 +235,7 @@ public class AdverstingController {
 			msg = "광고 삭제 실패";
 			loc = "/adv/adverstingView?ano="+ano;
 		}
-		
+		 
 		mav.addObject("msg", msg);
 		mav.addObject("loc", loc);
 		mav.setViewName("common/msg");
