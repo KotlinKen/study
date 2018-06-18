@@ -1,14 +1,17 @@
 package com.pure.study.adversting.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +20,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pure.study.adversting.model.dao.AdverstingDao;
 import com.pure.study.adversting.model.service.AdverstingService;
 import com.pure.study.adversting.model.vo.Adversting;
-
+@SessionAttributes({"popUpSession"})
 @Controller
 public class AdverstingController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -32,21 +39,20 @@ public class AdverstingController {
 	private AdverstingService adverstingService;
 	
 	
-	@RequestMapping("/adv/formAdversting.do")
-	public void formAdversting() {
+	@RequestMapping("/adv/adverstingWrite")
+	public void adverstingWrite() {
 		logger.info("test");
 		
 	}
 	
-	@RequestMapping("/adv/insertAdversting.do")
-	public ModelAndView insert (Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
+	@RequestMapping("/adv/adverstingWriteEnd")
+	public ModelAndView adverstingWriteEnd(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
-		logger.info("test 들어왔어"+ adversting);
 		
 		
 		try {
 			//1.파일업로드 처리
-			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/board");
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
 					
 			/************** MultipartFile을 이용한 파일 업로드 처리 로직 시작  ********************************************************/
 			
@@ -73,22 +79,16 @@ public class AdverstingController {
 						e.printStackTrace();
 					}
 					//VO객체 담기
-					if(cnt == 1) {
-						adversting.setImg1(renamedFileName); 
-					}else {
-						adversting.setImg2(renamedFileName); 
-					}
+					adversting.setAdvImg(renamedFileName);
 				}
 			}
 			
 			
+			int result = adverstingService.insertAdversting(adversting);
+			
 			
 			//2.비지니스로직
-			
-		/*	int result = adverstingService.insertAdversting(adversting);
-			int boardNo = adversting.getAno();
-			logger.debug("boardNo@controller = " + boardNo);
-			
+ 
 			
 			//3. view단 분기
 			String loc = "/";
@@ -96,24 +96,20 @@ public class AdverstingController {
 			
 			if(result>0) {
 				msg = "게시물 등록 성공";
-				loc = "/board/boardView.do?boardNo="+board.getBoardNo();
+				loc = "/adv/adverstingView?ano="+adversting.getAno();
 			}else {
 				msg = "게시물 등록 실패";
+				loc = "/adv/adverstingWrite";
 			}
 			
 			mav.addObject("msg", msg);
 			mav.addObject("loc", loc);
-			mav.setViewName("common/msg");*/
+			mav.setViewName("common/msg");
 		} catch(Exception e) {
 /*			throw new BoardException("게시물 등록 오류");*/
 		}
 		
-		
-		
-		
-		
-		
-		return mav;
+		return mav; 
 	}
 	
 	@RequestMapping("/adv/selectAdversting")
@@ -125,48 +121,143 @@ public class AdverstingController {
 		
 	}
 	
-	@RequestMapping("/adv/selectPagingAdversting")
-	public ModelAndView selectPagingAdversting(@RequestParam (value="cPage", required=false, defaultValue="1") int cPage) {
+	
+	
+	@RequestMapping("/adv/adverstingListPaging")
+	public ModelAndView adverstingListPaging(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage, 
+											@RequestParam Map<String, String> queryMap
+											  ,HttpServletRequest request) {
 		
+		logger.debug("================="+request.getParameterMap().get("type"));
+		logger.debug("================="+request.getParameter("type"));
+		logger.debug("=================queryMap"+ queryMap.get("type"));
+		logger.debug("=================queryMap"+ queryMap.toString());
 		ModelAndView mav = new ModelAndView();
 		int numPerPage = 10; 
-		List<Map<String, String>> map = adverstingService.selectPagingAdversting(cPage, numPerPage);
+		List<Map<String, String>>  list = adverstingService.adverstingListPaging(cPage, numPerPage, queryMap);
+		logger.debug("adversting list"+list);
 		
-		logger.debug("adversting list");
+		int totalBoardNumber = adverstingService.adverstingTotalCount(queryMap);
 		
-		
-		
+		mav.addObject("count", totalBoardNumber);
+		mav.addObject("list", list);
+		mav.addObject("numPerPage", numPerPage);
 		return mav;
-		
 	}
 	
-	@RequestMapping("/adv/updateAdversting")
-	public ModelAndView updateAdversting() {
+	
+	@RequestMapping("/adv/adverstingView")
+	public ModelAndView adverstingView(String ano) {
+		
 		ModelAndView mav = new ModelAndView();
 		
-		logger.debug("adversting");
+		Map<String, String> adversting = adverstingService.selectAdverstingOne(Integer.parseInt(ano));
 		
-		mav.addObject("test", "test");
-		
-		return mav;
+		mav.addObject("adversting", adversting);
+		return mav; 
 	}
 	
-	@RequestMapping("/adv/deleteAdversting")
-	public ModelAndView deleteAdversting() {
+	
+	
+	
+	@RequestMapping("/adv/adverstingReWrite")
+	public ModelAndView adverstingReWrite(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		
-		logger.debug("adversting");
+		try {
+			//1.파일업로드 처리
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
+					
+			/************** MultipartFile을 이용한 파일 업로드 처리 로직 시작  ********************************************************/
+			int cnt = 0; 
+			for(MultipartFile f : upFiles) {
+				cnt++;
+				logger.info("cnt"+saveDirectory);
+				logger.debug("cnt"+cnt);
+				if(!f.isEmpty()) {
+					//파일명 재생성
+					String originalFileName = f.getOriginalFilename();
+					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+					int rndNum = (int)(Math.random() * 1000);
+					String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
+					logger.info("renamedFileName"+renamedFileName);
+					try {
+						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					//VO객체 담기
+					adversting.setAdvImg(renamedFileName);
+				}
+			}
+			
+			
+			int result = adverstingService.updateAdversting(adversting);
+			
+			//3. view단 분기
+			String loc = "/";
+			String msg = "";
+			
+			if(result>0) {
+				msg = "게시물 수정 성공";
+				loc = "/adv/adverstingView?ano="+adversting.getAno();
+			}else {
+				msg = "게시물 수정 실패";
+				loc = "/adv/adverstingWrite";
+			}
+			
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("common/msg");
+		} catch(Exception e) {
+/*			throw new BoardException("게시물 등록 오류");*/
+		}
 		
-		mav.addObject("test", "test");
+		return mav; 
+	}
+	
+	@RequestMapping("/adv/adverstingDelete")
+	public ModelAndView adverstingDelete(int ano) {
+		ModelAndView mav = new ModelAndView();
+		
+		int result = adverstingService.adverstingDelete(ano);
+		//3. view단 분기
+		String loc = "/";
+		String msg = "";
+		
+		if(result>0) {
+			msg = "광고 삭제 성공";
+			loc = "/adv/adverstingListPaging";
+		}else {
+			msg = "광고 삭제 실패";
+			loc = "/adv/adverstingView?ano="+ano;
+		}
+		
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
 		
 		return mav;
 	}
 	
-	@RequestMapping(value="/adv/test")
-    public String login(Model model,String auth)throws Exception{
-        model.addAttribute("auth", "asdfasdffd");
-        return "test";
-    }
-
-
+ 
+	
+	@RequestMapping("/adv/call")
+	@ResponseBody
+	public Map<String, Object> call(String type, Model model)  throws JsonProcessingException {
+      Map<String, Object> map = new HashMap<>();
+		Map<String, String> adv = adverstingService.adverstingCall(type);
+		map.put("adv", adv);
+		return map;
+	}
+	
+	@RequestMapping("/adv/popupClose")
+	@ResponseBody
+	public void popupClose( Model model, HttpSession session )  throws JsonProcessingException {
+		session.setAttribute("popUpSession", "checked");
+		session.setMaxInactiveInterval(20);
+	}
 }

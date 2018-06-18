@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pure.study.adversting.model.dao.AdverstingDao;
+import com.pure.study.adversting.model.vo.Adversting;
 
 @Service
 public class AdverstingServiceImpl implements AdverstingService {
@@ -15,8 +16,39 @@ public class AdverstingServiceImpl implements AdverstingService {
 	private AdverstingDao adverstingDao;
 
 	@Override
-	public List<Map<String, String>> selectPagingAdversting(int cPage, int numPerPage) {
-		return adverstingDao.selectPagingAdversting(cPage, numPerPage);
+	public List<Map<String, String>> adverstingListPaging(int cPage, int numPerPage, Map<String, String> queryMap) {
+		return adverstingDao.adverstingListPaging(cPage, numPerPage, queryMap);
+	}
+
+	@Override
+	public int insertAdversting(Adversting adversting) {
+		return adverstingDao.insertAdversting(adversting);
+	}
+
+	@Override
+	public int adverstingTotalCount(Map<String, String> queryMap) {
+		return adverstingDao.adverstingTotalCount(queryMap);
+	}
+
+	@Override
+	public Map<String, String> selectAdverstingOne(int ano) {
+		return adverstingDao.selectAdverstingOne(ano); 
+	}
+
+	@Override
+	public int updateAdversting(Adversting adversting) {
+		return adverstingDao.updateAdversting(adversting);
+	}
+
+	@Override
+	public Map<String, String> adverstingCall(String type) {
+		return adverstingDao.adverstingCall(type); 
+	}
+
+	@Override
+	public int adverstingDelete(int ano) {
+		return adverstingDao.adverstingDelete(ano);
+		
 	}
 	
 

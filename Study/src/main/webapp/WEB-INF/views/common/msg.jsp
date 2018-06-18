@@ -7,12 +7,7 @@
 
 <script>
 	alert("${msg}");
-	
-	if("성공" == "${msg}"){
-	}else{
-		
-	}
-		location.href="${rootPath}${loc}";
+	location.href="${rootPath}${loc}";
 </script>
 
 
