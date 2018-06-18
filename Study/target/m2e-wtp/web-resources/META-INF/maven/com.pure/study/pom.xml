@@ -5,6 +5,7 @@
 	<groupId>com.pure</groupId>
 	<artifactId>study</artifactId>
 	<name>Study</name>
+	
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
