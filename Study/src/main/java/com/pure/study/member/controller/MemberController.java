@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,123 +52,121 @@ public class MemberController {
 
 	@Autowired
 	private JavaMailSender mailSender;
-	
+
 	Logger logger = LoggerFactory.getLogger(getClass());
-	
-	/**********************************회원가입(장익순) 시작*/
-	/*정보 입력동의페이지 이동 시작*/
-	@RequestMapping(value="/member/memberAgreement.do")
+
+	/********************************** 회원가입(장익순) 시작 */
+	/* 정보 입력동의페이지 이동 시작 */
+	@RequestMapping(value = "/member/memberAgreement.do")
 	public String memberAgreement() {
-		if(logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("회원동의홈페이지");
 		}
-		
+
 		return "member/memberAgreement";
 	}
-	/*정보 입력페이지 이동 시작*/
-	@RequestMapping(value="/member/memberEnroll.do")
+
+	/* 정보 입력페이지 이동 시작 */
+	@RequestMapping(value = "/member/memberEnroll.do")
 	public ModelAndView memberEnroll() {
-		if(logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("회원등록홈페이지");
 		}
 		ModelAndView mav = new ModelAndView();
-		List<Map<String,String>> list = memberService.selectCategory();
+		List<Map<String, String>> list = memberService.selectCategory();
 		System.out.println(list);
-		
-		mav.addObject("list",list);
+
+		mav.addObject("list", list);
 		return mav;
 	}
-	
-	/*mailSending 코드 전송*/
+
+	/* mailSending 코드 전송 */
 	@RequestMapping(value = "/member/certification.do")
 	@ResponseBody
-	public Map<String,Object> mailCertification(HttpServletRequest request ,@RequestParam(value="em") String em) {
-		Map<String,Object> map = new HashMap<>();
-		String setfrom = "kimemail2018@gmail.com";         
-		String tomail  = em;     // 받는 사람 이메일
-		String title   =   "( 스터디 그룹트 ) 회원가입 인증번호 내역";   // 제목
-		
-		String content =   "회원님 \n인증번호는  ";  // 내용
-		String ranstr = ""; 
-		for(int i =0; i<4 ; i++) {
-			int ran = (int)(Math.random()*10);
-			ranstr +=ran;
+	public Map<String, Object> mailCertification(HttpServletRequest request, @RequestParam(value = "em") String em) {
+		Map<String, Object> map = new HashMap<>();
+		String setfrom = "kimemail2018@gmail.com";
+		String tomail = em; // 받는 사람 이메일
+		String title = "( 스터디 그룹트 ) 회원가입 인증번호 내역"; // 제목
+
+		String content = "회원님 \n인증번호는  "; // 내용
+		String ranstr = "";
+		for (int i = 0; i < 4; i++) {
+			int ran = (int) (Math.random() * 10);
+			ranstr += ran;
 		}
 		String encoded = bcryptPasswordEncoder.encode(ranstr);
 		content += ranstr;
-		
+
 		int checkemail = memberService.checkEmail(tomail);
-		int result =0;
-		if(checkemail ==0 ) {
-			result = memberService.insertMailCertification(tomail,encoded);			
-		}else {
-			result = memberService.uploadMailCertification(tomail,encoded);
+		int result = 0;
+		if (checkemail == 0) {
+			result = memberService.insertMailCertification(tomail, encoded);
+		} else {
+			result = memberService.uploadMailCertification(tomail, encoded);
 		}
 		try {
-			MimeMessage message = mailSender.createMimeMessage(); 
+			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-			messageHelper.setFrom(setfrom);  // 보내는사람 생략하거나 하면 정상작동을 안함
-			messageHelper.setTo(tomail);     // 받는사람 이메일
+			messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
+			messageHelper.setTo(tomail); // 받는사람 이메일
 			messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
-			messageHelper.setText(content);  // 메일 내용
-		     
+			messageHelper.setText(content); // 메일 내용
+
 			mailSender.send(message);
-		} catch(Exception e){
+		} catch (Exception e) {
 		}
 		return map;
 	}
-	
-	/*mailSending 코드 검증*/
+
+	/* mailSending 코드 검증 */
 	@RequestMapping(value = "/member/checkJoinCode.do")
 	@ResponseBody
-	public Map<String,Object> checkJoinCode(HttpServletRequest request ,@RequestParam(value="em") String em ,@RequestParam(value="inputCode") String inputCode) {
-		Map<String,Object> map = new HashMap<>();
+	public Map<String, Object> checkJoinCode(HttpServletRequest request, @RequestParam(value = "em") String em,
+			@RequestParam(value = "inputCode") String inputCode) {
+		Map<String, Object> map = new HashMap<>();
 		String email = em;
-		Map<String,String> cer = new HashMap<>();
+		Map<String, String> cer = new HashMap<>();
 		cer = memberService.selectCheckJoinCode(email);
-		if(bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
+		if (bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
 			map.put("result", true);
-		}else {
-			map.put("result", false);			
+		} else {
+			map.put("result", false);
 		}
 		return map;
 	}
-	
-		
 
-
-	
-	/*주소입력*/
-	@RequestMapping(value="/member/jusoPopup.do")
+	/* 주소입력 */
+	@RequestMapping(value = "/member/jusoPopup.do")
 	public String jusoPopup() {
 		return "member/jusoPopup";
 	}
-	
-	/*파일 업로드 시작*/
-	@RequestMapping(value="/member/memberImgUpload.do")
-	public ModelAndView insertBoard(Model model,@RequestParam(value="upFile",required=false) MultipartFile[] upFiles,HttpServletRequest request) {
+
+	/* 파일 업로드 시작 */
+	@RequestMapping(value = "/member/memberImgUpload.do")
+	public ModelAndView insertBoard(Model model,
+			@RequestParam(value = "upFile", required = false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		logger.debug("게시판 페이지저장");
-		logger.debug("upFiles.length="+upFiles.length);
-		logger.debug("upFile1="+upFiles[0].getOriginalFilename());
-		
-		Map<String , String> map = new HashMap<>();
-	
-		//1.파일업로드처리
+		logger.debug("upFiles.length=" + upFiles.length);
+		logger.debug("upFile1=" + upFiles[0].getOriginalFilename());
+
+		Map<String, String> map = new HashMap<>();
+
+		// 1.파일업로드처리
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
-		String renamedFileName ="";
+		String renamedFileName = "";
 		/****** MultipartFile을 이용한 파일 업로드 처리로직 시작 ******/
-		for(MultipartFile f: upFiles) {
-			if(!f.isEmpty()) {
-				//파일명 재생성
+		for (MultipartFile f : upFiles) {
+			if (!f.isEmpty()) {
+				// 파일명 재생성
 				String originalFileName = f.getOriginalFilename();
-				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-				int rndNum = (int)(Math.random()*1000);
-				renamedFileName = sdf.format(new Date(System.currentTimeMillis()))+
-										"_"+rndNum+"."+ext;
+				int rndNum = (int) (Math.random() * 1000);
+				renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
 				try {
-					f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+					f.transferTo(new File(saveDirectory + "/" + renamedFileName));
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -179,97 +176,101 @@ public class MemberController {
 		}
 		/****** MultipartFile을 이용한 파일 업로드 처리로직 끝 ******/
 
-		//3.view단 분기
+		// 3.view단 분기
 		logger.debug(renamedFileName);
 		map.put("renamedFileName", renamedFileName);
-		
+
 		mav.addAllObjects(map);
 		mav.setViewName("jsonView");
-	
+
 		return mav;
 	}
-	
-	
-	
-	/*회원가입 시작 */
-	@RequestMapping(value="/member/memberEnrollEnd.do", method=RequestMethod.POST)
-	public String memberEnrollEnd(Model model , Member member  ) {
-		if(logger.isDebugEnabled()) {
+
+	/* 회원가입 시작 */
+	@RequestMapping(value = "/member/memberEnrollEnd.do", method = RequestMethod.POST)
+	public String memberEnrollEnd(Model model, Member member) {
+		System.out.println("??????????");
+		if (logger.isDebugEnabled()) {
 			logger.debug("회원가입완료");
 		}
-		logger.debug(""+member);
-		
-		/*이메일 가져오기*/
+		logger.debug("" + member);
+		/* 이메일 가져오기 */
 		String email = member.getEmail();
 		String[] emailArr = email.split(",");
-		email = emailArr[0]+"@"+emailArr[1];
+		email = emailArr[0] + "@" + emailArr[1];
+		System.out.println("member : " + member);
 		logger.debug(email);
 		member.setEmail(email);
 		Map<String, String> cer = memberService.selectCheckJoinCode(email);
-		String loc = "/"; 
+		System.out.println("email : " + email);
+		String loc = "/";
 		String msg = "";
 		if (cer == null) {
 			msg = "회원가입을 실패했습니다.";
-		}else {
-			
-			logger.debug(""+member);
-			String rawPassword = member.getPwd();
-			/******* password 암호화 시작 *******/
-			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-			member.setPwd(encodedPassword);
-			/******* password 암호화 끝 *******/
-			 
-			/* favor null일 경우 처리 */
-			if(member.getFavor()==null) {
-				String[] favor = new String[1]; 
-				favor[0] = "no";
-				member.setFavor(favor);
-			}
-			
-			int result = memberService.memberEnrollEnd(member);
-			
-			memberService.deleteCertification(email);
-
-			//2.처리결과에 따라 view단 분기처리
-			
-			if(result>0) msg="회원가입성공!";
-			else msg="회원가입성공!";
-				
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
+			return "common/msg";
 		}
+
+		String rawPassword = member.getPwd();
+		/******* password 암호화 시작 *******/
+		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+		member.setPwd(encodedPassword);
+		/******* password 암호화 끝 *******/
+
+		/* favor null일 경우 처리 */
+		if (member.getFavor() == null) {
+			String[] favor = new String[1];
+			favor[0] = "no";
+			member.setFavor(favor);
+		}
+
+		int result = memberService.memberEnrollEnd(member);
+
+		memberService.deleteCertification(email);
+
+		// 2.처리결과에 따라 view단 분기처리
+
+		if (result > 0)
+			msg = "회원가입성공!";
+		else
+			msg = "회원가입성공!";
+
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
-		
+
 		return "common/msg";
 	}
-	
-	/*ID 중복 검사 시작 */
-	@RequestMapping(value="/member/checkIdDuplicate.do")
+
+	/* ID 중복 검사 시작 */
+	@RequestMapping(value = "/member/checkIdDuplicate.do")
 	@ResponseBody
-	public Map<String,Object> checkIdDuplicate(@RequestParam("userId") String userId) throws IOException {
-		logger.debug("@ResponseBody-javaobj ajax : "+userId);
-		Map<String,Object> map = new HashMap<>();
-	
-		//업무로직
+	public Map<String, Object> checkIdDuplicate(@RequestParam("userId") String userId) throws IOException {
+		logger.debug("@ResponseBody-javaobj ajax : " + userId);
+		Map<String, Object> map = new HashMap<>();
+
+		// 업무로직
 		int count = memberService.checkIdDuplicate(userId);
-		logger.debug("count : "+count);
-		boolean isUsable = count==0?true:false;
-		logger.debug(""+isUsable);
-		
+		logger.debug("count : " + count);
+		boolean isUsable = count == 0 ? true : false;
+		logger.debug("" + isUsable);
+
 		map.put("isUsable", isUsable);
-		
+
 		return map;
 	}
-	
-	/*회원가입(장익순) 끝*********************************/
-	
-	/**********************************************로그인 및 마이페이지(김회진) 시작*/
-	/*******************************로그인&로그아웃 시작*/
-	@RequestMapping(value="/member/memberLogin.do", method = RequestMethod.POST)
-	public ModelAndView memberLogin(HttpServletRequest request, @RequestParam(value="userId") String userId, @RequestParam(value="pwd") String pwd) {
+
+	/* 회원가입(장익순) 끝 *********************************/
+
+	/********************************************** 로그인 및 마이페이지(김회진) 시작 */
+	/******************************* 로그인&로그아웃 시작 */
+	@RequestMapping(value = "/member/memberLogin.do", method = RequestMethod.POST)
+	public ModelAndView memberLogin(HttpServletRequest request, @RequestParam(value = "userId") String userId,
+			@RequestParam(value = "pwd") String pwd) {
 		ModelAndView mav = new ModelAndView();
 
 		System.out.println(userId);
-		
+
 		Member m = memberService.selectOneMember(userId);
 
 		String msg = "";
@@ -295,7 +296,7 @@ public class MemberController {
 		return mav;
 	}
 
-	@RequestMapping(value="/member/memberLogout.do")
+	@RequestMapping(value = "/member/memberLogout.do")
 	public String memberLogout(SessionStatus sessionStatus) {
 
 		if (!sessionStatus.isComplete())
@@ -303,12 +304,12 @@ public class MemberController {
 
 		return "redirect:/";
 	}
-	
-	/*로그인&로그아웃 끝*********************************/
-	
+
+	/* 로그인&로그아웃 끝 *********************************/
+
 	/**************** id, pwd찾기 */
 	// 아이디,비밀번호 찾기 페이지로 이동
-	@RequestMapping(value="/member/memberFindPage.do")
+	@RequestMapping(value = "/member/memberFindPage.do")
 	public ModelAndView memberFindPage(@RequestParam("findType") String findType) {
 
 		ModelAndView mav = new ModelAndView();
@@ -403,22 +404,23 @@ public class MemberController {
 				messageHelper.setFrom("kimemail2018@gmail.com"); // 보내는사람 생략하거나 하면 정상작동을 안함
 				messageHelper.setTo(email); // 받는사람 이메일
 				messageHelper.setSubject("스터디 그룹 임시 비밀번호 발송"); // 메일제목은 생략이 가능하다
-				
+
 				// 4. 인증키를 암호화 한다.
 				Member changeM = new Member();
 				String encodedPassword = bcryptPasswordEncoder.encode(tempPwd);
 				changeM.setPwd(encodedPassword);
 				changeM.setMid(mid);
-				
+
 				// 4.1 암호화 한 인증키를 디비에 넣어준다.(임시 비밀번호처럼 )
 				int result = memberService.updatePwd(changeM);
-				
+
 				// 4.2 메일 내용에 form을 이용하여 비밀번호를 변경하고자 하는 아이디와 인증키(페이지의 유효성?을 위해)를 보내준다.
-				messageHelper.setText(new StringBuffer().append("<form action='http://localhost:9090/study/member/memberPwd.do' target=\"_blank\" method='post'>")
+				messageHelper.setText(new StringBuffer().append(
+						"<form action='http://localhost:9090/study/member/memberPwd.do' target=\"_blank\" method='post'>")
 						.append("<input type='hidden' name='mid' value='" + mid + "'/>")
 						.append("<input type='hidden' name='key' value='" + encodedPassword + "'/>")
 						.append("<button type='submit'>비밀번호 변경하러 가기</button>").append("</form>").toString(), true); // 메일
-				
+
 				mailSender.send(message);
 			} catch (Exception e) {
 				e.getStackTrace();
@@ -440,9 +442,9 @@ public class MemberController {
 	@RequestMapping(value = "/member/memberPwd.do", method = RequestMethod.POST)
 	public ModelAndView pwd(String mid, String key) {
 		ModelAndView mav = new ModelAndView();
-		
-		//System.out.println("이동 중인 값 : "+ key);
-		
+
+		// System.out.println("이동 중인 값 : "+ key);
+
 		mav.addObject("mid", mid);
 		mav.addObject("key", key);
 		mav.setViewName("member/memberUpdatePwd");
@@ -452,8 +454,8 @@ public class MemberController {
 
 	// 6. 디비의 임시 비밀번호와 페이지 이동을 통한 인증키 비교(페이지 유효성 검사)
 	@RequestMapping(value = "/member/memberUpdatePwd.do", method = RequestMethod.POST)
-	public String updatePwd(@RequestParam("pwd") String pwd, @RequestParam("key") String key, 
-							@RequestParam("mid") String mid, Model model) {
+	public String updatePwd(@RequestParam("pwd") String pwd, @RequestParam("key") String key,
+			@RequestParam("mid") String mid, Model model) {
 		String loc = "/";
 		String msg = "";
 
@@ -540,115 +542,108 @@ public class MemberController {
 	 * return mav; }
 	 */
 	/* id,pwd 찾기 ******************************/
-	
-	
-	/****************************개인 정보 수정 시작*/
-	//개인 정보 수정 페이지로 이동
-	@RequestMapping(value="/member/memberView.do")
+
+	/**************************** 개인 정보 수정 시작 */
+	// 개인 정보 수정 페이지로 이동
+	@RequestMapping(value = "/member/memberView.do")
 	public ModelAndView memberView(@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		List<Map<String, String>> favor = departService.selectDepart();
-				
-		
-		if(m!=null) {
+
+		if (m != null) {
 			System.out.println(m);
 			mav.addObject("memberLoggedIn", m);
 			mav.addObject("favor", favor);
 			mav.setViewName("member/memberView");
-		}else {
+		} else {
 			mav.addObject("msg", "로그인 후 이용해 주세요");
 			mav.addObject("loc", "/");
-			
+
 			mav.setViewName("common/msg");
-			
+
 		}
-		
-		
+
 		return mav;
 	}
-	
-	//개인 번호 수정 - 비밀번호 변경
-	@RequestMapping(value="/member/newPwd.do", method = RequestMethod.POST)
-	public String newPwd(@RequestParam("newPwd") String newPwd
-							, @RequestParam("oldPwd") String oldPwd
-							, @ModelAttribute("memberLoggedIn") Member m
-							, SessionStatus sessionStatus
-							, Model model) {
-				
-		
-		//1. 기존 비밀번호가 맞는지 확인
+
+	// 개인 번호 수정 - 비밀번호 변경
+	@RequestMapping(value = "/member/newPwd.do", method = RequestMethod.POST)
+	public String newPwd(@RequestParam("newPwd") String newPwd, @RequestParam("oldPwd") String oldPwd,
+			@ModelAttribute("memberLoggedIn") Member m, SessionStatus sessionStatus, Model model) {
+
+		// 1. 기존 비밀번호가 맞는지 확인
 		Member oldMember = memberService.selectOneMember(m.getMid());
-				
-		if(bcryptPasswordEncoder.matches(oldPwd, oldMember.getPwd())) {
+
+		if (bcryptPasswordEncoder.matches(oldPwd, oldMember.getPwd())) {
 			Member changeM = new Member();
 			String encodedPwd = bcryptPasswordEncoder.encode(newPwd);
 			changeM.setPwd(encodedPwd);
 			changeM.setMid(m.getMid());
-			
+
 			int result = memberService.updatePwd(changeM);
-			
-			if(result>0) {
-				
+
+			if (result > 0) {
+
 				if (!sessionStatus.isComplete())
 					sessionStatus.setComplete();
-				
+
 				return "redirect:/";
-			}else {
+			} else {
 				model.addAttribute("loc", "/member/memberView.do");
 				model.addAttribute("msg", "비밀번호가 변경되지 않았습니다.");
-				
+
 			}
-		}else {
+		} else {
 			model.addAttribute("loc", "/member/memberView.do");
 			model.addAttribute("msg", "비밀번호가 일치 하지 않습니다.");
 		}
-						
+
 		return "common/msg";
 	}
-	
-	//개인 정보 수정 - 전체 수정
-	@RequestMapping(value="/member/updateUser.do", method= RequestMethod.POST)
-	public String updateUser(@RequestParam("mno") int mno, @RequestParam("mid") String mid
-							, @RequestParam("mname") String mname, @RequestParam("phone") String phone
-							, @RequestParam("addr") String post,@RequestParam("addr") String addr1
-							,@RequestParam("addr") String addr2,@RequestParam("addr") String addrDetail
-							,@RequestParam("email")String email
-							, @RequestParam("birth") Date birth, @RequestParam("gender") String gender
-							, @RequestParam("favor") String[] favor, @RequestParam("cover") String cover
-							, @RequestParam(value="mprofile", required=false) MultipartFile[] mprofile
-							, HttpServletRequest request, Model model, @RequestParam("pre_mprofile") String pre_mprofile) {
-		
+
+	// 개인 정보 수정 - 전체 수정
+	@RequestMapping(value = "/member/updateUser.do", method = RequestMethod.POST)
+	public String updateUser(@RequestParam("mno") int mno, @RequestParam("mid") String mid,
+			@RequestParam("mname") String mname, @RequestParam("phone") String phone, @RequestParam("addr") String post,
+			@RequestParam("addr") String addr1, @RequestParam("addr") String addr2,
+			@RequestParam("addr") String addrDetail, @RequestParam("email") String email,
+			@RequestParam("birth") Date birth, @RequestParam("gender") String gender,
+			@RequestParam("favor") String[] favor, @RequestParam("cover") String cover,
+			@RequestParam(value = "mprofile", required = false) MultipartFile[] mprofile, HttpServletRequest request,
+			Model model, @RequestParam("pre_mprofile") String pre_mprofile) {
+
 		Member member = new Member();
-		
+
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
-		if(mprofile != null) {
+		if (mprofile != null) {
 			/*********** MultipartFile을 이용한 파일 업로드 처리 로직 시작 **********/
-			for(MultipartFile f: mprofile) {
-				if(!f.isEmpty()) {
-					//파일명 재생성
+			for (MultipartFile f : mprofile) {
+				if (!f.isEmpty()) {
+					// 파일명 재생성
 					String originalFileName = f.getOriginalFilename();
-					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+					String ext = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-					int rndNum = (int)(Math.random()*1000);
-					String renamedFileName = sdf.format(new Date(System.currentTimeMillis()))+"_"+rndNum+"."+ext;
-					
+					int rndNum = (int) (Math.random() * 1000);
+					String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "."
+							+ ext;
+
 					try {
-						f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
 					} catch (IllegalStateException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					//vo객체 담기
+					// vo객체 담기
 					member.setMprofile(originalFileName);
-					
+
 				}
 			}
-		}else {
+		} else {
 			member.setMprofile(pre_mprofile);
 		}
-		
+
 		member.setMno(mno);
 		member.setMid(mid);
 		member.setMname(mname);
@@ -663,49 +658,49 @@ public class MemberController {
 		member.setGender(gender);
 		member.setFavor(favor);
 		member.setCover(cover);
-		
+
 		int result = memberService.updateMember(member);
-		
-		if(result>0) {
+
+		if (result > 0) {
 			model.addAttribute("memberLoggedIn", member);
 			model.addAttribute("msg", "회원 정보가 변경되었습니다.");
 			model.addAttribute("loc", "/member/memberView.do");
-		}else {
+		} else {
 			model.addAttribute("msg", "회원 정보가 변경되지 않았습니다.");
 			model.addAttribute("loc", "/member/memberView.do");
 		}
-		
+
 		return "common/msg";
 	}
-	
-	//개인 정보 수정 - 탈퇴하기
-	@RequestMapping(value="/member/memberDrop.do")
+
+	// 개인 정보 수정 - 탈퇴하기
+	@RequestMapping(value = "/member/memberDrop.do")
 	public String memberDrop(@RequestParam("mid") String mid, Model model, SessionStatus sessionStatus) {
-		
-		//탈퇴일만
+
+		// 탈퇴일만
 		int result = memberService.dropMember(mid);
-		
-		if(result>0) {
+
+		if (result > 0) {
 			if (!sessionStatus.isComplete())
 				sessionStatus.setComplete();
 			return "redirect:/";
-		}else {
+		} else {
 			model.addAttribute("msg", "오류가 발생하였습니다.");
 			model.addAttribute("loc", "/");
-			
-			
+
 		}
 		return "common/msg";
 	}
-	
-	//개인 정보 수정 - 이메일 변경(인증키 생성 및 메일 보내주기)
-	@RequestMapping(value="/member/newEmailKey.do")
+
+	// 개인 정보 수정 - 이메일 변경(인증키 생성 및 메일 보내주기)
+	@RequestMapping(value = "/member/newEmailKey.do")
 	@ResponseBody
-	public Map<String, Object> newEmailKey(@RequestParam(value="newEmail") String newEmail) throws JsonProcessingException{
-		
+	public Map<String, Object> newEmailKey(@RequestParam(value = "newEmail") String newEmail)
+			throws JsonProcessingException {
+
 		Map<String, Object> map = new HashMap<>();
 		boolean isUsable = false;
-		
+
 		// 1. 페이지의 인증키를 생성한다.
 		String tempPwd = "";
 		int tempSize = 8;
@@ -721,133 +716,118 @@ public class MemberController {
 				i--;
 			}
 		}
-		
+
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
-
 			messageHelper.setFrom("kimemail2018@gmail.com"); // 보내는사람 생략하거나 하면 정상작동을 안함
 			messageHelper.setTo(newEmail); // 받는사람 이메일
 			messageHelper.setSubject("스터디 그룹 이메일 인증번호 발송"); // 메일제목은 생략이 가능하다
-			messageHelper.setText("이메일 인증 번호는 ["+tempPwd+"] 입니다.");
-					
+			messageHelper.setText("이메일 인증 번호는 [" + tempPwd + "] 입니다.");
+
 			mailSender.send(message);
 			isUsable = true;
 		} catch (Exception e) {
 			e.getStackTrace();
 		}
-		
+
 		map.put("isUsable", isUsable);
 		map.put("tempPwd", tempPwd);
-		
+
 		return map;
 	}
-	
-	//개인 정보 수정 - 이메일 변경(인증된 이메일로 디비 값 변경 )	
-	@RequestMapping(value="/member/newEmail.do", method= RequestMethod.POST)
-	public String newEmail(HttpServletRequest request, @RequestParam("email") String email, Model model, @ModelAttribute("memberLoggedIn") Member m) {
-		//System.out.println(email+"로 이메일 변경해주기");
-		
+
+	// 개인 정보 수정 - 이메일 변경(인증된 이메일로 디비 값 변경 )
+	@RequestMapping(value = "/member/newEmail.do", method = RequestMethod.POST)
+	public String newEmail(HttpServletRequest request, @RequestParam("email") String email, Model model,
+			@ModelAttribute("memberLoggedIn") Member m) {
+		// System.out.println(email+"로 이메일 변경해주기");
+
 		m.setEmail(email);
 		int result = memberService.updateEmail(m);
-		
-		if(result>0) {
+
+		if (result > 0) {
 			model.addAttribute("memberLoggedIn", m);
 			return "member/memberView";
-		}else {
+		} else {
 			model.addAttribute("msg", "이메일이 변경되지 않았습니다.");
 			model.addAttribute("loc", "member/memberView");
 			return "common/msg";
 		}
 	}
-	/*개인 정보 수정 끝**********************************/
-	
-	/**************************내 스터디 목록 시작*/
-	@RequestMapping(value="/member/memberMyStudy.do")
-	public ModelAndView memberMyStudy(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
-			, @ModelAttribute("memberLoggedIn") Member m) {
+	/* 개인 정보 수정 끝 **********************************/
+
+	/************************** 내 스터디 목록 시작 */
+	@RequestMapping(value = "/member/memberMyStudy.do")
+	public ModelAndView memberMyStudy(@RequestParam(value = "cPage", required = false, defaultValue = "1") int cPage,
+			@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		int numPerPage = 10;
-		
-		//List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(), numPerPage, cPage);
-		
-		//int count = memberService.selectMyStudyListCnt(m.getMno());
-		
-		//mav.addObject("myStudyList", list);
-		//mav.addObject("count", count);
+
+		// List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(),
+		// numPerPage, cPage);
+
+		// int count = memberService.selectMyStudyListCnt(m.getMno());
+
+		// mav.addObject("myStudyList", list);
+		// mav.addObject("count", count);
 		mav.addObject("count", 0);
 		mav.addObject("numPerPage", numPerPage);
 		mav.setViewName("member/memberMyStudy");
-		
+
 		return mav;
 	}
-	
-	/*내 스터디 목록 끝*******************************/
-	
-	/**************************스터디 신청 목록 시작*/
-	@RequestMapping(value="/member/memberApplyList.do")
-	public ModelAndView memberApply(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
-									, @ModelAttribute("memberLoggedIn") Member m) {
+
+	/* 내 스터디 목록 끝 *******************************/
+
+	/************************** 스터디 신청 목록 시작 */
+	@RequestMapping(value = "/member/memberApplyList.do")
+	public ModelAndView memberApply(@RequestParam(value = "cPage", required = false, defaultValue = "1") int cPage,
+			@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		int numPerPage = 10;
-		
-		List<Map<String,String>> list = memberService.selectApplyList(m.getMno(), numPerPage, cPage);
-		
+
+		List<Map<String, String>> list = memberService.selectApplyList(m.getMno(), numPerPage, cPage);
+
 		int count = memberService.selectApplyListCnt(m.getMno());
-		
+
 		mav.addObject("applyList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
 		mav.setViewName("member/memberApply");
-		
+
 		return mav;
 	}
-	
-	/*스터디 신청 목록 끝*******************************/
-	
-	/**************************스터디 찜 목록 시작*/
-	@RequestMapping(value="/member/memberWish.do")
-	public ModelAndView memberWish(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
-			, @ModelAttribute("memberLoggedIn") Member m) {
+
+	/* 스터디 신청 목록 끝 *******************************/
+
+	/************************** 스터디 찜 목록 시작 */
+	@RequestMapping(value = "/member/memberWish.do")
+	public ModelAndView memberWish(@RequestParam(value = "cPage", required = false, defaultValue = "1") int cPage,
+			@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		int numPerPage = 10;
-		
-		//List<Map<String,String>> list = memberService.selectWishList(m.getMno(), numPerPage, cPage);
-		
-		//int count = memberService.selectWishListCnt(m.getMno());
-		
-		//mav.addObject("wishList", list);
-		//mav.addObject("count", count);
+
+		// List<Map<String,String>> list = memberService.selectWishList(m.getMno(),
+		// numPerPage, cPage);
+
+		// int count = memberService.selectWishListCnt(m.getMno());
+
+		// mav.addObject("wishList", list);
+		// mav.addObject("count", count);
 		mav.addObject("count", 0);
 		mav.addObject("numPerPage", numPerPage);
 		mav.setViewName("member/memberWish");
-		
+
 		return mav;
 	}
-	
-	/*스터디 찜 목록 끝*******************************/
-	
-	/*로그인 및 마이페이지(김회진) 끝**********************************************/
-	
-	
+
+	/* 스터디 찜 목록 끝 *******************************/
+
+	/* 로그인 및 마이페이지(김회진) 끝 **********************************************/
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
