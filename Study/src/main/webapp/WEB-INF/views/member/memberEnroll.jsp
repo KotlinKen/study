@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -610,8 +611,8 @@ function validate() {
 		</div>
 		<!-- ======db연동으로 수정요망======= -->
 		<br />
-		자기소계  <br />
-		<textarea rows="10" cols="50" name=""></textarea>
+		자기소개  <br />
+		<textarea rows="10" cols="50" name="cover"></textarea>
 		
 		<br />
 		 <button type="button" onclick="location.href='${pageContext.request.contextPath}'">취소</button>		
