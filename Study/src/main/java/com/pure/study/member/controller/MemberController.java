@@ -218,7 +218,7 @@ public class MemberController {
 			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
 			member.setPwd(encodedPassword);
 			/******* password 암호화 끝 *******/
-			
+			 
 			/* favor null일 경우 처리 */
 			if(member.getFavor()==null) {
 				String[] favor = new String[1]; 
