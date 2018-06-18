@@ -64,7 +64,7 @@
 								class="btn btn-outline-success"
 					    		data-toggle="modal" 
 					    		data-target="#emailUpdate">이메일 변경</button>
-						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" disabled /> 
+						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" readonly /> 
 						<br />
 						
 						생년월일 : 

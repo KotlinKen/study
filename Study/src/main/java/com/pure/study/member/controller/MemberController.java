@@ -2,13 +2,11 @@ package com.pure.study.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pure.study.depart.model.service.DepartService;
 import com.pure.study.member.model.service.MemberService;
 import com.pure.study.member.model.vo.Member;
 
@@ -44,9 +41,6 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
-
-	@Autowired
-	private DepartService departService;
 
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -579,11 +573,10 @@ public class MemberController {
 							, @ModelAttribute("memberLoggedIn") Member m
 							, SessionStatus sessionStatus
 							, Model model) {
-				
 		
-		//1. 기존 비밀번호가 맞는지 확인
 		Member oldMember = memberService.selectOneMember(m.getMid());
-				
+		
+		
 		if(bcryptPasswordEncoder.matches(oldPwd, oldMember.getPwd())) {
 			Member changeM = new Member();
 			String encodedPwd = bcryptPasswordEncoder.encode(newPwd);
@@ -621,7 +614,8 @@ public class MemberController {
 							, @RequestParam("birth") Date birth, @RequestParam("gender") String gender
 							, @RequestParam("favor") String[] favor, @RequestParam("cover") String cover
 							, @RequestParam(value="mprofile", required=false) MultipartFile[] mprofile
-							, HttpServletRequest request, Model model, @RequestParam("pre_mprofile") String pre_mprofile) {
+							, HttpServletRequest request, Model model, @RequestParam("pre_mprofile") String pre_mprofile
+							) {
 		Member member = new Member();
 		
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
@@ -752,15 +746,19 @@ public class MemberController {
 	public String newEmail(HttpServletRequest request, @RequestParam("email") String email, Model model, @ModelAttribute("memberLoggedIn") Member m) {
 		//System.out.println(email+"로 이메일 변경해주기");
 		
+		//List<Map<String, String>> favor = memberService.selectKind();
+		
 		m.setEmail(email);
 		int result = memberService.updateEmail(m);
 		
+		//model.addAttribute("favor",favor);
+		
 		if(result>0) {
 			model.addAttribute("memberLoggedIn", m);
-			return "member/memberView";
+			return "redirect:/member/memberView.do";
 		}else {
 			model.addAttribute("msg", "이메일이 변경되지 않았습니다.");
-			model.addAttribute("loc", "member/memberView");
+			model.addAttribute("loc", "member/memberView.do");
 			return "common/msg";
 		}
 	}

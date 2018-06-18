@@ -20,21 +20,24 @@
 </head>
 <body>
 	<div>
-		<header> <c:if test="${memberLoggedIn == null }">
-			<button type="button" class="btn btn-outline-success"
-				data-toggle="modal" data-target="#loginModal">로그인</button>
-			<!-- 회원가입 버튼 시작 -->
-			<button type="button"
-				onclick="location.href='${pageContext.request.contextPath}/member/memberAgreement.do'">회원가입</button>
-			<!-- 회원가입 버튼 끝 -->
-		</c:if> <c:if test="${memberLoggedIn != null }">
-			<p>
-				<a href="${pageContext.request.contextPath }/member/memberView.do">${memberLoggedIn.mname }</a>님
-			</p>
-			<button type="button" class="btn btn-outline-success"
-				onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
-
-		</c:if> </header>
+		<header> 
+			<c:if test="${memberLoggedIn == null }">
+				<button type="button" class="btn btn-outline-success"
+					data-toggle="modal" data-target="#loginModal">로그인</button>
+				<!-- 회원가입 버튼 시작 -->
+				<button type="button"
+					onclick="location.href='${pageContext.request.contextPath}/member/memberAgreement.do'">회원가입</button>
+				<!-- 회원가입 버튼 끝 -->
+			</c:if> <c:if test="${memberLoggedIn != null }">
+				<p>
+					<a href="${pageContext.request.contextPath }/member/memberView.do">${memberLoggedIn.mname }</a>님
+				</p>
+				<button type="button" class="btn btn-outline-success"
+					onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
+	
+			</c:if> 
+		<a href="${pageContext.request.contextPath }/study/studyList.do">스터디</a>
+		</header>
 		<section> <!-- 로그인 Modal 시작 -->
 		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog"
 			aria-labelledby="exampleModalLabel" aria-hidden="true">

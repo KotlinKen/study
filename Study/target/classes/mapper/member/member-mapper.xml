@@ -43,21 +43,43 @@
 	<update id="updateMember" >
 		update member set 
 						mid=#{mid}, 
-						mname=#{mname},
-						phone=#{phone},
-						addr1=#{addr1}, 
-						addr2=#{addr2}, 
-						addrDetail=#{addrDetail}, 
-						post=#{post}, 
+						<if test="mid != null">
+							mname=#{mname},
+						</if>
+						<if test="phone != null">
+							phone=#{phone},
+						</if>
+						<if test="addr1 != null">
+							addr1=#{addr1}, 
+						</if>
+						<if test="addr2 != null">
+							addr2=#{addr2}, 
+						</if>
+						<if test="addrDetail != null">
+							addrDetail=#{addrDetail}, 
+						</if>
+						<if test="post != null">
+							post=#{post}, 
+						</if>
 						<if test="mprofile != null">
 							mprofile=#{mprofile}, 
 						</if>
-						email=#{email},
-						birth=#{birth}, 
-						gender=#{gender}, 
-						favor=#{favor, typeHandler=strArrTypeHandler}, 
-						cover=#{cover}
-						where mno=#{mno}
+						<if test="email != null">
+							email=#{email},
+						</if>
+						<if test="birth != null">
+							birth=#{birth}, 
+						</if>
+						<if test="gender != null">
+							gender=#{gender}, 
+						</if>
+						<if test="favor != null">
+							favor=#{favor, typeHandler=strArrTypeHandler}, 
+						</if>
+						<if test="cover != null">
+							cover=#{cover}
+						</if>
+			where mno=#{mno}
 	</update>
 	<update id="dropMember">
 		update member set qdate=sysdate where mid=#{mid}
