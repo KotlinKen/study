@@ -242,12 +242,12 @@
  
 		  <!-- query와 resultSet을 logging할 수 있는 log4jdbc-remix 라이브러리추가 -->
 	      <!-- https://mvnrepository.com/artifact/org.lazyluke/log4jdbc-remix/0.2.7 -->
-	      <dependency>
-	         <groupId>org.lazyluke</groupId>
-	         <artifactId>log4jdbc-remix</artifactId>
-	         <version>0.2.7</version>
-	      </dependency>
-	
+      <dependency>
+         <groupId>org.lazyluke</groupId>
+         <artifactId>log4jdbc-remix</artifactId>
+         <version>0.2.7</version>
+      </dependency>
+
 		<!-- #10. FileUpload용 라이브러리 추가 -->
 	    <dependency>
 	        <groupId>commons-io</groupId>
