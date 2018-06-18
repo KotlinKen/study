@@ -2,6 +2,7 @@ package com.pure.study.member.model.vo;
 
 
 import java.sql.Date;
+import java.util.Arrays;
 
 public class Member {
 	private int mno;
@@ -9,7 +10,10 @@ public class Member {
 	private String mname;
 	private String pwd;
 	private String phone;
-	private String addr;
+	private String post;
+	private String addr1;
+	private String addr2;
+	private String addrDetail;
 	private String mprofile;
 	private String email;
 	private Date birth;
@@ -25,17 +29,19 @@ public class Member {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Member(int mno, String mid, String mname, String pwd, String phone, String addr, String mprofile,
-			String email, Date birth, String gender, String[] favor, int exp, int point, Date regdate, Date qdate,
-			String cover, String etc2) {
-	
+	public Member(int mno, String mid, String mname, String pwd, String phone, String post, String addr1, String addr2,
+			String addrDetail, String mprofile, String email, Date birth, String gender, String[] favor, int exp,
+			int point, Date regdate, Date qdate, String cover, String etc2) {
 		super();
 		this.mno = mno;
 		this.mid = mid;
 		this.mname = mname;
 		this.pwd = pwd;
 		this.phone = phone;
-		this.addr = addr;
+		this.post = post;
+		this.addr1 = addr1;
+		this.addr2 = addr2;
+		this.addrDetail = addrDetail;
 		this.mprofile = mprofile;
 		this.email = email;
 		this.birth = birth;
@@ -78,11 +84,29 @@ public class Member {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getAddr() {
-		return addr;
+	public String getPost() {
+		return post;
 	}
-	public void setAddr(String addr) {
-		this.addr = addr;
+	public void setPost(String post) {
+		this.post = post;
+	}
+	public String getAddr1() {
+		return addr1;
+	}
+	public void setAddr1(String addr1) {
+		this.addr1 = addr1;
+	}
+	public String getAddr2() {
+		return addr2;
+	}
+	public void setAddr2(String addr2) {
+		this.addr2 = addr2;
+	}
+	public String getAddrDetail() {
+		return addrDetail;
+	}
+	public void setAddrDetail(String addrDetail) {
+		this.addrDetail = addrDetail;
 	}
 	public String getMprofile() {
 		return mprofile;
@@ -153,10 +177,11 @@ public class Member {
 	@Override
 	public String toString() {
 		return "Member [mno=" + mno + ", mid=" + mid + ", mname=" + mname + ", pwd=" + pwd + ", phone=" + phone
-				+ ", addr=" + addr + ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender="
-				+ gender + ", favor=" + favor + ", exp=" + exp + ", point=" + point + ", regdate=" + regdate
-				+ ", qdate=" + qdate + ", cover=" + cover + ", etc2=" + etc2 + "]";
+				+ ", post=" + post + ", addr1=" + addr1 + ", addr2=" + addr2 + ", addrDetail=" + addrDetail
+				+ ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender=" + gender + ", favor="
+				+ Arrays.toString(favor) + ", exp=" + exp + ", point=" + point + ", regdate=" + regdate + ", qdate="
+				+ qdate + ", cover=" + cover + ", etc2=" + etc2 + "]";
 	}
-	
+
 
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
 	<insert id="memberEnrollEnd">
-		insert into tbl_member values (seq_member.nextval, 
+		insert into member values (seq_member.nextval, 
 										#{mid},
 										#{mname},
 										#{pwd},
@@ -24,19 +24,19 @@
 		<result column="favor" property="favor" typeHandler="strArrTypeHandler"/>
 	</resultMap>
 	<select id="selectOneMember" parameterType="string" resultMap="memberMap">
-		select * from tbl_member where mid=#{userId}
+		select * from member where mid=#{userId}
 	</select>
 	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
-		select * from tbl_member where mname=#{mname} and email=#{email}
+		select * from member where mname=#{mname} and email=#{email}
 	</select>
 	<update id="updatePwd">
-		update tbl_member set pwd=#{pwd} where mid=#{mid}
+		update member set pwd=#{pwd} where mid=#{mid}
 	</update>
 	<select id="selectCntMember" parameterType="member" resultType="_int">
-		select count(*) from tbl_member where mid=#{mid} and email=#{email}
+		select count(*) from member where mid=#{mid} and email=#{email}
 	</select>
 	<update id="updateMember" >
-		update tbl_member set 
+		update member set 
 						mid=#{mid}, 
 						mname=#{mname},
 						phone=#{phone},
@@ -52,10 +52,10 @@
 						where mno=#{mno}
 	</update>
 	<update id="dropMember">
-		update tbl_member set qdate=sysdate where mid=#{mid}
+		update member set qdate=sysdate where mid=#{mid}
 	</update>
 	<update id="updateEmail">
-		update tbl_member set email=#{email} where mid=#{mid}
+		update member set email=#{email} where mid=#{mid}
 	</update>
 	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
 		select * from study s join tbl_apply a on s.sno=a.sno 
