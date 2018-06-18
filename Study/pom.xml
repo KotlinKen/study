@@ -22,6 +22,22 @@
 	</repositories>
 	
 	<dependencies>
+	<!-- 내가 추가한 pom.xml 시작(김회진)-->
+		
+		 <!--************** Java Mail API -->
+		  <dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>1.4.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${org.springframework-version}</version>
+			</dependency>
+		<!-- Java Mail API***************** -->
+		
+	<!-- 내가 추가한 pom.xml 끝-->
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

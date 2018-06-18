@@ -10,8 +10,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/spring/root-context.xml
-			/WEB-INF/spring/security-context.xml			
+		/WEB-INF/spring/root-context.xml
+		<!-- #7.1 스프링 security 프레임워크 의존 관련 설정파일 -->
+		/WEB-INF/spring/security-context.xml
 		</param-value>
 	</context-param>
 	

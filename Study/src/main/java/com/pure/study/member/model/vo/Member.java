@@ -1,6 +1,8 @@
 package com.pure.study.member.model.vo;
 
-import java.util.Date;
+
+import java.sql.Date;
+import java.util.Arrays;
 
 public class Member {
 	private int mno;
@@ -8,26 +10,38 @@ public class Member {
 	private String mname;
 	private String pwd;
 	private String phone;
-	private String addr;
+	private String post;
+	private String addr1;
+	private String addr2;
+	private String addrDetail;
 	private String mprofile;
 	private String email;
-	private String birth;
+	private Date birth;
 	private String gender;
-	private String favor;
+	private String[] favor;
 	private int exp;
 	private int point;
-	private Date regDate;
-	private Date qDate;
-	public Member() {}
-	public Member(int mno, String mid, String mname, String pwd, String phone, String addr, String mprofile,
-			String email, String birth, String gender, String favor, int exp, int point, Date regDate, Date qDate) {
+	private Date regdate;
+	private Date qdate;
+	private String cover;
+	private String etc2;
+	public Member() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Member(int mno, String mid, String mname, String pwd, String phone, String post, String addr1, String addr2,
+			String addrDetail, String mprofile, String email, Date birth, String gender, String[] favor, int exp,
+			int point, Date regdate, Date qdate, String cover, String etc2) {
 		super();
 		this.mno = mno;
 		this.mid = mid;
 		this.mname = mname;
 		this.pwd = pwd;
 		this.phone = phone;
-		this.addr = addr;
+		this.post = post;
+		this.addr1 = addr1;
+		this.addr2 = addr2;
+		this.addrDetail = addrDetail;
 		this.mprofile = mprofile;
 		this.email = email;
 		this.birth = birth;
@@ -35,8 +49,10 @@ public class Member {
 		this.favor = favor;
 		this.exp = exp;
 		this.point = point;
-		this.regDate = regDate;
-		this.qDate = qDate;
+		this.regdate = regdate;
+		this.qdate = qdate;
+		this.cover = cover;
+		this.etc2 = etc2;
 	}
 	public int getMno() {
 		return mno;
@@ -68,11 +84,29 @@ public class Member {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getAddr() {
-		return addr;
+	public String getPost() {
+		return post;
 	}
-	public void setAddr(String addr) {
-		this.addr = addr;
+	public void setPost(String post) {
+		this.post = post;
+	}
+	public String getAddr1() {
+		return addr1;
+	}
+	public void setAddr1(String addr1) {
+		this.addr1 = addr1;
+	}
+	public String getAddr2() {
+		return addr2;
+	}
+	public void setAddr2(String addr2) {
+		this.addr2 = addr2;
+	}
+	public String getAddrDetail() {
+		return addrDetail;
+	}
+	public void setAddrDetail(String addrDetail) {
+		this.addrDetail = addrDetail;
 	}
 	public String getMprofile() {
 		return mprofile;
@@ -86,10 +120,10 @@ public class Member {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getBirth() {
+	public Date getBirth() {
 		return birth;
 	}
-	public void setBirth(String birth) {
+	public void setBirth(Date birth) {
 		this.birth = birth;
 	}
 	public String getGender() {
@@ -98,10 +132,10 @@ public class Member {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public String getFavor() {
+	public String[] getFavor() {
 		return favor;
 	}
-	public void setFavor(String favor) {
+	public void setFavor(String[] favor) {
 		this.favor = favor;
 	}
 	public int getExp() {
@@ -116,26 +150,38 @@ public class Member {
 	public void setPoint(int point) {
 		this.point = point;
 	}
-	public Date getRegDate() {
-		return regDate;
+	public Date getRegdate() {
+		return regdate;
 	}
-	public void setRegDate(Date regDate) {
-		this.regDate = regDate;
+	public void setRegdate(Date regdate) {
+		this.regdate = regdate;
 	}
-	public Date getqDate() {
-		return qDate;
+	public Date getQdate() {
+		return qdate;
 	}
-	public void setqDate(Date qDate) {
-		this.qDate = qDate;
+	public void setQdate(Date qdate) {
+		this.qdate = qdate;
+	}
+	public String getCover() {
+		return cover;
+	}
+	public void setCover(String cover) {
+		this.cover = cover;
+	}
+	public String getEtc2() {
+		return etc2;
+	}
+	public void setEtc2(String etc2) {
+		this.etc2 = etc2;
 	}
 	@Override
 	public String toString() {
 		return "Member [mno=" + mno + ", mid=" + mid + ", mname=" + mname + ", pwd=" + pwd + ", phone=" + phone
-				+ ", addr=" + addr + ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender="
-				+ gender + ", favor=" + favor + ", exp=" + exp + ", point=" + point + ", regDate=" + regDate
-				+ ", qDate=" + qDate + "]";
+				+ ", post=" + post + ", addr1=" + addr1 + ", addr2=" + addr2 + ", addrDetail=" + addrDetail
+				+ ", mprofile=" + mprofile + ", email=" + email + ", birth=" + birth + ", gender=" + gender + ", favor="
+				+ Arrays.toString(favor) + ", exp=" + exp + ", point=" + point + ", regdate=" + regdate + ", qdate="
+				+ qdate + ", cover=" + cover + ", etc2=" + etc2 + "]";
 	}
-	
-	
-	
+
+
 }
