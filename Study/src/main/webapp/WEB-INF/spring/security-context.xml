@@ -8,5 +8,4 @@
 	<!-- #7.2. 패스워드암호화관련 빈등록 -->
 	<bean id="bcryptPasswordEncoder"
 		  class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-	
 </beans>

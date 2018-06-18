@@ -1,5 +1,6 @@
 package com.pure.study.member.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,12 +15,57 @@ import com.pure.study.member.model.vo.Member;
 public class MemberDAOImpl implements MemberDAO {
 	@Autowired
 	SqlSessionTemplate sqlSession;
-
+	
+	/**************************************/
 	@Override
-	public int insertMember(Member member) {
-		return sqlSession.insert("member.insertMember", member);
+	public int memberEnrollEnd(Member member) {
+		System.out.println(member);
+		return sqlSession.insert("member.memberEnrollEnd",member);
+	}
+	
+	@Override
+	public int memberCristal(Member member) {
+		return sqlSession.update("member.memberCristal",member);
+	}
+	@Override
+	public int checkIdDuplicate(String userId) {
+		return sqlSession.selectOne("member.checkIdDuplicate",userId);
+	}
+	@Override
+	public int insertMailCertification(String tomail, String ranstr) {
+		Map <String,String> map = new HashMap<>();
+		map.put("tomail", tomail);
+		map.put("ranstr", ranstr);
+		return sqlSession.insert("member.insertMailCertification",map);
+	}
+	@Override
+	public int checkEmail(String tomail) {
+		return sqlSession.selectOne("member.checkEmail",tomail);
+	}
+	@Override
+	public int uploadMailCertification(String tomail, String encoded) {
+		Map <String,String> map = new HashMap<>();
+		map.put("tomail", tomail);
+		map.put("encoded", encoded);
+		return sqlSession.update("member.uploadMailCertification",map);
+	}
+	@Override
+	public Map<String, String> selectCheckJoinCode(String email) {
+		return sqlSession.selectOne("member.selectCheckJoinCode",email);
 	}
 
+	@Override
+	public int deleteCertification(String email) {
+		return sqlSession.delete("member.deleteCertification",email);
+	}
+
+	@Override
+	public List<Map<String, String>> selectCategory() {
+		return sqlSession.selectList("member.selectCategory");
+	}
+	
+	/**************************************/
+	
 	@Override
 	public Member selectOneMember(String userId) {
 		return sqlSession.selectOne("member.selectOneMember", userId);
@@ -91,6 +137,5 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	
-
 
 }

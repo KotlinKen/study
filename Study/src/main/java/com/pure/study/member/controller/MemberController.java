@@ -2,6 +2,7 @@ package com.pure.study.member.controller;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -54,51 +55,221 @@ public class MemberController {
 	private JavaMailSender mailSender;
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
-
-	@RequestMapping("/member/memberEnroll.do")
+	
+	/**********************************회원가입(장익순) 시작*/
+	/*정보 입력동의페이지 이동 시작*/
+	@RequestMapping(value="/member/memberAgreement.do")
+	public String memberAgreement() {
+		if(logger.isDebugEnabled()) {
+			logger.debug("회원동의홈페이지");
+		}
+		
+		return "member/memberAgreement";
+	}
+	/*정보 입력페이지 이동 시작*/
+	@RequestMapping(value="/member/memberEnroll.do")
 	public ModelAndView memberEnroll() {
+		if(logger.isDebugEnabled()) {
+			logger.debug("회원등록홈페이지");
+		}
 		ModelAndView mav = new ModelAndView();
-		//logger.info("test");
-		List<Map<String, String>> d = departService.selectDepart();
-
-		mav.addObject("departList", d);
-		mav.setViewName("member/memberEnroll");
-
+		List<Map<String,String>> list = memberService.selectCategory();
+		System.out.println(list);
+		
+		mav.addObject("list",list);
 		return mav;
 	}
+	
+	/*mailSending 코드 전송*/
+	@RequestMapping(value = "/member/certification.do")
+	@ResponseBody
+	public Map<String,Object> mailCertification(HttpServletRequest request ,@RequestParam(value="em") String em) {
+		Map<String,Object> map = new HashMap<>();
+		String setfrom = "kimemail2018@gmail.com";         
+		String tomail  = em;     // 받는 사람 이메일
+		String title   =   "( 스터디 그룹트 ) 회원가입 인증번호 내역";   // 제목
+		
+		String content =   "회원님 \n인증번호는  ";  // 내용
+		String ranstr = ""; 
+		for(int i =0; i<4 ; i++) {
+			int ran = (int)(Math.random()*10);
+			ranstr +=ran;
+		}
+		String encoded = bcryptPasswordEncoder.encode(ranstr);
+		content += ranstr;
+		
+		int checkemail = memberService.checkEmail(tomail);
+		int result =0;
+		if(checkemail ==0 ) {
+			result = memberService.insertMailCertification(tomail,encoded);			
+		}else {
+			result = memberService.uploadMailCertification(tomail,encoded);
+		}
+		try {
+			MimeMessage message = mailSender.createMimeMessage(); 
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom(setfrom);  // 보내는사람 생략하거나 하면 정상작동을 안함
+			messageHelper.setTo(tomail);     // 받는사람 이메일
+			messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
+			messageHelper.setText(content);  // 메일 내용
+		     
+			mailSender.send(message);
+		} catch(Exception e){
+		}
+		return map;
+	}
+	
+	/*mailSending 코드 검증*/
+	@RequestMapping(value = "/member/checkJoinCode.do")
+	@ResponseBody
+	public Map<String,Object> checkJoinCode(HttpServletRequest request ,@RequestParam(value="em") String em ,@RequestParam(value="inputCode") String inputCode) {
+		Map<String,Object> map = new HashMap<>();
+		String email = em;
+		Map<String,String> cer = new HashMap<>();
+		cer = memberService.selectCheckJoinCode(email);
+		if(bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
+			map.put("result", true);
+		}else {
+			map.put("result", false);			
+		}
+		return map;
+	}
+	
+		
 
-	@RequestMapping("/member/memberEnrollEnd.do")
-	public String memberEnrollerEnd(@RequestParam("member") Member member, Model model) {
 
-		System.out.println(member);
-		String rawPassword = member.getPwd();
-		System.out.println("암호화전 : " + rawPassword);
+	
+	/*주소입력*/
+	@RequestMapping(value="/member/jusoPopup.do")
+	public String jusoPopup() {
+		return "member/jusoPopup";
+	}
+	
+	/*파일 업로드 시작*/
+	@RequestMapping(value="/member/memberImgUpload.do")
+	public ModelAndView insertBoard(Model model,@RequestParam(value="upFile",required=false) MultipartFile[] upFiles,HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		logger.debug("게시판 페이지저장");
+		logger.debug("upFiles.length="+upFiles.length);
+		logger.debug("upFile1="+upFiles[0].getOriginalFilename());
+		
+		Map<String , String> map = new HashMap<>();
+	
+		//1.파일업로드처리
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
+		String renamedFileName ="";
+		/****** MultipartFile을 이용한 파일 업로드 처리로직 시작 ******/
+		for(MultipartFile f: upFiles) {
+			if(!f.isEmpty()) {
+				//파일명 재생성
+				String originalFileName = f.getOriginalFilename();
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rndNum = (int)(Math.random()*1000);
+				renamedFileName = sdf.format(new Date(System.currentTimeMillis()))+
+										"_"+rndNum+"."+ext;
+				try {
+					f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		/****** MultipartFile을 이용한 파일 업로드 처리로직 끝 ******/
 
-		/****** password 암호화 시작 ******/
-
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		member.setPwd(encodedPassword);
-
-		/****** password 암호화 끝 ******/
-		System.out.println("암호화후 : " + member.getPwd());
-
-		// 1.비지니스로직 실행
-		int result = memberService.insertMember(member);
-
-		// 2.처리결과에 따라 view단 분기처리
-		String loc = "/";
+		//3.view단 분기
+		logger.debug(renamedFileName);
+		map.put("renamedFileName", renamedFileName);
+		
+		mav.addAllObjects(map);
+		mav.setViewName("jsonView");
+	
+		return mav;
+	}
+	
+	
+	
+	/*회원가입 시작 */
+	@RequestMapping(value="/member/memberEnrollEnd.do", method=RequestMethod.POST)
+	public String memberEnrollEnd(Model model , Member member  ) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("회원가입완료");
+		}
+		logger.debug(""+member);
+		
+		/*이메일 가져오기*/
+		String email = member.getEmail();
+		String[] emailArr = email.split(",");
+		email = emailArr[0]+"@"+emailArr[1];
+		logger.debug(email);
+		member.setEmail(email);
+		Map<String, String> cer = memberService.selectCheckJoinCode(email);
+		String loc = "/"; 
 		String msg = "";
-		if (result > 0)
-			msg = "회원가입성공!";
-		else
-			msg = "회원가입실패!";
+		if (cer == null) {
+			msg = "회원가입을 실패했습니다.";
+		}else {
+			
+			/*주소값 정리 (임시 addr1/addr2필요)*/
+			String addr= member.getAddr();
+			String[] addrArr = addr.split(",");
+			addr = addrArr[0]+", "+addrArr[1]+", "+addrArr[2]+", "+addrArr[3];
+			member.setAddr(addr);
+			
+			
+			logger.debug(""+member);
+			String rawPassword = member.getPwd();
+			/******* password 암호화 시작 *******/
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			member.setPwd(encodedPassword);
+			/******* password 암호화 끝 *******/
+			
+			/* favor null일 경우 처리 */
+			if(member.getFavor()==null) {
+				String[] favor = new String[1]; 
+				favor[0] = "no";
+				member.setFavor(favor);
+			}
+			
+			int result = memberService.memberEnrollEnd(member);
+			
+			memberService.deleteCertification(email);
 
+			//2.처리결과에 따라 view단 분기처리
+			
+			if(result>0) msg="회원가입성공!";
+			else msg="회원가입성공!";
+				
+		}
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
-
+		
 		return "common/msg";
 	}
 	
+	/*ID 중복 검사 시작 */
+	@RequestMapping(value="/member/checkIdDuplicate.do")
+	@ResponseBody
+	public Map<String,Object> checkIdDuplicate(@RequestParam("userId") String userId) throws IOException {
+		logger.debug("@ResponseBody-javaobj ajax : "+userId);
+		Map<String,Object> map = new HashMap<>();
+	
+		//업무로직
+		int count = memberService.checkIdDuplicate(userId);
+		logger.debug("count : "+count);
+		boolean isUsable = count==0?true:false;
+		logger.debug(""+isUsable);
+		
+		map.put("isUsable", isUsable);
+		
+		return map;
+	}
+	
+	/*회원가입(장익순) 끝*********************************/
+	
+	/**********************************************로그인 및 마이페이지(김회진) 시작*/
 	/*******************************로그인&로그아웃 시작*/
 	@RequestMapping(value="/member/memberLogin.do", method = RequestMethod.POST)
 	public ModelAndView memberLogin(HttpServletRequest request, @RequestParam(value="userId") String userId, @RequestParam(value="pwd") String pwd) {
@@ -131,7 +302,7 @@ public class MemberController {
 		return mav;
 	}
 
-	@RequestMapping("/member/memberLogout.do")
+	@RequestMapping(value="/member/memberLogout.do")
 	public String memberLogout(SessionStatus sessionStatus) {
 
 		if (!sessionStatus.isComplete())
@@ -144,7 +315,7 @@ public class MemberController {
 	
 	/**************** id, pwd찾기 */
 	// 아이디,비밀번호 찾기 페이지로 이동
-	@RequestMapping("/member/memberFindPage.do")
+	@RequestMapping(value="/member/memberFindPage.do")
 	public ModelAndView memberFindPage(@RequestParam("findType") String findType) {
 
 		ModelAndView mav = new ModelAndView();
@@ -380,7 +551,7 @@ public class MemberController {
 	
 	/****************************개인 정보 수정 시작*/
 	//개인 정보 수정 페이지로 이동
-	@RequestMapping("/member/memberView.do")
+	@RequestMapping(value="/member/memberView.do")
 	public ModelAndView memberView(@ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
 		
@@ -510,7 +681,7 @@ public class MemberController {
 	}
 	
 	//개인 정보 수정 - 탈퇴하기
-	@RequestMapping("/member/memberDrop.do")
+	@RequestMapping(value="/member/memberDrop.do")
 	public String memberDrop(@RequestParam("mid") String mid, Model model, SessionStatus sessionStatus) {
 		
 		//탈퇴일만
@@ -530,7 +701,7 @@ public class MemberController {
 	}
 	
 	//개인 정보 수정 - 이메일 변경(인증키 생성 및 메일 보내주기)
-	@RequestMapping("/member/newEmailKey.do")
+	@RequestMapping(value="/member/newEmailKey.do")
 	@ResponseBody
 	public Map<String, Object> newEmailKey(@RequestParam(value="newEmail") String newEmail) throws JsonProcessingException{
 		
@@ -595,7 +766,7 @@ public class MemberController {
 	/*개인 정보 수정 끝**********************************/
 	
 	/**************************내 스터디 목록 시작*/
-	@RequestMapping("/member/memberMyStudy.do")
+	@RequestMapping(value="/member/memberMyStudy.do")
 	public ModelAndView memberMyStudy(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
 			, @ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
@@ -618,7 +789,7 @@ public class MemberController {
 	/*내 스터디 목록 끝*******************************/
 	
 	/**************************스터디 신청 목록 시작*/
-	@RequestMapping("/member/memberApplyList.do")
+	@RequestMapping(value="/member/memberApplyList.do")
 	public ModelAndView memberApply(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
 									, @ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
@@ -640,7 +811,7 @@ public class MemberController {
 	/*스터디 신청 목록 끝*******************************/
 	
 	/**************************스터디 찜 목록 시작*/
-	@RequestMapping("/member/memberWish.do")
+	@RequestMapping(value="/member/memberWish.do")
 	public ModelAndView memberWish(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
 			, @ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
@@ -662,11 +833,10 @@ public class MemberController {
 	
 	/*스터디 찜 목록 끝*******************************/
 	
-	
+	/*로그인 및 마이페이지(김회진) 끝**********************************************/
 	
 	
 }
-
 
 
 

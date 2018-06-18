@@ -1,5 +1,6 @@
 package com.pure.study.member.model.vo;
 
+
 import java.sql.Date;
 
 public class Member {
@@ -27,6 +28,7 @@ public class Member {
 	public Member(int mno, String mid, String mname, String pwd, String phone, String addr, String mprofile,
 			String email, Date birth, String gender, String[] favor, int exp, int point, Date regdate, Date qdate,
 			String cover, String etc2) {
+	
 		super();
 		this.mno = mno;
 		this.mid = mid;
@@ -156,8 +158,5 @@ public class Member {
 				+ ", qdate=" + qdate + ", cover=" + cover + ", etc2=" + etc2 + "]";
 	}
 	
-	
-	
-	
-	
+
 }

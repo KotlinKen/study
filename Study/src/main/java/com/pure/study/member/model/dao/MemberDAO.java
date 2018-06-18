@@ -6,9 +6,28 @@ import java.util.Map;
 import com.pure.study.member.model.vo.Member;
 
 public interface MemberDAO {
+	
+	
+	/***********************************/
+	int memberEnrollEnd(Member member);
 
-	int insertMember(Member member);
+	int memberCristal(Member member);
 
+	int checkIdDuplicate(String userId);
+
+	int insertMailCertification(String tomail, String ranstr);
+
+	int checkEmail(String tomail);
+
+	int uploadMailCertification(String tomail, String encoded);
+
+	Map<String, String> selectCheckJoinCode(String email);
+
+	int deleteCertification(String email);
+
+	List<Map<String, String>> selectCategory();
+	/***********************************/
+	
 	Member selectOneMember(String userId);
 
 	Member selectOneMember(Member fm);
@@ -34,6 +53,5 @@ public interface MemberDAO {
 	int selectMyStudyListCnt(int mno);
 
 	List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage);
-
 
 }

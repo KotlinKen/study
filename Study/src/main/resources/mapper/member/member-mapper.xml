@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
-	<insert id="insertMember">
+	<insert id="memberEnrollEnd">
 		insert into tbl_member values (seq_member.nextval, 
 										#{mid},
 										#{mname},
@@ -68,4 +68,27 @@
 		select count(*) from tbl_apply where mno=#{mno}
 	</select>
 	<resultMap type="map" id="applyList"></resultMap>
+
+ 
+ 	<insert id="insertMailCertification">
+ 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
+ 	</insert>
+ 	<select id="checkEmail" resultType="_int">
+ 		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
+ 	</select>
+ 	<update id="uploadMailCertification">
+ 		UPDATE CERTIFICATION SET CERTI = #{encoded} WHERE EMAIL = #{tomail}
+ 	</update>
+ 	<select id="selectCheckJoinCode" resultType="map">
+ 		SELECT * FROM CERTIFICATION WHERE EMAIL = #{email}
+ 	</select>
+ 	<select id="checkIdDuplicate" resultType="_int">
+ 		SELECT COUNT (*) COUNT FROM MEMBER WHERE MID = #{userId}
+ 	</select>
+	<delete id="deleteCertification">
+		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
+	</delete>
+	<select id="selectCategory" resultType="map" >
+		select kname from kindk where klevel = 1
+	</select>
 </mapper>
