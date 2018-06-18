@@ -1,5 +1,6 @@
 package com.pure.study.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.pure.study.member.model.vo.Certification;
@@ -20,5 +21,9 @@ public interface MemberDAO {
 	int uploadMailCertification(String tomail, String encoded);
 
 	Map<String, String> selectCheckJoinCode(String email);
+
+	int deleteCertification(String email);
+
+	List<Map<String, String>> selectCategory();
 
 }

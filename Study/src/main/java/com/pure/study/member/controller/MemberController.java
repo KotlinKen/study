@@ -55,9 +55,23 @@ public class MemberController {
 	@RequestMapping("/member/memberAgreement.do")
 	public String memberAgreement() {
 		if(logger.isDebugEnabled()) {
+			logger.debug("회원동의홈페이지");
+		}
+		
+		return "member/memberAgreement";
+	}
+	/*정보 입력페이지 이동 시작*/
+	@RequestMapping("/member/memberEnroll.do")
+	public ModelAndView memberEnroll() {
+		if(logger.isDebugEnabled()) {
 			logger.debug("회원등록홈페이지");
 		}
-		return "member/memberAgreement";
+		ModelAndView mav = new ModelAndView();
+		List<Map<String,String>> list = memberService.selectCategory();
+		System.out.println(list);
+		
+		mav.addObject("list",list);
+		return mav;
 	}
 	
 	/*mailSending 코드 전송*/
@@ -75,22 +89,16 @@ public class MemberController {
 			int ran = (int)(Math.random()*10);
 			ranstr +=ran;
 		}
-		System.out.println(ranstr);
 		String encoded = bcryptPasswordEncoder.encode(ranstr);
 		content += ranstr;
-		System.out.println(content);
 		
 		int checkemail = memberService.checkEmail(tomail);
 		int result =0;
-		System.out.println("checkemail : "+checkemail);
 		if(checkemail ==0 ) {
-			System.out.println("insertMailCertification");
 			result = memberService.insertMailCertification(tomail,encoded);			
 		}else {
-			System.out.println("uploadMailCertification");
 			result = memberService.uploadMailCertification(tomail,encoded);
 		}
-		System.out.println("result : "+result);
 		try {
 			MimeMessage message = mailSender.createMimeMessage(); 
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
@@ -101,7 +109,6 @@ public class MemberController {
 		     
 			mailSender.send(message);
 		} catch(Exception e){
-			System.out.println(e);
 		}
 		return map;
 	}
@@ -112,8 +119,6 @@ public class MemberController {
 	public Map<String,Object> checkJoinCode(HttpServletRequest request ,@RequestParam(value="em") String em ,@RequestParam(value="inputCode") String inputCode) {
 		Map<String,Object> map = new HashMap<>();
 		String email = em;
-		System.out.println(email);
-		System.out.println(inputCode);
 		Map<String,String> cer = new HashMap<>();
 		cer = memberService.selectCheckJoinCode(email);
 		if(bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
@@ -121,20 +126,12 @@ public class MemberController {
 		}else {
 			map.put("result", false);			
 		}
-		System.out.println(map);
 		return map;
 	}
 	
 		
 
-	/*정보 입력페이지 이동 시작*/
-	@RequestMapping("/member/memberEnroll.do")
-	public String memberEnroll() {
-		if(logger.isDebugEnabled()) {
-			logger.debug("회원등록홈페이지");
-		}
-		return "member/memberEnroll";
-	}
+
 	
 	/*주소입력*/
 	@RequestMapping("/member/jusoPopup.do")
@@ -202,37 +199,48 @@ public class MemberController {
 		email = emailArr[0]+"@"+emailArr[1];
 		logger.debug(email);
 		member.setEmail(email);
-		
-		/*생년월일 가져오기*/
-		String birth= member.getBirth();
-		String[] birthArr = birth.split(",");
-		birth = birthArr[0]+"/"+birthArr[1]+"/"+birthArr[2];
-		member.setBirth(birth);
-		
-		/*주소값 정리 (임시 addr1/addr2필요)*/
-		String addr= member.getAddr();
-		String[] addrArr = addr.split(",");
-		addr = addrArr[0]+" "+addrArr[2]+" "+addrArr[3];
-		System.out.println(addr);
-		member.setAddr(addr);
-		
-		
-		logger.debug(""+member);
-		String rawPassword = member.getPwd();
-		System.out.println("암호화전="+rawPassword);
-		/******* password 암호화 시작 *******/
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		member.setPwd(encodedPassword);
-		/******* password 암호화 끝 *******/
-	
-		int result = memberService.memberEnrollEnd(member);
-		
-		//2.처리결과에 따라 view단 분기처리
+		Map<String, String> cer = memberService.selectCheckJoinCode(email);
 		String loc = "/"; 
 		String msg = "";
-		if(result>0) msg="회원가입성공!";
-		else msg="회원가입성공!";
-		
+		if (cer == null) {
+			msg = "회원가입을 실패했습니다.";
+		}else {
+
+			/*생년월일 가져오기*/
+			String birth= member.getBirth();
+			String[] birthArr = birth.split(",");
+			birth = birthArr[0]+"/"+birthArr[1]+"/"+birthArr[2];
+			member.setBirth(birth);
+			
+			/*주소값 정리 (임시 addr1/addr2필요)*/
+			String addr= member.getAddr();
+			String[] addrArr = addr.split(",");
+			addr = addrArr[0]+" "+addrArr[2]+" "+addrArr[3];
+			member.setAddr(addr);
+			
+			
+			logger.debug(""+member);
+			String rawPassword = member.getPwd();
+			/******* password 암호화 시작 *******/
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			member.setPwd(encodedPassword);
+			/******* password 암호화 끝 *******/
+			
+			/* favor null일 경우 처리 */
+			if(member.getFavor()==null) {
+				member.setFavor("no");
+			}
+			
+			int result = memberService.memberEnrollEnd(member);
+			
+			memberService.deleteCertification(email);
+
+			//2.처리결과에 따라 view단 분기처리
+			
+			if(result>0) msg="회원가입성공!";
+			else msg="회원가입성공!";
+				
+		}
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
 		

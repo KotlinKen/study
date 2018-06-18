@@ -1,5 +1,6 @@
 package com.pure.study.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Map<String, String> selectCheckJoinCode(String email) {
 		return memberDAO.selectCheckJoinCode(email);
+	}
+
+	@Override
+	public int deleteCertification(String email) {
+		return memberDAO.deleteCertification(email);
+	}
+
+	@Override
+	public List<Map<String, String>> selectCategory() {
+		return memberDAO.selectCategory();
 	}
 
 }
