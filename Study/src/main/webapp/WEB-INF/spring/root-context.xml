@@ -10,17 +10,10 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- #6.1. myBatis(JDBC)설정 연결 설정하기 -->
 	<bean id="dataSource-origin" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-<<<<<<< HEAD
 	   <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 	   <property name="url" value="jdbc:oracle:thin:@khq.iptime.org:1521:xe"/>
 	   <property name="username" value="groupt"/>
 	   <property name="password" value="groupt"/>
-=======
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-		<property name="username" value="spring"/>
-		<property name="password" value="spring"/>
->>>>>>> refs/remotes/origin/JangIkSoon
 	</bean>
 	
 	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
@@ -80,23 +73,6 @@
 	
 	<!-- 내가 추가한 root-context -->
 	<!-- 메일보내기 -->
-<<<<<<< HEAD
-	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
-	   <property name="host" value="smtp.gmail.com" />
-	   <property name="port" value="587" />
-	   <property name="username" value="jjsk109@gmail.com" />
-	   <property name="password" value="kingark6607!@" />
-	   <property name="javaMailProperties">
-	      <props>
-	            <prop key="mail.transport.protocol">smtp</prop>
-	            <prop key="mail.smtp.auth">true</prop>
-	            <prop key="mail.smtp.starttls.enable">true</prop>
-	            <prop key="mail.debug">true</prop>
-	      </props>
-	   </property>
-	
-	</bean>
-=======
    <bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
       <property name="host" value="smtp.gmail.com" />
       <property name="port" value="25" />
@@ -112,5 +88,4 @@
       </property>
    </bean>
 
->>>>>>> refs/remotes/origin/JangIkSoon
 </beans>

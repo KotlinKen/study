@@ -7,11 +7,12 @@
 										#{mname},
 										#{pwd},
 										#{phone},
-										#{post},
 										#{addr1},
 										#{addr2},
 										#{addrDetail},
+										#{post},
 										#{mprofile},
+										#{cover},
 										#{email},
 										#{birth},
 										#{gender},
@@ -19,8 +20,7 @@
 										default,
 										default,
 										default,
-										null,
-										default
+										null
 										)
 	</insert>
 	<resultMap type="member" id="memberMap">
@@ -92,6 +92,12 @@
 		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
 	</delete>
 	<select id="selectCategory" resultType="map" >
-		select kname from kindk where klevel = 1
+		select kname from kind 
+	</select>
+	<select id="selectServiceAgree" resultType="map">
+		select * from serviceagree order by sno
+	</select>
+	<select id="selectInformationAgree" resultType="map">
+		select * from informationagree order by ino
 	</select>
 </mapper>
