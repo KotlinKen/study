@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
+	<insert id="memberEnrollEnd">
+		insert into tbl_member values (seq_member.nextval, 
+										#{mid},
+										#{mname},
+										#{pwd},
+										#{phone},
+										#{addr},
+										#{mprofile},
+										#{email},
+										#{birth},
+										#{gender},
+										#{favor, typeHandler=strArrTypeHandler},
+										default,
+										default,
+										default,
+										null,
+										default
+										)
+	</insert>
+	<resultMap type="member" id="memberMap">
+		<result column="favor" property="favor" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	<select id="selectOneMember" parameterType="string" resultMap="memberMap">
+		select * from tbl_member where mid=#{userId}
+	</select>
+	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
+		select * from tbl_member where mname=#{mname} and email=#{email}
+	</select>
+	<update id="updatePwd">
+		update tbl_member set pwd=#{pwd} where mid=#{mid}
+	</update>
+	<select id="selectCntMember" parameterType="member" resultType="_int">
+		select count(*) from tbl_member where mid=#{mid} and email=#{email}
+	</select>
+	<update id="updateMember" >
+		update tbl_member set 
+						mid=#{mid}, 
+						mname=#{mname},
+						phone=#{phone},
+						addr=#{addr}, 
+						<if test="mprofile != null">
+							mprofile=#{mprofile}, 
+						</if>
+						email=#{email},
+						birth=#{birth}, 
+						gender=#{gender}, 
+						favor=#{favor, typeHandler=strArrTypeHandler}, 
+						cover=#{cover}
+						where mno=#{mno}
+	</update>
+	<update id="dropMember">
+		update tbl_member set qdate=sysdate where mid=#{mid}
+	</update>
+	<update id="updateEmail">
+		update tbl_member set email=#{email} where mid=#{mid}
+	</update>
+	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
+		select * from study s join tbl_apply a on s.sno=a.sno 
+									join tbl_kind k on k.kno=s.kno
+									join tbl_town t on t.tno=s.tno
+									join tbl_depart d on d.dno=s.dno
+        where s.mno=#{mno}
+	</select>
+	<select id="selectApplyListCnt" parameterType="_int" resultType="_int">
+		select count(*) from tbl_apply where mno=#{mno}
+	</select>
+	<resultMap type="map" id="applyList"></resultMap>
+
  
  	<insert id="insertMailCertification">
  		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
@@ -17,9 +85,6 @@
  	<select id="checkIdDuplicate" resultType="_int">
  		SELECT COUNT (*) COUNT FROM MEMBER WHERE MID = #{userId}
  	</select>
-	<insert id="memberEnrollEnd">
-		INSERT INTO MEMBER VALUES(seq_member.nextval, #{mid} , #{mname} , #{pwd} , #{phone} , #{addr} , #{mprofile} , #{email} , TO_DATE(#{birth},'YYYY/MM/DD') , #{gender} , #{favor} , 0 , 0 , default , null )
-	</insert>
 	<delete id="deleteCertification">
 		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
 	</delete>
