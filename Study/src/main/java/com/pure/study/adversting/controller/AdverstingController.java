@@ -238,7 +238,7 @@ public class AdverstingController {
 		 
 		mav.addObject("msg", msg);
 		mav.addObject("loc", loc);
-		mav.setViewName("common/msg");
+		mav.setViewName("common/msg"); 
 		
 		return mav;
 	}

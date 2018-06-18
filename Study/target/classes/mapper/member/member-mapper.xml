@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="member">
+ 
+ 	<insert id="insertMailCertification">
+ 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
+ 	</insert>
+ 	<select id="checkEmail" resultType="_int">
+ 		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
+ 	</select>
+ 	<update id="uploadMailCertification">
+ 		UPDATE CERTIFICATION SET CERTI = #{encoded} WHERE EMAIL = #{tomail}
+ 	</update>
+ 	<select id="selectCheckJoinCode" resultType="map">
+ 		SELECT * FROM CERTIFICATION WHERE EMAIL = #{email}
+ 	</select>
+ 	<select id="checkIdDuplicate" resultType="_int">
+ 		SELECT COUNT (*) COUNT FROM MEMBER WHERE MID = #{userId}
+ 	</select>
+	<insert id="memberEnrollEnd">
+		INSERT INTO MEMBER VALUES(seq_member.nextval, #{mid} , #{mname} , #{pwd} , #{phone} , #{addr} , #{mprofile} , #{email} , TO_DATE(#{birth},'YYYY/MM/DD') , #{gender} , #{favor} , 0 , 0 , default , null )
+	</insert>
+</mapper>
