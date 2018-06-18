@@ -225,14 +225,45 @@
 	        <scope>provided</scope>
 	    </dependency>
 	
+	<!-- #12. jsonView관련 의존 -->
+    <dependency>
+        <groupId>net.sf.json-lib</groupId>
+        <artifactId>json-lib-ext-spring</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+    
+    
+	<!-- #13. @Responsebody사용을 위한 의존 : 자바객체->json -->
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.5</version>
+    </dependency>
+
+	<!-- thymeleaf -->
+	<!-- thymeleaf -->
+       <dependency>
+           <groupId>org.thymeleaf</groupId>
+           <artifactId>thymeleaf-spring3</artifactId>
+           <version>2.0.14</version>
+           <scope>compile</scope>
+       </dependency>
+       <dependency>
+           <groupId>org.thymeleaf</groupId>
+           <artifactId>thymeleaf</artifactId>
+           <version>2.0.14</version>
+           <scope>compile</scope>
+       </dependency>
+ 
 		  <!-- query와 resultSet을 logging할 수 있는 log4jdbc-remix 라이브러리추가 -->
 	      <!-- https://mvnrepository.com/artifact/org.lazyluke/log4jdbc-remix/0.2.7 -->
-	      <dependency>
-	         <groupId>org.lazyluke</groupId>
-	         <artifactId>log4jdbc-remix</artifactId>
-	         <version>0.2.7</version>
-	      </dependency>
-	
+      <dependency>
+         <groupId>org.lazyluke</groupId>
+         <artifactId>log4jdbc-remix</artifactId>
+         <version>0.2.7</version>
+      </dependency>
+
 		<!-- #10. FileUpload용 라이브러리 추가 -->
 	    <dependency>
 	        <groupId>commons-io</groupId>
