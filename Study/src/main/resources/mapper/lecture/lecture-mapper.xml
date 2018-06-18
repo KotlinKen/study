@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lecture">
+	<resultMap type="map" id="map"></resultMap>
+	
+	<insert id="insertLecture">
+		INSERT INTO STUDY VALUES(SEQUENCE_STUDY.NEXTVAL,
+								 2, 
+								 #{kno}, 
+								 #{tno}, 
+								 #{dno}, 
+								 #{title}, 
+								 #{freqs}, 
+								 #{content}, 
+								 #{price}, 
+								 NULL, 
+								 #{recruit}, 
+								 '모집 중', 
+								 #{time}, 
+								 'lecture', 
+								 #{etc}, 
+								 #{ldate}, 
+								 #{sdate}, 
+								 #{edate}, 
+								 sysdate)
+	</insert>
+
+	<select id="selectLocList" resultMap="map">
+		SELECT * FROM LOCAL
+	</select>
+	
+	<select id="selectTownList" resultMap="map">
+		SELECT * FROM TOWN WHERE LNO = #{localNo}
+	</select>
+	
+	<select id="selectSubList" resultMap="map">
+		SELECT * FROM SUBJECT
+	</select>
+	
+	<select id="selectKindList" resultMap="map">
+		SELECT * FROM KIND WHERE SUBNO = #{subNo}
+	</select>
+	
+	<select id="selectDiffList" resultMap="map">
+		SELECT * FROM DIFF
+	</select>
+	
+	<select id="selectLectureList" resultMap="map">
+		SELECT (SELECT M.NAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
+		       (SELECT L.LOCAL1 AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
+		       (SELECT T.NAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
+		       (SELECT SUB.NAEM AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
+		       (SELECT K.NAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,       
+		        TIME,
+		        NVL(PRICE, 0) AS PRICE,
+		        STATUS,        
+		        LDATE,
+		        SDATE,
+		        EDATE,
+		        REGDATE
+		FROM (SELECT S.*, 
+		            (SELECT T.LNO AS LNO FROM TOWN T WHERE T.TNO = S.TNO) LNO,
+		            (SELECT K.SUBNO AS SUBNO FROM KIND K WHERE K.KNO = S.KNO) SUBNO
+		      FROM STUDY S 
+		WHERE TYPE = 'lecture') A
+	</select>
+</mapper>

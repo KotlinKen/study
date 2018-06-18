@@ -2,6 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<typeAliases>
+		<!-- <typeAlias type="com.pure.study.local.model.vo.Local" alias="local"/> -->
 		<typeAlias type="com.pure.study.board.model.vo.Board" alias="board"/>
 		<!-- <typeAlias type="com.pure.study.board.model.vo.Member" alias="member"/> -->
 	</typeAliases>

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -78,8 +77,7 @@ $(function(){
 		},error:function(){
 			
 		}
-	}); 
-	
+	}); 	
 	
 	//subject를 선택하면 해당하는 과목들을들을 가져와 리스트를 생성한다.
 	 $("select#subject").on("change",function(){
@@ -114,8 +112,7 @@ $(function(){
 		},error:function(){
 			
 		}
-	}); 
-	
+	}); 	
 	
 	//첨부파일 + 버튼 클릭시 첨부파일창이 밑에 더 생긴다.
 	$("form[name=studyFrm]").on("click","button.addFile",function(){
@@ -132,9 +129,7 @@ $(function(){
 		if( $(this).parent("div.fileWrapper")[0]!==$("div.fileWrapper:eq(0)")[0]){ //맨첫번째 첨부파일은 삭제이벤트 발생안함.
 			$(this).parent("div.fileWrapper").remove();
 		}
-	});
-	
-	
+	});	
 });
 
 </script>
@@ -172,7 +167,7 @@ $(function(){
 		
 		</c:forEach>
 	</select><br />
-	<label for="pay">일회 사용회비 : </label><input type="text" name="pay" id="pay" class="form-control" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
+	<label for="price">일회 사용회비 : </label><input type="text" name="price" id="pay" class="form-control" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
 	<br />
 	<label for="recruit">모집 인원 : </label>
 	<select name="recruit" id="recruit">
@@ -207,7 +202,6 @@ $(function(){
 	
 	<input type="reset" value="취소하기" />
 	<input type="submit" value="등록하기" />
-	</form>
-	
+	</form>	
 </div>
 <%-- <jsp:include page="/WEB-INF/views/common/footer.jsp"/>	 --%>
