@@ -36,18 +36,25 @@
 	</div>
 </div>
 
-<script>
+<div class="panel">
+	<div class="leftSection">
+	<div style="padding:5px 10px;">
+	총 <span style="font-weight:bold;"> ${count } </span>건의 광고가 있습니다.
+	</div>
+	</div>
+	<div class="rightSection">
+	<button type="button" class="rm_btn rm_btn_colorGreen" onclick="location.href='adverstingWrite'">REGIST ADVERSTING</button>
+	</div>
+</div>
 
-</script>
 
-총 ${count }건의 게시물이 있습니다.
-<input type="button" value="글쓰기"  class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"  id="btn-add" onclick="location.href='adverstingWrite'" />
+
 
 <table class="rm_table">
 <thead>
 	<tr>
 		<th width="5%">번호</th>
-		<th width="8%">위치</th>
+		<th width="5%">위치</th>
 		<th width="15%">제목</th>
 		<th width="20%">내용</th>
 		<th width="6%">시작일</th>
@@ -55,18 +62,20 @@
 	</tr>
 </thead>
 <tbody>
+	
 	<c:forEach var="list" items="${list}" varStatus="status">
 		<tr onclick="fn_boardView('${list.ANO }')">
 			<td class="first_col">${list.ANO}</td>
-			<td>${list.POSITION}</td>
+			<td class="advType">${list.POSITION}</td>
 			<td>${list.TITLE}</td>
 			<td>${list.CONTENT}</td>
 			<td class="advDate">${fn:substring(list.STARTAD, 0, 10)}</td>
 			<td class="advDate">${fn:substring(list.ENDAD, 0, 10)}</td>
-
-
 		</tr>
+
 	</c:forEach>
+	${fn:length(list) == 0 ? "<tr><td colspan='6'>등록된 광고가 없습니다.</td></tr>" : "" }
+	
 </tbody>
 </table>
 

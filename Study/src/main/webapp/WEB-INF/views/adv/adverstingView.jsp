@@ -55,7 +55,20 @@
 	      <input type="text" class="form-control" id="url" name="url" placeholder="링크를 작성해주세요." autocomplete="off">
 	    </div>
 	</div>
-  
+
+	<div class="form-row">
+	   <div class="form-group col-md-6">
+	       <input type="checkbox" class="form-check-input" id="status" name="status">
+	       ${adversting.STATUS }
+  		   <label class="form-check-label" for="status">사용유무</label>
+	    </div>
+	</div>
+   	<div class="form-row">
+	   <div class="form-group col-md-6">
+	      <label for="backColor">백보드 컬러</label> 
+	      <input type="text" class="form-control" id="backColor" name="backColor" placeholder="백보드 컬러를 작성해주세요" autocomplete="off" value="${adversting.BACKCOLOR }">
+	    </div>
+	</div>
   
    
   <button type="submit" class="btn btn-primary">수정</button>

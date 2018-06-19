@@ -11,13 +11,14 @@ public class Adversting {
 	private String position;
 	private Date startAd;
 	private Date endAd;
+	private String status;
+	private String backColor;
 	private Date regDate;
 	
 	public Adversting() {
 	}
-
 	public Adversting(int ano, String title, String content, String advImg, String url, String position, Date startAd,
-			Date endAd, Date regDate) {
+			Date endAd, String status, String backColor, Date regDate) {
 		super();
 		this.ano = ano;
 		this.title = title;
@@ -27,9 +28,10 @@ public class Adversting {
 		this.position = position;
 		this.startAd = startAd;
 		this.endAd = endAd;
+		this.status = status;
+		this.backColor = backColor;
 		this.regDate = regDate;
 	}
-
 	public int getAno() {
 		return ano;
 	}
@@ -102,11 +104,27 @@ public class Adversting {
 		this.regDate = regDate;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getBackColor() {
+		return backColor;
+	}
+
+	public void setBackColor(String backColor) {
+		this.backColor = backColor;
+	}
+
 	@Override
 	public String toString() {
 		return "Adversting [ano=" + ano + ", title=" + title + ", content=" + content + ", advImg=" + advImg + ", url="
-				+ url + ", position=" + position + ", startAd=" + startAd + ", endAd=" + endAd + ", regDate=" + regDate
-				+ "]";
+				+ url + ", position=" + position + ", startAd=" + startAd + ", endAd=" + endAd + ", status=" + status
+				+ ", backColor=" + backColor + ", regDate=" + regDate + "]";
 	}
 
 	

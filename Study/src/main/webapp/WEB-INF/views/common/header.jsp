@@ -17,7 +17,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 <script>
 
+function imgError(img){ 
+	img.src="${rootPath}/resources/upload/adversting/20180617_161710579_2.jpg";
+}
 $(function(){
+
 	var type = "메인TOP";
 	$.ajax({
 		url : "${rootPath}/adv/call",
@@ -25,7 +29,12 @@ $(function(){
 		dataType : "json",
 		success : function(data){
 			console.log(data);
-			$(".mainTop").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG+ "' />");
+			if(data.adv != null){
+				$(".mainTop").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG + "' onerror='imgError(this)'/>");
+				$(".topBanner").css({"display": "block", "background-color" : data.adv.BACKCOLOR});
+			}else{
+
+			}
 		}
 	});
 });	
@@ -62,6 +71,7 @@ $(function(){
 		})
 	});
  }
+ 
 });	
 	
 	

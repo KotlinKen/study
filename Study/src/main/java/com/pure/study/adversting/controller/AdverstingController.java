@@ -49,6 +49,13 @@ public class AdverstingController {
 		ModelAndView mav = new ModelAndView();
 		
 		
+		if(adversting.getStatus().equals("on")) {
+			adversting.setStatus("Y");
+		}else {
+			adversting.setStatus("N");
+		}
+		
+		
 		try {
 			//1.파일업로드 처리
 			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
@@ -159,6 +166,12 @@ public class AdverstingController {
 	@RequestMapping("/adv/adverstingReWrite")
 	public ModelAndView adverstingReWrite(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		
+		if(adversting.getStatus() != null) {
+			adversting.setStatus("Y");
+		}else {
+			adversting.setStatus("N");
+		}
 		
 		Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
 		
