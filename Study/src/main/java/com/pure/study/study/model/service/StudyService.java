@@ -41,5 +41,7 @@ public interface StudyService {
 
 	int updateStudy(Study study);
 
+	int deleteStudy(int sno);
+
 
 }
