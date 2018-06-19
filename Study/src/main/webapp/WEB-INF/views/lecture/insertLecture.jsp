@@ -100,6 +100,8 @@ $(function(){
 	
 	// 날짜를 조정해보자...
 	$("input[class=changeDate]").on("change", function(){
+		$("input[class=day]").prop("checked", false);
+		
 		var sdate = $("#sdate").val();
 		var sday = new Date(sdate).getDay();
 		var startArray = sdate.split("-");
@@ -111,9 +113,8 @@ $(function(){
 		
 		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
 		
-		if( difference >= 0 && difference < 7 ){
-			$(".day").attr("disabled", true);
-			
+		if( difference >= 0 && difference < 7 ){			
+			$("input[class=day]").attr("disabled", true);
 		 	for( var i = 0; i < difference+1; i++ ){
 		 		if( sday + i < 7)			
 		 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
@@ -122,7 +123,7 @@ $(function(){
 		 	}
 		}
 		else
-			$(".day").attr("disabled", false);
+			$(".day").attr("disabled", true);
 	});
 });
 </script>
