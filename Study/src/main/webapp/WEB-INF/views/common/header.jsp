@@ -143,7 +143,6 @@ $(function(){
 								<a href="${rootPath}/member/memberFindPage.do?findType=아이디">아이디/</a>
 								<a href="${rootPath}/member/memberFindPage.do?findType=비밀번호">비밀번호 찾기</a>
 							</div>
-	      
 		
 	      <div class="modal-footer">
 	        <button type="submit" class="btn btn-outline-success" >로그인</button>
