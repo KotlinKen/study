@@ -50,8 +50,8 @@ public class StudyController {
 		mav.addObject("localList",localList);
 		
 		//카테고리 리스트
-		List<Map<String,Object>> subjectList=studyService.selectSubject();
-		mav.addObject("subjectList",subjectList);
+		List<Map<String,Object>> kindList=studyService.selectKind();
+		mav.addObject("kindList",kindList);
 		
 		//난이도 리스트
 		List<Map<String,Object>> diffList=studyService.selectLv();
@@ -123,7 +123,7 @@ public class StudyController {
 
 		if(study.getPrice()==null) study.setPrice(0+"원");
 		System.out.println("study="+study);
-		study.setMno(9); //임시로
+		study.setMno(2); //임시로
 		//스터디 생성하기 
 		int result = studyService.insertStudy(study);
 		
@@ -181,7 +181,7 @@ public class StudyController {
 		String msg="";
 		if(result>0) {
 			msg="스터디 등록 성공";
-			//loc="/board/boardView.do?no="+boardNo;
+			loc="/study/studyList.do";
 		}else
 			msg="스터디 등록 실패";
 		
@@ -437,18 +437,18 @@ public class StudyController {
 	/* ---------------------------------------study form에 필요한 select ------------------------------------------------*/
 	@RequestMapping("/study/selectSubject.do")
 	@ResponseBody
-	public List<Map<String,Object>> selectSubject(){
+	public List<Map<String,Object>> selectSubject(@RequestParam(value="kno", required=true) int kno){
 		
-		List<Map<String,Object>> list = studyService.selectSubject();
+		List<Map<String,Object>> list = studyService.selectSubject(kno);
 		return list;
 		
 	}
 	
 	@RequestMapping("/study/selectKind.do")
 	@ResponseBody
-	public List<Map<String,Object>> selectKind(@RequestParam(value="subno", required=true) int subno){
+	public List<Map<String,Object>> selectKind(){
 		
-		List<Map<String,Object>> list = studyService.selectKind(subno);
+		List<Map<String,Object>> list = studyService.selectKind();
 		
 		return list;
 		
@@ -458,7 +458,7 @@ public class StudyController {
 	public List<Map<String,Object>> selectLocal(){
 		
 		List<Map<String,Object>> list = studyService.selectLocal();
-		
+		System.out.println("@@@@@@@localList="+list);
 		return list;
 	}
 	

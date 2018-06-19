@@ -8,7 +8,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.pure.study.study.model.vo.Study;
 
 
@@ -41,15 +40,15 @@ public class StudyDAOImpl implements StudyDAO {
 	
 	
 	@Override
-	public List<Map<String, Object>> selectSubject() {
+	public List<Map<String, Object>> selectSubject(int kno) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("study.selectSubject");
+		return sqlSession.selectList("study.selectSubject",kno);
 	}
 
 	@Override
-	public List<Map<String, Object>> selectKind(int subno) {
+	public List<Map<String, Object>> selectKind() {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("study.selectKind",subno);
+		return sqlSession.selectList("study.selectKind");
 	}
 
 	@Override
@@ -67,7 +66,9 @@ public class StudyDAOImpl implements StudyDAO {
 	@Override
 	public List<Map<String, Object>> selectLv() {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("study.selectLv");
+		List<Map<String, Object>> list =sqlSession.selectList("study.selectLv");
+		System.out.println("list="+list);
+		return list;
 	}
 
 	@Override
