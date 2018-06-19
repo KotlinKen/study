@@ -115,27 +115,36 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage) {
 		return sqlSession.selectOne("member.selectWishList", mno);
-		//mapper 안 만들었음.
 	}
 
 	@Override
 	public int selectWishListCnt(int mno) {
 		return sqlSession.selectOne("member.selectWishListCnt", mno);
-		//mapper 안 만들었음.
 	}
 
 	@Override
 	public int selectMyStudyListCnt(int mno) {
 		return sqlSession.selectOne("member.selectMyStudyListCnt", mno);
-		//mapper 안 만들었음.
 	}
 
 	@Override
 	public List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage) {
-		return sqlSession.selectOne("member.selectMyStudyList", mno);
-		//mapper 안 만들었음.
+		return sqlSession.selectList("member.selectMyStudyList", mno);
+	}
+
+	@Override
+	public List<Map<String, String>> selectKind() {
+		return sqlSession.selectList("member.selectKind");
 	}
 	
+	@Override
+	public List<Map<String, String>> serviceagree() {
+		return sqlSession.selectList("member.serviceagree");
+	}
 	
+	@Override
+	public List<Map<String, String>> informationagree() {
+		return sqlSession.selectList("member.informationagree");
+	}
 
 }

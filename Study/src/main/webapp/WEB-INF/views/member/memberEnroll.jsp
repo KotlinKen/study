@@ -28,7 +28,6 @@ div#userId-container span.guide {
 	top: 12px;
 	right: 10px;
 }
-
 span.pwd {
 	display: none;
 	font-size: 12px;
@@ -36,11 +35,9 @@ span.pwd {
 	top: 12px;
 	right: 10px;
 }
-
 div#userId-container span.ok {
 	color: green;
 }
-
 div#userId-container span.error {
 	color: red;
 }
@@ -62,19 +59,15 @@ div#userId-container span.error {
 				} else {
 					$(".pwd.ok").show();
 					$(".pwd.error").hide();
-
 					$("#pwdDuplicateCheck").val(1);
 				}
 			});
-
 			/* 아이디 */
 			$("#userId_").on("keyup", function() {
 				var userId = $(this).val().trim();
 				if (userId.length > 11)
 					alert("아이디가 너무 김니다.")
-
 			});
-
 			/* 파일 업로드 */
 			$("input:file")
 					.change(
@@ -92,7 +85,6 @@ div#userId-container span.error {
 								var data = new FormData();
 								var upFile = document.getElementById("upFile").files[0];
 								data.append("upFile", upFile);
-
 								$
 										.ajax({
 											url : "memberImgUpload.do",
@@ -123,11 +115,8 @@ div#userId-container span.error {
 											cache : false,
 											processData : false
 										});
-
 							});
-
 		});
-
 		function fn_checkID() {
 			var userId = $("#userId_").val().trim();
 			if (userId.length < 4) {
@@ -155,7 +144,6 @@ div#userId-container span.error {
 				userId.focus();
 				return;
 			}
-
 			$.ajax({
 				url : "checkIdDuplicate.do",
 				data : {
@@ -179,7 +167,6 @@ div#userId-container span.error {
 				}
 			});
 		}
-
 		function validate() {
 			/* id */
 			var userId = $("#userId_");
@@ -208,14 +195,12 @@ div#userId-container span.error {
 				userId.focus();
 				return false;
 			}
-
 			var idcheck = $("#idDuplicateCheck").val();
 			if (idcheck == 0) {
-				alert("아이디가 중복 됩니다.");
+				alert("아이디가 확인 하세요.");
 				userId.focus();
 				return false;
 			}
-
 			/* password */
 			var password = $("#password_");
 			var pwdcheck = $("#pwdDuplicateCheck").val();
@@ -229,7 +214,6 @@ div#userId-container span.error {
 				password.focus();
 				return false;
 			}
-
 			if (password.val().indexOf(" ") >= 0) {
 				alert("패스워드는 공백을 사용할 수 없습니다");
 				password.focus();
@@ -240,13 +224,15 @@ div#userId-container span.error {
 				password.focus();
 				return false;
 			}
-			if (password.val().search(/[!@#$%^&*()?_~]/g) <= 2) {
-				alert("패스워드는 특수문자를 최소2개 이상 사용해야 합니다.");
+		
+			if (password.val().search(/[!@#$%^&*()?_+~]/g) == -1) {
+				alert(password.val()+"패스워드는 특수문자를 사용해야 합니다.");
 				password.focus();
 				return false;
-			}
-			if (password.val().search(/[0-9]/g) <= 3) {
-				alert("패스워드는 숫자를 최소3개 이상 사용해야 합니다.");
+			} 
+		  
+			if (password.val().search(/[0-9]/g) == -1) {
+				alert("패스워드는 숫자를 사용해야 합니다.");
 				password.focus();
 				return false;
 			}
@@ -255,14 +241,12 @@ div#userId-container span.error {
 				password.focus();
 				return false;
 			}
-
 			var name = $("#name");
 			if (name.val().trim().length < 2) {
 				alert("이름을 2글자 이상 입력해 주세요.");
 				name.focus();
 				return false;
 			}
-
 			if (name.val().trim().indexOf(" ") >= 0) {
 				alert("이름을에 공백을  사용할 수 없습니다.");
 				name.focus();
@@ -288,7 +272,6 @@ div#userId-container span.error {
 				name.focus();
 				return false;
 			}
-
 			var phone = $("#phone");
 			if (phone.val().search(/[a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|!@#$%^&*()?_~]/g) != -1) {
 				alert("전화번호는 숫자만 가능합니다.");
@@ -300,7 +283,6 @@ div#userId-container span.error {
 				phone.focus();
 				return false;
 			}
-
 			/* 이메일  */
 			var email = $("#email").val();
 			var emailaddr = $("#emailaddr");
@@ -309,14 +291,12 @@ div#userId-container span.error {
 				emailaddr.focus();
 				return false;
 			}
-
 			var checkPoint = $("#checkPoint").val();
 			if (checkPoint == 0) {
 				alert("이메일 인증을 바랍니다");
 				emailaddr.focus();
 				return false;
 			}
-
 			/* 생년월일  */
 			var year = $("#year");
 			var month = $("#month");
@@ -336,76 +316,66 @@ div#userId-container span.error {
 				year.focus();
 				return false;
 			}
-
 			return true;
 		}
 	</script>
 
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 	<script>
-		//본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
-		function sample4_execDaumPostcode() {
-			new daum.Postcode(
-					{
-						oncomplete : function(data) {
-							// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-							// 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
-							// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-							var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
-							var extraRoadAddr = ''; // 도로명 조합형 주소 변수
-
-							// 법정동명이 있을 경우 추가한다. (법정리는 제외)
-							// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-							if (data.bname !== ''
-									&& /[동|로|가]$/g.test(data.bname)) {
-								extraRoadAddr += data.bname;
-							}
-							// 건물명이 있고, 공동주택일 경우 추가한다.
-							if (data.buildingName !== ''
-									&& data.apartment === 'Y') {
-								extraRoadAddr += (extraRoadAddr !== '' ? ', '
-										+ data.buildingName : data.buildingName);
-							}
-							// 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-							if (extraRoadAddr !== '') {
-								extraRoadAddr = ' (' + extraRoadAddr + ')';
-							}
-							// 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
-							if (fullRoadAddr !== '') {
-								fullRoadAddr += extraRoadAddr;
-							}
-
-							// 우편번호와 주소 정보를 해당 필드에 넣는다.
-							document.getElementById('sample4_postcode').value = data.zonecode; //5자리 새우편번호 사용
-							document.getElementById('sample4_roadAddress').value = fullRoadAddr;
-							document.getElementById('sample4_jibunAddress').value = data.jibunAddress;
-
-							// 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
-							if (data.autoRoadAddress) {
-								//예상되는 도로명 주소에 조합형 주소를 추가한다.
-								var expRoadAddr = data.autoRoadAddress
-										+ extraRoadAddr;
-								document.getElementById('guide').innerHTML = '(예상 도로명 주소 : '
-										+ expRoadAddr + ')';
-
-							} else if (data.autoJibunAddress) {
-								var expJibunAddr = data.autoJibunAddress;
-								document.getElementById('guide').innerHTML = '(예상 지번 주소 : '
-										+ expJibunAddr + ')';
-
-							} else {
-								document.getElementById('guide').innerHTML = '';
-							}
-						}
-					}).open();
-		}
-
+	    //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+	    function sample4_execDaumPostcode() {
+	        new daum.Postcode({
+	            oncomplete: function(data) {
+	                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+	                // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+	                var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
+	                var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+	
+	                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+	                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+	                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                    extraRoadAddr += data.bname;
+	                }
+	                // 건물명이 있고, 공동주택일 경우 추가한다.
+	                if(data.buildingName !== '' && data.apartment === 'Y'){
+	                   extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	                }
+	                // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+	                if(extraRoadAddr !== ''){
+	                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+	                }
+	                // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
+	                if(fullRoadAddr !== ''){
+	                    fullRoadAddr += extraRoadAddr;
+	                }
+	
+	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+	                document.getElementById('sample4_postcode').value = data.zonecode; //5자리 새우편번호 사용
+	                document.getElementById('sample4_roadAddress').value = fullRoadAddr;
+	                document.getElementById('sample4_jibunAddress').value = data.jibunAddress;
+	
+	                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+	                if(data.autoRoadAddress) {
+	                    //예상되는 도로명 주소에 조합형 주소를 추가한다.
+	                    var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+	                    document.getElementById('guide').innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+	
+	                } else if(data.autoJibunAddress) {
+	                    var expJibunAddr = data.autoJibunAddress;
+	                    document.getElementById('guide').innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+	
+	                } else {
+	                    document.getElementById('guide').innerHTML = '';
+	                }
+	            }
+	        }).open();
+	    }
 		/* 이메일 인증 번호 전송 */
 		function fn_certification() {
 			var email = $("#email").val();
 			var emailaddr = $("#emailaddr").val();
-
 			if (email.trim().length == 0) {
 				alert("이메일을 입력하세요.");
 				email.focus();
@@ -414,11 +384,9 @@ div#userId-container span.error {
 				alert("이메일을 입력하세요.");
 				emailaddr.focus();
 			}
-
 			var data = new FormData();
 			var em = email + "@" + emailaddr;
 			data.append("em", em);
-
 			$.ajax({
 				url : "certification.do",
 				data : data,
@@ -428,7 +396,7 @@ div#userId-container span.error {
 				dataType : "json",
 				success : function(date) {
 					alert("인증번호 전송");
-
+					$("#checkcertification").val(1);
 				},
 				error : function(jqxhr, textStatus, errorThrown) {
 					console.log(jqxhr);
@@ -437,16 +405,14 @@ div#userId-container span.error {
 				},
 				cache : false,
 				processData : false
-
 			});
 		}
-
 		/* 이메일 인증번호 확인 */
 		function checkJoinCode() {
 			var email = $("#email").val();
 			var emailaddr = $("#emailaddr").val();
 			var inputCode = $("#inputCode").val();
-
+			var checkcertification = $("#checkcertification").val();
 			if (email.trim().length == 0) {
 				alert("이메일을 입력하세요.");
 				email.focus();
@@ -455,7 +421,10 @@ div#userId-container span.error {
 				alert("이메일을 입력하세요.");
 				emailaddr.focus();
 			}
-
+			if(checkcertification ==0){
+				alert("이메일을 인증을 먼저 하세요.");
+				emailaddr.focus();
+			}
 			var data = new FormData();
 			var em = email + "@" + emailaddr;
 			console.log("em : " + em);
@@ -469,6 +438,7 @@ div#userId-container span.error {
 				type : "POST",
 				dataType : "json",
 				success : function(date) {
+					console.log(data.result);
 					if (date.result == true) {
 						$("#checkPoint").val(1);
 						alert("이메일 인증을 성공했습니다.")
@@ -485,97 +455,10 @@ div#userId-container span.error {
 				},
 				cache : false,
 				processData : false
-
 			});
 		}
 	</script>
-	<script>
-		window.onload = function() {
-			var frm = document.getElementById('mainForm');
 
-			var nowDate = new Date();
-			var nowYear = nowDate.getFullYear();
-			var nowMonth = eval(nowDate.getMonth()) + 1;
-			var nowDay = eval(nowDate.getDate());
-
-			/***************
-			 * 년 세팅
-			 ***************/
-			var startYear = nowYear - 99;
-			for (var i = 0; i < 100; i++) {
-				frm['dateYear'].options[i] = new Option(startYear + i,
-						startYear + i);
-			}
-
-			/***************
-			 * 월 세팅
-			 **************/
-			for (var i = 0; i < 12; i++) {
-				frm['dateMonth'].options[i] = new Option(i + 1, i + 1);
-			}
-
-			/***************************************
-			 * 먼저 현재 년과 월을 셋팅
-			 * 윤년계산과 월의 마지막 일자를 구하기 위해
-			 ***************************************/
-			frm['dateYear'].value = nowYear;
-			frm['dateMonth'].value = nowMonth;
-			setDay();
-			/********************************************
-			 * 일(day)의 select를 생성하고 현재 일자로 초기화
-			 ********************************************/
-			frm['dateDay'].value = nowDay;
-		}
-
-		/******************
-		 * 일(day) 셋팅
-		 ******************/
-		function setDay() {
-			var frm = document.getElementById('mainForm');
-
-			var year = frm['dateYear'].value;
-			var month = frm['dateMonth'].value;
-			var day = frm['dateDay'].value;
-			var dateDay = frm['dateDay'];
-
-			var arrayMonth = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-
-			/*******************************************
-			 * 윤달 체크 부분
-			 * 윤달이면 2월 마지막 일자를 29일로 변경
-			 *******************************************/
-			if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-				arrayMonth[1] = 29;
-			}
-
-			/**************************************
-			 * 기존 일(day) select를 모두 삭제한다.
-			 **************************************/
-			for (var i = dateDay.length; i > 0; i--) {
-				dateDay.remove(dateDay.selectedIndex);
-			}
-
-			/*********************************
-			 * 일(day) select 옵션 생성
-			 *********************************/
-			for (var i = 1; i <= arrayMonth[month - 1]; i++) {
-				dateDay.options[i - 1] = new Option(i, i);
-			}
-
-			/*********************************************
-			 * 기존에 선택된 일값 유지
-			 * 기존 일값보다 현재 최대일값이 작을 경우
-			 * 현재 선택 최대일값으로 세팅
-			 ********************************************/
-			if (day != null || day != '') {
-				if (day > arrayMonth[month - 1]) {
-					dateDay.options.selectedIndex = arrayMonth[month - 1] - 1;
-				} else {
-					dateDay.options.selectedIndex = day - 1;
-				}
-			}
-		}
-	</script>
 
 	<div id="enroll-container">
 		<form
@@ -599,56 +482,40 @@ div#userId-container span.error {
 			</div>
 
 			<input type="text" name="mname" id="name" placeholder="이름" required />
-			<br /> <input type="text" name="phone" id="phone" maxlength="11"
-				placeholder="전화번호" required /> <br /> <input type="text"
-				name="email" id="email" placeholder="이메일" required /> @ <input
-				type="text" name="email" id="emailaddr" placeholder="직접입력" required />
-
-			<button type="button" onclick="fn_certification();">인증번호</button>
-			<br /> <input type="text" id="inputCode" placeholder="인증번호를 입력하세요" />
+			<br /> <input type="text" name="phone" id="phone" maxlength="11" placeholder="전화번호" required /> <br /> 
+			<input type="text" name="email" id="email" placeholder="이메일" required /> @ 
+			<input type="text" name="email" id="emailaddr" placeholder="직접입력" required />
+			<input type="button" value="인증번호" onclick="fn_certification();" /> 
+			<input type="hidden" id="checkcertification" value="0" /> 
+			<input type="text" id="inputCode" placeholder="인증번호를 입력하세요" required />
 			<input type="button" value="확인" onclick="checkJoinCode();" /> 
-			<input type="hidden" id="checkPoint" value="0" /> <br /> 
-			<!-- <select name="birth" id='dateYear' onChange='setDay()'></select>년&nbsp; 
-			<select name="birth" id='dateMonth' onChange='setDay()'></select>월&nbsp; 
-			<select name="birth" id='dateDay'></select>일&nbsp; <br /> -->
-			<input type="date" name="birth" />
+			<input type="hidden" id="checkPoint" value="0" /> <br />
+			
+			<input type="date" name="birth" required/><br />
 
-			<div class="input">
-				<input type="button" class="btn-primary box"
-					onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-			</div>
-			<div class="input">
-				<input type="text" name="post" id="sample4_postcode"
-					placeholder="우편번호" required>
-			</div>
-			<div class="input">
-				<input type="text" name="addr1" id="sample4_jibunAddress"
-					placeholder="지번주소" required>
-			</div>
-			<div class="input">
-				<input type="text" name="addr2" id="sample4_roadAddress"
-					placeholder="도로명주소" required>
-			</div>
-			<div class="input">
-				<input type="text" name="addrDetail" id="sample4_jibunAddress" placeholder="상세정보" required>
-			</div>
-
-			<input type="radio" name="gender" value="M" id="male" checked />
+			<input type="button" class="btn-primary box" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">
+			<input type="text" name="post" id="sample4_postcode" placeholder="우편번호" required>
+			<input type="text" name="addr1" id="sample4_jibunAddress" placeholder="지번주소" required>
+			<input type="text" name="addr2" id="sample4_roadAddress" placeholder="도로명주소" required>
+			<input type="text" name="addrDetail" id="sample4_jibunAddress" placeholder="상세정보" required>
+			<span id="guide" style="color:#999"></span><br>
+	
+			<input type="radio" name="gender" value="M" id="male" checked /> 
 			<label for="male">male</label> 
-			<input type="radio" name="gender" value="F" id="fmale" />
-			<label for="fmale">fmale</label> <br /> 
+			<input type="radio" name="gender" value="F"id="fmale" /> <label for="fmale">fmale</label> <br /> 
 			프로필사진 : <input type="file" name="upFile" id="upFile" /> 
 			<input type='hidden' name='mprofile' id="mprofile" value='no'>
-			<div id="div-img-ik"></div><br />
+			<div id="div-img-ik"></div>
+			<br />
 			<div class="form-check-inline form-check">
 				관심분야 : &nbsp;
 				<c:forEach var="v" items="${list }">
-					<input type="checkbox" class="form-check-input" value="${v.KNAME }"
-						name="favor" id="${v.KNAME }" />
-					<label for="${v.KNAME }" class="form-check-input">${v.KNAME }</label>
+					<input type="checkbox" class="form-check-input" value="${v.KINDNAME }"
+						name="favor" id="${v.KINDNAME }" />
+					<label for="${v.KINDNAME }" class="form-check-input">${v.KINDNAME }</label>
 				</c:forEach>
 			</div>
-			
+
 			<br /> 자기소개 <br />
 			<textarea rows="10" cols="50" name="cover"></textarea>
 
