@@ -21,4 +21,8 @@ public interface LectureDAO {
 
 	List<Map<String, String>> selectDiffList();
 
+	Map<String, String> selectLectureOne(int sno);
+
+	int deleteLecture(int sno);
+
 }

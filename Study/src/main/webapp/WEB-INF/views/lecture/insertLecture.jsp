@@ -18,7 +18,11 @@ function validate(){
 	
 	return true;
 }
-$(function(){
+$(document).ready(function(){
+	$(".day").attr("disabled", true);
+});
+
+$(function(){	
 	// TOWN선택
 	$("#local").on("change", 	function(){
 		var localNo = $("option:selected", this).val();
@@ -27,6 +31,7 @@ $(function(){
 			$("#town").hide();
 			return;
 		}
+		
 		$("#town").show();
 
 		$.ajax({
@@ -95,6 +100,33 @@ $(function(){
 			$(this).parent("div.fileWrapper").remove();
 		}
 	});	
+	
+	// 날짜를 조정해보자...
+	$("input[class=changeDate]").on("change", function(){
+		var sdate = $("#sdate").val();
+		var sday = new Date(sdate).getDay();
+		var startArray = sdate.split("-");
+		var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+		
+		var edate = $("#edate").val();
+		var endArray = edate.split("-");
+		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
+		
+		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
+		
+		if( difference >= 0 && difference < 7 ){
+			$(".day").attr("disabled", true);
+			
+		 	for( var i = 0; i < difference+1; i++ ){
+		 		if( sday + i < 7)			
+		 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
+		 		else
+		 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
+		 	}
+		}
+		else
+			$(".day").attr("disabled", false);
+	});
 });
 
 </script>
@@ -151,16 +183,16 @@ $(function(){
 	<br />
 	
 	<label for="ldate">신청마감 : </label><input type="date" name="ldate" id="ldate" />
-	<label for="schedule">스터디 일정 : </label><input type="date" name="sdate" id="sdate" />~<input type="date" name="edate" id="edate" /><br />
+	<label for="schedule">스터디 일정 : </label><input type="date" name="sdate" id="sdate" class="changeDate"/>~<input type="date" name="edate" id="edate" class="changeDate"/><br />
 
 	<label for="freq">스터디빈도 : </label>
-    <label>월 </label><input type="checkbox" name="freqs" value="월" />
-    <label>화 </label><input type="checkbox" name="freqs" value="화" />
-    <label>수 </label><input type="checkbox" name="freqs" value="수" />
-    <label>목 </label><input type="checkbox" name="freqs" value="목" />
-    <label>금 </label><input type="checkbox" name="freqs" value="금" />
-    <label>토 </label><input type="checkbox" name="freqs" value="토" />
-    <label>일 </label><input type="checkbox" name="freqs" value="일" /> 
+    <label>일 </label><input type="checkbox" class="day" name="freqs" value="일" /> 
+    <label>월 </label><input type="checkbox" class="day" name="freqs" value="월" />
+    <label>화 </label><input type="checkbox" class="day" name="freqs" value="화" />
+    <label>수 </label><input type="checkbox" class="day" name="freqs" value="수" />
+    <label>목 </label><input type="checkbox" class="day" name="freqs" value="목" />
+    <label>금 </label><input type="checkbox" class="day" name="freqs" value="금" />
+    <label>토 </label><input type="checkbox" class="day" name="freqs" value="토" />
 	    
 	<label for="starttime">스터디 시간</label>
 	<select name="starttime" id="starttime">

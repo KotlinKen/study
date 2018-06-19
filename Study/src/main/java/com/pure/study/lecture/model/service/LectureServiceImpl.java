@@ -49,5 +49,14 @@ public class LectureServiceImpl implements LectureService {
 		return ld.selectLectureList(cPage, numPerPage);
 	}
 
+	@Override
+	public Map<String, String> selectLectureOne(int sno) {
+		return ld.selectLectureOne(sno);
+	}
+
+	@Override
+	public int deleteLecture(int sno) {
+		return ld.deleteLecture(sno);
+	}
 
 }

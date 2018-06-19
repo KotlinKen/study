@@ -51,4 +51,14 @@ public class LectureDAOImpl implements LectureDAO {
 		return session.selectList("lecture.selectLectureList", null, rowBounds);
 	}
 
+	@Override
+	public Map<String, String> selectLectureOne(int sno) {
+		return session.selectOne("lecture.selectLectureOne", sno);
+	}
+
+	@Override
+	public int deleteLecture(int sno) {
+		return session.delete("lecture.deleteLecture", sno);
+	}
+
 }

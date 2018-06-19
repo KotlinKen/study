@@ -21,4 +21,8 @@ public interface LectureService {
 
 	List<Map<String, String>> selectDiff();
 
+	Map<String, String> selectLectureOne(int sno);
+
+	int deleteLecture(int sno);
+
 }

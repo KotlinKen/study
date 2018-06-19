@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pure.study.lecture.model.service.LectureService;
 import com.pure.study.lecture.model.vo.Lecture;
+import com.pure.study.study.model.vo.Study;
 
 @Controller
 public class LectureContoller {
@@ -96,5 +97,27 @@ public class LectureContoller {
 
 		return mav;
 	}
-
+	
+	@RequestMapping("/lecture/lectureView.do")
+	public ModelAndView lectureView(@RequestParam int sno) {
+		ModelAndView mav = new ModelAndView();		
+		Map<String, String> lecture = ls.selectLectureOne(sno);
+		
+		mav.addObject("lecture", lecture);
+		
+		mav.setViewName("lecture/lectureView");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/lecture/deleteLecture.do")
+	public ModelAndView deleteLecture(@RequestParam int sno) {
+		ModelAndView mav = new ModelAndView();
+		
+		int result = ls.deleteLecture(sno);
+		
+		mav.setViewName("/lecture/lectureList");
+				
+		return mav;
+	}
 }

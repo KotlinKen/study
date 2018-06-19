@@ -8,7 +8,15 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
+	$(document).ready(function(){
+		$(".lectureTr").click(function(){
+			var sno = $(this).attr("sno");			
+			location.href="${pageContext.request.contextPath}/lecture/lectureView.do?sno=" + sno;
+		});
+	});	
+	
 	$(document).ready(function(){
 		$("#town").hide();
 		$("#kind").hide();
@@ -63,6 +71,8 @@
 				}			
 			});
 		});
+		
+		
 	});
 </script>
 <body>
@@ -78,17 +88,10 @@
 					<option value="${loc.LNO }">${loc.LOCAL1 }</option>
 				</c:forEach>		
 			</c:if>
-		</select>	<%-- 
-		<label for="local">지역:</label> 
-		<select name="lno" id="local">
-			<c:forEach var="local" items="${locList }">
-				<option value="${local.LNO }">${local.LOCAL1 }</option>
-			</c:forEach>
-		</select> --%>
+		</select>
 		&nbsp; 
 		
-		<select name="tno" id="town">
-		</select> 
+		<select name="tno" id="town"></select> 
 		
 		<!-- 카테고리 -->
 		<label for="subject">카테고리</label>
@@ -143,6 +146,7 @@
 				<th>지역</th>
 				<th>분야</th>
 				<th>과목</th>
+				<th>난이도</th>
 				<th>비용</th>
 				<th>상태</th>
 				<th>모집일</th>
@@ -153,27 +157,32 @@
 			</tr>
 			
 			<c:forEach var="lecture" items="${lectureList}" varStatus="vs">
-				<div class="lecture">
-					<tr>
-						<td>${vs.index+1}</td>
-						<td>${lecture.LOCAL} ${lecture.TNAME}</td>
-						<td>${lecture.SUBNAME}</td>
-						<td>${lecture.KNAME}</td>
-						<td>${lecture.PRICE}원</td>
-						<td>${lecture.STATUS }</td>
-						<td>${lecture.LDATE }</td>
-						<td>
-							<fmt:parseDate value="${lecture.SDATE}" type="date" var="sdate" pattern="yyyy-MM-dd" />
-							<fmt:formatDate value="${sdate }" pattern="yyyy/MM/dd"/> 
-							~ 
-							<fmt:parseDate value="${lecture.EDATE}" type="date" var="edate" pattern="yyyy-MM-dd" />
-							<fmt:formatDate value="${edate }" pattern="yyyy/MM/dd"/>
-						</td>
-						<td>${lecture.TIME }</td>
-						<td>${lecture.MNAME }</td>
-						<td>${lecture.REGDATE }</td>
-					</tr>			
-				</div>
+				<tr class="lectureTr" sno="${lecture.SNO}">
+					<td>${vs.index+1}</td>
+					<td>${lecture.LOCAL} ${lecture.TNAME}</td>
+					<td>${lecture.SUBNAME}</td>
+					<td>${lecture.KNAME}</td>
+					<td>${lecture.DNAME }</td>
+					<td>${lecture.PRICE}원</td>
+					<td>${lecture.STATUS }</td>
+					<td>
+						<fmt:parseDate value="${lecture.LDATE }" type="date" var="ldate" pattern="yyyy-MM-dd" />
+						<fmt:formatDate value="${ldate }" pattern="yyyy/MM/dd"/>
+					</td>
+					<td>
+						<fmt:parseDate value="${lecture.SDATE}" type="date" var="sdate" pattern="yyyy-MM-dd" />
+						<fmt:formatDate value="${sdate }" pattern="yyyy/MM/dd"/> 
+						~ 
+						<fmt:parseDate value="${lecture.EDATE}" type="date" var="edate" pattern="yyyy-MM-dd" />
+						<fmt:formatDate value="${edate }" pattern="yyyy/MM/dd"/>
+					</td>
+					<td>${lecture.TIME }</td>
+					<td>${lecture.MNAME }</td>
+					<td>
+						<fmt:parseDate value="${lecture.REGDATE }" type="date" var="regDate" pattern="yyyy-MM-dd" />
+						<fmt:formatDate value="${regDate }" pattern="yyyy/MM/dd"/>						
+					</td>
+				</tr>	
 			</c:forEach>
 		</table>
 	</c:if>
