@@ -113,7 +113,6 @@ public class AdverstingController {
 	public String  selectAdversting(Model model) {
 		
 		logger.debug("adversting list");
-		model.addAttribute("auth", "555");
 		return "selectAdversting";
 		
 	}
@@ -264,6 +263,6 @@ public class AdverstingController {
 	@ResponseBody
 	public void popupClose( Model model, HttpSession session )  throws JsonProcessingException {
 		session.setAttribute("popUpSession", "checked");
-		session.setMaxInactiveInterval(20);
+		session.setMaxInactiveInterval(24*60*60);
 	}
 }

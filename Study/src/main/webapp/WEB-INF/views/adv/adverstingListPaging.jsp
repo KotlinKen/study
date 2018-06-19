@@ -42,28 +42,32 @@
 
 총 ${count }건의 게시물이 있습니다.
 <input type="button" value="글쓰기"  class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"  id="btn-add" onclick="location.href='adverstingWrite'" />
-<table class="table table-striped table-hover">
-<tr>
-	<th scope="col">번호</th>
-	<th scope="col">제목</th>
-	<th scope="col">내용</th>
-	<th scope="col">위치</th>
-	<th scope="col">시작일</th>
-	<th scope="col">종료일</th>
-</tr>
-<c:forEach var="list" items="${list}" varStatus="status">
-<tr onclick="fn_boardView('${list.ANO }')">
-<td>    ${list.ANO}</td> 
-<td>    ${list.TITLE}</td>
-<td>    ${list.CONTENT}</td>
-<td>    ${list.POSITION}</td>
 
-<td>    ${fn:substring(list.STARTAD, 0, 10)}</td>
-<td>    ${fn:substring(list.ENDAD, 0, 10)}</td>
+<table class="rm_table">
+<thead>
+	<tr>
+		<th width="5%">번호</th>
+		<th width="8%">위치</th>
+		<th width="15%">제목</th>
+		<th width="20%">내용</th>
+		<th width="6%">시작일</th>
+		<th width="6%">종료일</th>
+	</tr>
+</thead>
+<tbody>
+	<c:forEach var="list" items="${list}" varStatus="status">
+		<tr onclick="fn_boardView('${list.ANO }')">
+			<td class="first_col">${list.ANO}</td>
+			<td>${list.POSITION}</td>
+			<td>${list.TITLE}</td>
+			<td>${list.CONTENT}</td>
+			<td class="advDate">${fn:substring(list.STARTAD, 0, 10)}</td>
+			<td class="advDate">${fn:substring(list.ENDAD, 0, 10)}</td>
 
 
-</tr>
-</c:forEach>
+		</tr>
+	</c:forEach>
+</tbody>
 </table>
 
 
