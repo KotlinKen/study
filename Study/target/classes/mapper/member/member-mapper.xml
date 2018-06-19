@@ -7,8 +7,12 @@
 										#{mname},
 										#{pwd},
 										#{phone},
-										#{addr},
+										#{addr1},
+										#{addr2},
+										#{addrDetail},
+										#{post},
 										#{mprofile},
+										#{cover},
 										#{email},
 										#{birth},
 										#{gender},
@@ -16,8 +20,8 @@
 										default,
 										default,
 										default,
-										null,
-										default
+										default,
+										null
 										)
 	</insert>
 	<select id="selectKind" resultMap="kindMap">
@@ -128,7 +132,7 @@
 	<resultMap type="map" id="wishList"></resultMap>
  
  	<insert id="insertMailCertification">
- 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
+ 		INSERT INTO CERTIFICATION VALUES(#{tomail}, #{ranstr})
  	</insert>
  	<select id="checkEmail" resultType="_int">
  		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
@@ -147,5 +151,11 @@
 	</delete>
 	<select id="selectCategory" resultType="map" >
 		select kindname from kind 
+	</select>
+	<select id="serviceagree" resultType="map" >
+		select * from serviceagree
+	</select>
+	<select id="informationagree" resultType="map" >
+		select * from informationagree
 	</select>
 </mapper>
