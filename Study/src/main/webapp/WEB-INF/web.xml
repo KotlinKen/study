@@ -2,18 +2,11 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
-	
+
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>
-		/WEB-INF/spring/root-context.xml
-		<!-- #7.1 스프링 security 프레임워크 의존 관련 설정파일 -->
-		/WEB-INF/spring/security-context.xml
-		</param-value>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -22,20 +15,6 @@
 	</listener>
 
 	<!-- Processes application requests -->
-	<servlet>
-		<servlet-name>appServletDo</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/*-context.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>appServletDo</servlet-name>
-		<url-pattern>*.do</url-pattern>
-	</servlet-mapping>
-	
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -72,4 +51,5 @@
       <include-prelude>/WEB-INF/views/common/prelude.jsp</include-prelude>
     </jsp-property-group>
   </jsp-config>
+
 </web-app>
