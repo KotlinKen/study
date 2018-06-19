@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
-<<<<<<< HEAD
 	<insert id="memberEnrollEnd">
 		insert into member values (seq_member.nextval, 
 										#{mid},
@@ -30,106 +29,6 @@
 	</resultMap>
 	<select id="selectOneMember" parameterType="string" resultMap="memberMap">
 		select * from member where mid=#{userId}
-=======
-	<insert id="memberEnrollEnd">
-		insert into member values (seq_member.nextval, 
-										#{mid},
-										#{mname},
-										#{pwd},
-										#{phone},
-										#{addr1},
-										#{addr2},
-										#{addrDetail},
-										#{post},
-										#{mprofile},
-										#{cover},
-										#{email},
-										#{birth},
-										#{gender},
-										#{favor, typeHandler=strArrTypeHandler},
-										default,
-										default,
-										default,
-										null
-										)
-	</insert>
-	<resultMap type="member" id="memberMap">
-		<result column="favor" property="favor" typeHandler="strArrTypeHandler"/>
-	</resultMap>
-	<select id="selectOneMember" parameterType="string" resultMap="memberMap">
-		select * from member where mid=#{userId}
-	</select>
-	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
-		select * from member where mname=#{mname} and email=#{email}
-	</select>
-	<update id="updatePwd">
-		update member set pwd=#{pwd} where mid=#{mid}
-	</update>
-	<select id="selectCntMember" parameterType="member" resultType="_int">
-		select count(*) from member where mid=#{mid} and email=#{email}
-	</select>
-	<update id="updateMember" >
-		update member set 
-						mid=#{mid}, 
-						mname=#{mname},
-						phone=#{phone},
-						addr=#{addr}, 
-						<if test="mprofile != null">
-							mprofile=#{mprofile}, 
-						</if>
-						email=#{email},
-						birth=#{birth}, 
-						gender=#{gender}, 
-						favor=#{favor, typeHandler=strArrTypeHandler}, 
-						cover=#{cover}
-						where mno=#{mno}
-	</update>
-	<update id="dropMember">
-		update member set qdate=sysdate where mid=#{mid}
-	</update>
-	<update id="updateEmail">
-		update member set email=#{email} where mid=#{mid}
-	</update>
-	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
-		select * from study s join tbl_apply a on s.sno=a.sno 
-									join tbl_kind k on k.kno=s.kno
-									join tbl_town t on t.tno=s.tno
-									join tbl_depart d on d.dno=s.dno
-        where s.mno=#{mno}
-	</select>
-	<select id="selectApplyListCnt" parameterType="_int" resultType="_int">
-		select count(*) from tbl_apply where mno=#{mno}
-	</select>
-	<resultMap type="map" id="applyList"></resultMap>
-
- 
- 	<insert id="insertMailCertification">
- 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
- 	</insert>
- 	<select id="checkEmail" resultType="_int">
- 		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
- 	</select>
- 	<update id="uploadMailCertification">
- 		UPDATE CERTIFICATION SET CERTI = #{encoded} WHERE EMAIL = #{tomail}
- 	</update>
- 	<select id="selectCheckJoinCode" resultType="map">
- 		SELECT * FROM CERTIFICATION WHERE EMAIL = #{email}
- 	</select>
- 	<select id="checkIdDuplicate" resultType="_int">
- 		SELECT COUNT (*) COUNT FROM MEMBER WHERE MID = #{userId}
- 	</select>
-	<delete id="deleteCertification">
-		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
-	</delete>
-	<select id="selectCategory" resultType="map" >
-		select kname from kind 
-	</select>
-	<select id="selectServiceAgree" resultType="map">
-		select * from serviceagree order by sno
-	</select>
-	<select id="selectInformationAgree" resultType="map">
-		select * from informationagree order by ino
->>>>>>> branch 'JangIkSoon' of https://github.com/KotlinKen/study.git
 	</select>
 	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
 		select * from member where mname=#{mname} and email=#{email}
