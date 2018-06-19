@@ -137,6 +137,14 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectList("member.selectKind");
 	}
 	
+	@Override
+	public List<Map<String, String>> serviceagree() {
+		return sqlSession.selectList("member.serviceagree");
+	}
 	
+	@Override
+	public List<Map<String, String>> informationagree() {
+		return sqlSession.selectList("member.informationagree");
+	}
 
 }

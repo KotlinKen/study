@@ -134,5 +134,15 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, String>> selectKind() {
 		return memberDAO.selectKind();
 	}
+
+	@Override
+	public List<Map<String, String>> serviceagree() {
+		return memberDAO.serviceagree();
+	}
+
+	@Override
+	public List<Map<String, String>> informationagree() {
+		return memberDAO.informationagree();
+	}
 	
 }
