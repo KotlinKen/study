@@ -36,7 +36,10 @@
 		select * from member where mid=#{userId}
 	</select>
 	<select id="selectOneMemberId" parameterType="member" resultMap="memberMap">
-		select * from member where mname=#{mname} and email=#{email}
+		select * from member where mname=#{mname} and email=#{email} 
+					<if test="mno != 0">
+						and mno=#{mno}
+					</if>
 	</select>
 	<update id="updatePwd">
 		update member set pwd=#{pwd} where mid=#{mid}
@@ -46,10 +49,7 @@
 	</select>
 	<update id="updateMember" >
 		update member set 
-						mid=#{mid}, 
-						<if test="mid != null">
 							mname=#{mname},
-						</if>
 						<if test="phone != null">
 							phone=#{phone},
 						</if>
@@ -138,7 +138,7 @@
  		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
  	</select>
  	<update id="uploadMailCertification">
- 		UPDATE CERTIFICATION SET CERTI = #{encoded} WHERE EMAIL = #{tomail}
+ 		UPDATE CERTIFICATION SET CERTIFICATION = #{encoded} WHERE EMAIL = #{tomail}
  	</update>
  	<select id="selectCheckJoinCode" resultType="map">
  		SELECT * FROM CERTIFICATION WHERE EMAIL = #{email}

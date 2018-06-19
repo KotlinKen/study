@@ -213,7 +213,6 @@ public class MemberController {
 	/* 회원가입 시작 */
 	@RequestMapping(value = "/member/memberEnrollEnd.do", method = RequestMethod.POST)
 	public String memberEnrollEnd(Model model, Member member) {
-		System.out.println("??????????");
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원가입완료");
 		}
@@ -355,6 +354,7 @@ public class MemberController {
 		Member fm = new Member();
 		fm.setMname(mname);
 		fm.setEmail(email);
+		
 
 		Member m = memberService.selectOneMember(fm);
 
@@ -662,6 +662,7 @@ public class MemberController {
 							, @RequestParam("favor") String[] favor, @RequestParam("cover") String cover
 							, @RequestParam(value="mprofile", required=false) MultipartFile[] mprofile
 							, HttpServletRequest request, Model model, @RequestParam("pre_mprofile") String pre_mprofile
+							, @ModelAttribute("memberLoggedIn") Member m
 							) {
 		Member member = new Member();
 		
@@ -693,8 +694,8 @@ public class MemberController {
 			member.setMprofile(pre_mprofile);
 		}
 		
+		
 		member.setMno(mno);
-		member.setMid(mid);
 		member.setMname(mname);
 		member.setPhone(phone);
 		member.setPost(post);
@@ -712,8 +713,13 @@ public class MemberController {
 		
 		if(result>0) {
 			model.addAttribute("memberLoggedIn", member);
-			model.addAttribute("msg", "회원 정보가 변경되었습니다.");
+			
+			if(mid==m.getMid()) {
+				model.addAttribute("msg", "회원 정보가 변경되었습니다.");
+			}
+			model.addAttribute("msg", "회원 아이디는 변경할 수 없습니다.");				
 			model.addAttribute("loc", "/member/memberView.do");
+			
 		}else {
 			model.addAttribute("msg", "회원 정보가 변경되지 않았습니다.");
 			model.addAttribute("loc", "/member/memberView.do");
