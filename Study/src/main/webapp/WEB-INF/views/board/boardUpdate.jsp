@@ -17,9 +17,9 @@ div#board-container label.custom-file-label{text-align:left;}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 <%-- <!-- 사용자작성 css -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
- --%>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" /> --%>
 <div id="board-container">
+   <form action="boardUpdateEnd.do" name="boardUpdateFrm" method="post" onsubmit="location.href='${pageContext.request.contextPath}/board/boardView.do?no='+${board.boardNo}" enctype="multipart/form-data">
 <input type="text" class="form-control" placeholder="글번호" name="boardNo" id= "boardNo" value="${board.boardNo }" required>
  <input type="text" class="form-control" placeholder="제목" name="boardTitle" id="boardTitle" value="${board.boardTitle }" required>
    <input type="text" class="form-control" name="boardWriter" value="${board.boardWriter}" readonly required> 
@@ -29,17 +29,11 @@ div#board-container label.custom-file-label{text-align:left;}
                class="btn btn-outline-success btn-block"
                onclick="fileDownload('${a.originalFileName}','${a.renamedFileName }');">
            첨부파일${vs.count} - ${a.originalFileName }
+           
        </button>
+       
    </c:forEach>
-  
-  <textarea class="form-control" name="boardContent" placeholder="내용" required>${board.boardContent }</textarea> 
-       <input type="button" class="updateBtn" value="글수정" onclick="location.href='${pageContext.request.contextPath}/board/boardUpdate.do?no='+${board.boardNo}">
-       <input type="button" class="delBtn" value="글삭제" onclick="location.href='${pageContext.request.contextPath}/board/boardDelete.do?no='+${board.boardNo}">
+<textarea class="form-control" name="boardContent" placeholder="내용" required>${board.boardContent }</textarea> 
+<button type="submit">확인</button>
+</form>
 </div>
- <script>
-function fileDownload(oName, rName){
-	//한글파일명, 특수문자가 포함있을 경우 대비
-	oName = encodeURIComponent(oName);
-	location.href="${pageContext.request.contextPath}/board/boardDownload.do?oName="+oName+"&rName="+rName;
-}
-</script> 

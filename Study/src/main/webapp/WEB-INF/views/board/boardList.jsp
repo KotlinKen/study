@@ -8,9 +8,15 @@
  
 input#btn-add{float:right; margin: 0 0 15px;}
 </style> 
-
+<script src="${pageContext.request.contextPath }/resources/jquery-3.3.1.js"></script>
+<!-- 부트스트랩관련 라이브러리 -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<!-- 사용자작성 css -->
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
+ --%>
 <section id="board-container" class="container">
-   <h2>총 게시물 수는 ${count }개 입니다.</h2>
+   <h2>자유게시판</h2>
    <input type="button" class="btn btn-outline-success"
    value="글쓰기" id="btn-add" onclick="location.href='boardForm.do'"/>
    

@@ -15,5 +15,9 @@ public interface BoardService {
 	List<Map<String, String>> selectOne(int boardNo);
 	Board selectOneBoard(int boardNo);
 	List<Attachment> selectAttachmentList(int boardNo);
+	Board selectOneBoardFix(int boardNo);
+	int updateBoard(Board board, List<Attachment> attachList);
+	int deleteBoard(int boardNo);
+	
 	
 }

@@ -169,6 +169,12 @@ public class BoardController {
 		
 		return "board/boardView";
 	}
+	@RequestMapping("/board/boardUpdate.do")
+	public String selectOneBoardFix(@RequestParam("no") int boardNo, Model model) {
+		model.addAttribute("board",boardService.selectOneBoardFix(boardNo));
+		model.addAttribute("attachmentList", boardService.selectAttachmentList(boardNo));
+		return "board/boardUpdate";
+	}
 	
 	
 	@RequestMapping("/board/boardDownload.do")
@@ -220,10 +226,108 @@ public class BoardController {
 	            e.printStackTrace();
 	         }
 	      }
+	  }
+	      @RequestMapping("/board/boardUpdateEnd.do")
+	      public ModelAndView updateBoard(Board board, @RequestParam(value="upFile", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
+	  		ModelAndView mav = new ModelAndView();
+	  		try {
+				//1.파일업로드 처리
+				String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/board");
+						
+				List<Attachment> attachList = new ArrayList<>();
+				/************** MultipartFile을 이용한 파일 업로드 처리 로직 시작  ********************************************************/
+				
+				
+				for(MultipartFile f : upFiles) {
+					if(!f.isEmpty()) {
+						//파일명 재생성
+						String originalFileName = f.getOriginalFilename();
+						String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+						int rndNum = (int)(Math.random() * 1000);
+						String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
+						
+						try {
+							f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						//VO객체 담기
+						
+						Attachment attach = new Attachment();
+						attach.setOriginalFileName(originalFileName);
+						attach.setRenamedFileName(renamedFileName);
+						attachList.add(attach);
+					}
+				}
+				logger.debug("attachList="+attachList);
+				//2.비지니스로직
+				
+				int result = boardService.updateBoard(board, attachList);
+				int boardNo = board.getBoardNo();
+				logger.debug("boardNo@controller = " + boardNo);
+				
+				
+				//3. view단 분기
+				String loc = "/";
+				String msg = "";
+				
+				if(result>0) {
+					msg = "게시물 수정 성공";
+	/*				loc = "/board/boardView.do?boardNo="+board.getBoardNo();
+	*/				
+					loc = "/board/boardView.do?no="+boardNo;
+				}else {
+					msg = "게시물 수정 실패";
+				}
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("common/msg");
+			} catch(Exception e) {
+				throw new BoardException("게시물 수정 오류");
+			}
+			/************** MultipartFile을 이용한 파일 업로드 처리 로직 끝  ********************************************************/
+			return mav;
+		}
+	      
+	      @RequestMapping("/board/boardDelete.do")
+	  	public ModelAndView deleteBoard(/*Board board,*/ @RequestParam("no") int boardNo, Model model){
+	    	  ModelAndView mav = new ModelAndView();
+	    	  
+/*	    	  int boardNo = board.getBoardNo();*/
+	    		int result = boardService.deleteBoard(boardNo);
+				logger.debug("boardNo@controller = " + boardNo);
+				
+				
+				//3. view단 분기
+				String loc = "/";
+				String msg = "";
+				
+				if(result>0) {
+					msg = "게시물 삭제 성공";
+	/*				loc = "/board/boardView.do?boardNo="+board.getBoardNo();
+	*/				
+					loc = "/board/boardList.do";
+				}else {
+					msg = "게시물 삭제 실패";
+				}
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("common/msg");
+		
+			/************** MultipartFile을 이용한 파일 업로드 처리 로직 끝  ********************************************************/
+			return mav;
+		}
+	      }
+
+
 	      
 	      
 	      
 	      
 	      
-	   }
-}
+

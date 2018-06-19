@@ -89,6 +89,51 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.selectAttachmentList(boardNo);
 	}
 
+	@Override
+	public Board selectOneBoardFix(int boardNo) {
+		// TODO Auto-generated method stub
+		return boardDAO.selectOneBoardFix(boardNo);
+	}
+
+	@Override
+	public int updateBoard(Board board, List<Attachment> attachList) {
+	int result = 0;
+		
+		try {
+			result = boardDAO.updateBoard(board);
+			
+			int boardNo = board.getBoardNo();
 	
-	
+			logger.debug("boardNo@service="+boardNo);
+			if(attachList.size() > 0 ) {
+				for(Attachment a : attachList) {
+					a.setBoardNo(boardNo);
+					result = boardDAO.updateAttachment(a);
+				}
+			}else {
+				
+			}
+		}catch(Exception e ) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteBoard(int boardNo) {
+int result = 0;
+		
+		try {
+			result = boardDAO.deleteBoard(boardNo);
+		}catch(Exception e ) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
+
+	}
 }
+
+	
+

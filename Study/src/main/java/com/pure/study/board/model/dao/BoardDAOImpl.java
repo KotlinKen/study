@@ -66,5 +66,31 @@ public class BoardDAOImpl implements BoardDAO {
 		return sqlSession.selectList("board.selectAttachmentList", boardNo);
 	}
 
+	@Override
+	public Board selectOneBoardFix(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.selectOneBoardFix", boardNo);
+	}
+
+	@Override
+	public int updateAttachment(Attachment a) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("board.updateAttachment", a);
+	}
+
+	@Override
+	public int updateBoard(Board board) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("board.updateBoard", board);
+	}
+
+	@Override
+	public int deleteBoard(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("board.deleteBoard", boardNo);
+	}
+
+
+
 
 }

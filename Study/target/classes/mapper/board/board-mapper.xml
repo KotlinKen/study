@@ -51,6 +51,14 @@
 	<select id="selectAttachmentList" parameterType="_int" resultMap="attachment">
 		SELECT * FROM ATTACHMENT WHERE BOARDNO = #{boardNo}
 	</select>
-
+<select id="selectOneBoardFix" resultType="board">
+SELECT * FROM BOARD WHERE BOARDNO = #{boardNo}
+</select>
+<update id="updateBoard">
+UPDATE BOARD SET BOARDTITLE=#{boardTitle}, BOARDCONTENT=#{boardContent} WHERE BOARDNO = #{boardNo}
+</update>
+<delete id="deleteBoard">
+DELETE FROM BOARD WHERE BOARDNO = #{boardNo}
+</delete>
 </mapper>
 
