@@ -39,7 +39,7 @@ import com.pure.study.member.model.vo.Member;
 @Controller
 public class MemberController {
 
-	// private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private MemberService memberService;
@@ -53,7 +53,6 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender mailSender;
 
-	Logger logger = LoggerFactory.getLogger(getClass());
 
 	/********************************** 회원가입(장익순) 시작 */
 	/* 정보 입력동의페이지 이동 시작 */
@@ -73,10 +72,10 @@ public class MemberController {
 			logger.debug("회원등록홈페이지");
 		}
 		ModelAndView mav = new ModelAndView();
-		List<Map<String, String>> list = memberService.selectCategory();
-		System.out.println(list);
+		//List<Map<String, String>> list = memberService.selectCategory();
+		//System.out.println(list);
 
-		mav.addObject("list", list);
+		//mav.addObject("list", list);
 		return mav;
 	}
 
@@ -92,10 +91,11 @@ public class MemberController {
 		String content = "회원님 \n인증번호는  "; // 내용
 		String ranstr = "";
 		for (int i = 0; i < 4; i++) {
-			int ran = (int) (Math.random() * 10);
+			int ran = (int) (Math.random() * 10); 
 			ranstr += ran;
 		}
-		String encoded = bcryptPasswordEncoder.encode(ranstr);
+		
+		String encoded = bcryptPasswordEncoder.encode("1234");
 		content += ranstr;
 
 		int checkemail = memberService.checkEmail(tomail);

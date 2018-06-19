@@ -19,6 +19,7 @@
 										default,
 										default,
 										default,
+										default,
 										null,
 										default
 										)
@@ -74,7 +75,7 @@
 
  
  	<insert id="insertMailCertification">
- 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
+ 		INSERT INTO CERTIFICATION VALUES(#{tomail}, #{ranstr})
  	</insert>
  	<select id="checkEmail" resultType="_int">
  		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
@@ -92,6 +93,6 @@
 		DELETE FROM CERTIFICATION WHERE EMAIL = #{email}
 	</delete>
 	<select id="selectCategory" resultType="map" >
-		select kname from kindk where klevel = 1
+		select kname from kind where level = 1
 	</select>
 </mapper>
