@@ -57,25 +57,46 @@ public class MemberController {
 	/********************************** 회원가입(장익순) 시작 */
 	/* 정보 입력동의페이지 이동 시작 */
 	@RequestMapping(value = "/member/memberAgreement.do")
-	public String memberAgreement() {
+	public ModelAndView memberAgreement() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원동의홈페이지");
 		}
-
-		return "member/memberAgreement";
+		ModelAndView mav = new ModelAndView();
+		List <Map<String , String>> service = memberService.serviceagree();
+		List <Map<String , String>> information = memberService.informationagree();
+		System.out.println(service);
+		System.out.println(information);
+		
+		mav.addObject("service", service);
+		mav.addObject("information", information);
+		return mav;
 	}
 
 	/* 정보 입력페이지 이동 시작 */
 	@RequestMapping(value = "/member/memberEnroll.do")
-	public ModelAndView memberEnroll() {
+	public ModelAndView memberEnroll(@RequestParam(value="check", required=false, defaultValue="1")  int check,
+			@RequestParam(value="agree1", required=false, defaultValue="2")  int agree1,
+			@RequestParam(value="agree2", required=false, defaultValue="2")  int agree2)  {
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원등록홈페이지");
 		}
+		System.out.println(check);
 		ModelAndView mav = new ModelAndView();
-		//List<Map<String, String>> list = memberService.selectCategory();
-		//System.out.println(list);
+		int c = check+agree1+agree2;
+		System.out.println(c);
+		if(c != 23) {
+			String loc = "/member/memberAgreement.do";
+			String msg = "회원가입을 실패했습니다.";
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+		List<Map<String, String>> list = memberService.selectCategory();
+		System.out.println(list);
 
-		//mav.addObject("list", list);
+		mav.addObject("list", list);
 		return mav;
 	}
 
@@ -87,15 +108,15 @@ public class MemberController {
 		String setfrom = "kimemail2018@gmail.com";
 		String tomail = em; // 받는 사람 이메일
 		String title = "( 스터디 그룹트 ) 회원가입 인증번호 내역"; // 제목
-
 		String content = "회원님 \n인증번호는  "; // 내용
 		String ranstr = "";
 		for (int i = 0; i < 4; i++) {
 			int ran = (int) (Math.random() * 10); 
 			ranstr += ran;
 		}
+		System.out.println(tomail);
 		
-		String encoded = bcryptPasswordEncoder.encode("1234");
+		String encoded = bcryptPasswordEncoder.encode(ranstr);
 		content += ranstr;
 
 		int checkemail = memberService.checkEmail(tomail);
@@ -126,13 +147,16 @@ public class MemberController {
 			@RequestParam(value = "inputCode") String inputCode) {
 		Map<String, Object> map = new HashMap<>();
 		String email = em;
+		System.out.println(email);
 		Map<String, String> cer = new HashMap<>();
+		System.out.println(cer);
 		cer = memberService.selectCheckJoinCode(email);
-		if (bcryptPasswordEncoder.matches(inputCode, cer.get("CERTI"))) {
+		if (bcryptPasswordEncoder.matches(inputCode, cer.get("CERTIFICATION"))) {
 			map.put("result", true);
 		} else {
 			map.put("result", false);
 		}
+		System.out.println(map);
 		return map;
 	}
 
@@ -147,10 +171,6 @@ public class MemberController {
 	public ModelAndView insertBoard(Model model,
 			@RequestParam(value = "upFile", required = false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
-		logger.debug("게시판 페이지저장");
-		logger.debug("upFiles.length=" + upFiles.length);
-		logger.debug("upFile1=" + upFiles[0].getOriginalFilename());
-
 		Map<String, String> map = new HashMap<>();
 
 		// 1.파일업로드처리
@@ -193,7 +213,6 @@ public class MemberController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원가입완료");
 		}
-		logger.debug("" + member);
 		/* 이메일 가져오기 */
 		String email = member.getEmail();
 		String[] emailArr = email.split(",");
