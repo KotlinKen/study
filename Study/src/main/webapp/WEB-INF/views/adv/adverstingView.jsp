@@ -33,6 +33,7 @@
       
     <div class="form-group col-md-6">
       <label for="img1">메인이미지</label>
+      <input type="hidden" name="advImg" value="${adversting.ADVIMG }"/>
       <input type="file" class="form-control" id="img1" name="img" placeholder="이미지를 선택해주세요">
       <div><img src="${rootPath}/resources/upload/adversting/${adversting.ADVIMG}" alt="" class="col-md-12" /> </div>
     </div>

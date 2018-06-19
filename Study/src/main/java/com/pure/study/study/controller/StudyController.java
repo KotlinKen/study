@@ -363,7 +363,7 @@ public class StudyController {
 				try { //최초 메소드 부른 곳은 controller이기때문에 여기서 에러 처리함. 
 					
 					//1. 파일 업로드 처리 
-					String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/studyImg");
+					String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/study");
 					
 					System.out.println("save"+saveDirectory);
 					/********* MultipartFile을 이용한 파일 업로드 처리 로직 시작 ********/

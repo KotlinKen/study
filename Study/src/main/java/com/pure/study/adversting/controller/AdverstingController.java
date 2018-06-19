@@ -161,11 +161,13 @@ public class AdverstingController {
 	public ModelAndView adverstingReWrite(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		
+		Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
 		
-
+		logger.debug("test======================================================================================"+adversting);
+		logger.debug("test======================================================================================"+map);
 		
 		try {
-			if(adversting.getAdvImg() != null && adversting.getAdvImg() != "") {
+			if((!adversting.getAdvImg().equals(map.get("ADVIMG")) || adversting.getAdvImg() != null)) {
 			//1.파일업로드 처리
 				String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
 					
@@ -195,7 +197,6 @@ public class AdverstingController {
 					}
 				}
 			}else {
-				Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
 				map.get("ADVIMG");
 				adversting.setAdvImg(map.get("ADVIMG"));
 			}

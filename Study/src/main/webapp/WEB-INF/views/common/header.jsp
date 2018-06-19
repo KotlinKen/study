@@ -116,7 +116,7 @@ $(function(){
 		    <button type="button" class="btn btn-outline-success" onclick="location.href='${rootPath}/member/memberAgreement.do'">회원가입</button>
 		 		      </c:if>
 	      <c:if test="${memberLoggedIn != null }">
-	      	<a href="${rootPath }/member/memberView.do?userId=${memberLoggedIn.userId }">${memberLoggedIn.userName }</a> 님, 안녕하세요. 
+	      	<a href="${rootPath }/member/memberView.do?userId=${memberLoggedIn.mid }">${memberLoggedIn.mname }</a> 님, 안녕하세요. 
 	      	<button class="btn btn-outline-success" type="button" onclick="location.href='${rootPath}/member/memberLogout.do'">로그아웃</button>
 	      </c:if>
 		    
@@ -139,7 +139,7 @@ $(function(){
 							<div class="modal-body">
 								<input type="text" name="userId" id="userId" class="form-control" placeholder="아이디" required />
 								<br />
-								<input type="password" name="password" id="password" class="form-control" placeholder="비밀번호" required />
+								<input type="password" name="pwd" id="password" class="form-control" placeholder="비밀번호" required />
 								<a href="${rootPath}/member/memberFindPage.do?findType=아이디">아이디/</a>
 								<a href="${rootPath}/member/memberFindPage.do?findType=비밀번호">비밀번호 찾기</a>
 							</div>
