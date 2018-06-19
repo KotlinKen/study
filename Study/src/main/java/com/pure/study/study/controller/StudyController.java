@@ -263,7 +263,7 @@ public class StudyController {
 	}
 	
 	//스터디 상세보기
-	@RequestMapping("/study/studyView")
+	@RequestMapping("/study/studyView.do")
 	public ModelAndView selectStudyOne(@RequestParam(value="sno", required=true) int sno) {
 		ModelAndView mav = new ModelAndView();
 		
@@ -307,6 +307,7 @@ public class StudyController {
 		
 		Map<String,Object> study = new HashMap<>();
 		study=studyService.selectStudyOne(sno);
+		System.out.println("@@@@@@@study="+study);
 		mav.addObject("study", study);
 		mav.setViewName("study/studyUpdate");
 		return mav;
@@ -334,7 +335,7 @@ public class StudyController {
 		
 		System.out.println("upFiles.length="+upFiles.length);
 		 
-		if(study.getPrice()==null) study.setPrice(0+"원");
+		if(study.getPrice()==null) study.setPrice("0");
 		System.out.println("study="+study);
 		
 		

@@ -21,7 +21,7 @@ $(function(){
 			
 			var html="<option>선택하세요</option>";
 			for(var index in data){
-				//console.log(data[index]);
+				console.log(data[index]);
 				html +="<option value='"+data[index].LNO+"'";
 				if(${study.LNO}==data[index].LNO) html+="selected";
 				html += ">"+data[index].LOCAL+"</option><br/>";
@@ -97,38 +97,40 @@ $(function(){
 		}
 	}); 
 	
+	
 	$.ajax({
-		url:"selectSubject.do",
-		dataType:"json",
-		data:{kno:${study.KNO}},
-		success:function(data){
-			var html="";
-			for(var index in data){
-				html +="<option value='"+data[index].SUBNO+"'";
-				if(${study.SUBNO}==data[index].SUBNO) html+="selected";
-				html += ">"+data[index].SUBJECTNAME+"</option><br/>";
-			}
-			$("select#kind").html(html);
-		},error:function(){
-			
-		}
-	});
-	
-	
-	
-	
-	//subject를 선택하면 해당하는 과목들을들을 가져와 리스트를 생성한다.
-	 $("select#subject").on("change",function(){
-		$.ajax({
-			url:"selectKind.do",
+			url:"selectSubject.do",
+			data:{kno:${study.KNO}},
 			dataType:"json",
-			data:{subno:$("select#subject option:selected").val()},
+			success:function(data){
+
+				var html="";
+				for(var index in data){
+					html +="<option value='"+data[index].SUBNO+"'";
+					if(${study.SUBNO}==data[index].SUBNO) html+="selected";
+					html += ">"+data[index].SUBJECTNAME+"</option><br/>";
+				}
+				$("select#subject").html(html);
+				
+			},error:function(){
+				
+			}
+		});
+	
+
+	
+	//kind를 선택하면 해당하는 subject과목들을들을 가져와 리스트를 생성한다.
+	 $("select#kind").on("change",function(){
+		$.ajax({
+			url:"selectSubject.do",
+			dataType:"json",
+			data:{kno:$("select#kind option:selected").val()},
 			success:function(data){
 				var html="";
 				for(var index in data){
-					html +="<option value='"+data[index].KNO+"'>"+data[index].NAME+"</option><br/>";
+					html +="<option value='"+data[index].SUBNO+"'>"+data[index].SUBJECTNAME+"</option><br/>";
 				}
-				$("select#kind").html(html);
+				$("select#subject").html(html);
 				
 			},error:function(){
 				
@@ -146,7 +148,7 @@ $(function(){
 			for(var index in data){
 				html +="<option value='"+data[index].DNO+"'";
 				if(${study.DNO}==data[index].DNO) html+="selected";
-				html+=">"+data[index].NAME+"</option><br/>";
+				html+=">"+data[index].DIFFICULTNAME+"</option><br/>";
 			}
 			$("select#dno").html(html);
 			
@@ -166,14 +168,7 @@ $(function(){
 		
 		//첨부파일 - 버튼 클릭시  해당 첨부파일 영역이 사라진다.
 		$("form[name=studyFrm]").on("click","button.removeFile",function(){
-			//console.log($("div.fileWrapper:eq(0)"));
-			//if( $(this).parent("div.fileWrapper")[0]!==$("div.fileWrapper:eq(0)")[0]){ //맨첫번째 첨부파일은 삭제이벤트 발생안함.
 				$(this).parent("div.fileWrapper").remove();
-			//}else{//맨 첫번째 첨부파일을 삭제하려고 하면, 외관상으로만 파일이름을 지운다. 
-				//console.log("맨첫번째 파일 지울라구?");
-				//$("div.fileWrapper:eq(0)").find("label.custom-file-label").html("파일을 선택하세요"); 
-
-			//}
 		});
 	 
 		//첨부파일 선택하면 파일 이름이 input창에 나타나게한다.
@@ -185,41 +180,35 @@ $(function(){
 			$(this).next("input[name=isNew]").val("true");
 			
 		});
-	
 		
-		/* $("button#upfileAllDelete").click(function(){
-			if(confirm("정말 첨부파일을 모두 제거하겠습니까?")){
-				$("div.fileWrapper").remove();
-			}
-			
-		}); */
-		
-		// 날짜를 조정해보자...
-	   $("input[class=changeDate]").on("change", function(){
-	      var week = [ "일", "월", "화", "수", "목", "금", "토" ];
-	      
-	      var sdate = $("#sdate").val();
-	      var sday = new Date(sdate).getDay();
-	      var startArray = sdate.split("-");
-	      var start_date = new Date(startArray[0], startArray[1], startArray[2]);
-	      
-	      var edate = $("#edate").val();
-	      var endArray = edate.split("-");
-	      var end_date = new Date(endArray[0], endArray[1], endArray[2]);   
-	      
-	      var difference = (end_date.getTime() - start_date.getTime())/1000/24/60/60;
-	      
-	      if( difference >= 0 && difference < 7 ){
-	         $(".day").attr("disabled", true);
-	         
-	          for( var i = 0; i < difference+1; i++ ){
-	             if( sday + i < 7)         
-	                $("input[class=day]").eq(sday+i).attr("disabled", false);             
-	             else
-	                $("input[class=day]").eq(sday+i-7).attr("disabled", false);   
-	          }
-	      }      
-	   });
+		 $("input[class=changeDate]").on("change", function(){
+		      $("input[class=day]").prop("checked", false);
+		      
+		      var sdate = $("#sdate").val();
+		      var sday = new Date(sdate).getDay();
+		      var startArray = sdate.split("-");
+		      var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+		      
+		      var edate = $("#edate").val();
+		      var endArray = edate.split("-");
+		      var end_date = new Date(endArray[0], endArray[1], endArray[2]);   
+		      
+		      var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
+		      alert(difference);
+		      if( difference >= 0 && difference < 7 ){         
+		         $("input[class=day]").attr("disabled", true);
+		          for( var i = 0; i < difference+1; i++ ){
+		             if( sday + i < 7)         
+		                $("input[class=day]").eq(sday+i).attr("disabled", false);             
+		             else
+		                $("input[class=day]").eq(sday+i-7).attr("disabled", false);   
+		          }
+		      }
+		      else if( difference > 7 )
+		         $(".day").attr("disabled", false);
+		      else
+		         $(".day").attr("disabled", false);
+		   }); 
 
 	
 });
@@ -257,17 +246,18 @@ function validate(){
 <form action="studyUpdateEnd.do" name="studyFrm" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 	
 		<label for="local">지역 : </label>
-		<select name="lno" id="local">
+		<select id="local">
 		</select>
 		<select name="tno" id="town">
 		</select>	
 		<label for="title">스터디 제목 : </label><input type="text" name="title" id="title" placeholder="제목" class="form-control" value="${study.TITLE }" required /><br />
 		<label for="content">스터디 내용 : </label><textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력해주세요" class="form-control">${study.CONTENT }</textarea><br />
 		<label for="depart">카테고리</label>
+		<select id="kind"> <!-- ajax로 kind가져오기 -->
+		</select>&nbsp;&nbsp;&nbsp;
 		<select name="subno" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
 		</select>
-		<select name="kno" id="kind"> <!-- ajax로 kind가져오기 -->
-		</select>&nbsp;&nbsp;&nbsp;<label for="diff">난이도 : </label>
+		<label for="diff">난이도 : </label>
 		<select name="dno" id="dno">
 			<option value="1">입문</option>
 		</select><br />
@@ -287,13 +277,13 @@ function validate(){
 		<!-- 시간을 시작시간, 끝나는 시간으로 나누어서 비교하기 위해서 spilt함 -->
 		<c:set var="times" value="${fn:split(study.TIME,'~')}"/>
 		
-		<select name="starttime" id="starttime">
+		<select id="starttime">
 			<c:forEach var="i" begin="6" end="23">
 			<option value="${i }:00" ${fn:contains(fn:split(study.TIME,'~')[0],i)? "selected":""} >${i }:00</option>
 			
 			</c:forEach>
 		</select>
-		<select name="endtime" id="endtime">
+		<select id="endtime">
 			<c:forEach var="j" begin="7" end="24">
 			<option value="${j }:00"${fn:contains(times[1],j)? "selected":""}>${j }:00</option>
 			
@@ -336,8 +326,6 @@ function validate(){
 		</c:forEach>
 		
 		
-		
-		
 		<input type="reset" value="취소하기" />
 		<input type="submit" value="수정하기" />
 		<input type="hidden" name="sno" value="${study.SNO }" />
@@ -354,4 +342,4 @@ function validate(){
 			  </div>
 			  
 			  <button type="button" class="removeFile">-</button>
-		</div>
+	</div>

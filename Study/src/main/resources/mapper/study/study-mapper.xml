@@ -86,7 +86,7 @@
   </select>
   
   <select id="selectStudyOne" resultMap="mapList">
-  	select  s.sno,s.mno,s.subno,s.tno,t.lno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,
+  	select  s.sno,s.mno,s.subno,s.tno,t.lno,s.dno,k.kno,l.lno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,
   		to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,
   		to_char(s.regdate,'yyyy-mm-dd') regdate,m.mprofile,l.lno,l.local lname,t.townname tname, sb.subjectname subname, k.kindname kname, d.DIFFICULTNAME dname,
   		m.mname mname,m.cover,m.exp,m.point,m.npoint,(select count(*) cnt from apply where sno=#{sno}) cnt
@@ -131,7 +131,7 @@
   
   
   <update id="updateStudy">
-  	update study set kno=#{kno},tno=#{tno}, dno=#{dno}, title=#{title}, freq=#{freq}, content=#{content}, price=#{price}, 
+  	update study set subno=#{subno},tno=#{tno}, dno=#{dno}, title=#{title}, freq=#{freq}, content=#{content}, price=#{price}, 
   		   recruit=#{recruit}, time=#{time}, etc=#{etc}, ldate=#{ldate}, sdate=#{sdate}, edate=#{edate} 
   	where sno=#{sno}
   </update>

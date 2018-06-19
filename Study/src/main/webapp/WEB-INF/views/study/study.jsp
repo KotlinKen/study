@@ -95,7 +95,7 @@ $(function(){
 	
 	$("div#study-list").on("click","div.studyone",function(){
 		console.log("되나");
-		location.href="${pageContext.request.contextPath}/study/studyView?sno="+$(this).children("input").val();
+		location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).children("input").val();
 	});//스터디를 클릭하면..
 	
 	
