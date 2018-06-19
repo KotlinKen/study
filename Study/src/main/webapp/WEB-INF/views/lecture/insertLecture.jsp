@@ -21,7 +21,6 @@ function validate(){
 $(document).ready(function(){
 	$(".day").attr("disabled", true);
 });
-
 $(function(){	
 	// TOWN선택
 	$("#local").on("change", function(){
@@ -33,7 +32,6 @@ $(function(){
 		}
 		
 		$("#town").show();
-
 		$.ajax({
 			url: "selectTown.do",
 			data: {localNo : localNo},
@@ -58,7 +56,6 @@ $(function(){
 			return;
 		}
 		$("#sub").show();
-
 		$.ajax({
 			url: "selectSubject.do",
 			data: {kindNo : kindNo},
@@ -128,7 +125,6 @@ $(function(){
 			$(".day").attr("disabled", false);
 	});
 });
-
 </script>
 <div id="lecture-container">
 	<form action="lectureFormEnd.do" name="lectureFrm" method="post" onsubmit="return validate();" enctype="multipart/form-data">
@@ -164,7 +160,7 @@ $(function(){
 		</c:forEach>
 		</c:if>
 	</select>
-	<select name="kindNo" id="sub"> <!-- ajax로 kind가져오기 -->
+	<select name="subno" id="sub"> <!-- ajax로 kind가져오기 -->
 	
 	</select>
 	<!-- 카테고리 end -->

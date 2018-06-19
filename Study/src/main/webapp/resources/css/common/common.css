@@ -1,0 +1,36 @@
+/* 광고 */
+.banner{}
+.topBanner{background:#333; min-height:70px; color:#fff; }
+.navbar-brand{font-weight:bold; font-size:24px;}
+.adverstingPopup{position:absolute; width:350px; display:none; z-index:1001; right:300px; top:200px; }
+.adverstingPopup img{width:100%}
+footer{ background:#333; margin-bottom:160px;  }
+.followFooter{background:#000; position:fixed; padding:20px; color:#fff; bottom:0px; width:100%; letter-spacing:1px; z-index:1000; }
+
+ 
+.closebtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 62px;
+  height: 62px;
+  opacity: 1;
+  cursor:pointer;
+}
+.closebtn:hover {
+  opacity: 1;
+}
+.closebtn:before, .closebtn:after {
+  position: absolute;
+  left: 28px;
+  content: ' ';
+  height: 62px;
+  width: 1px;
+  background-color: #fff;
+}
+.closebtn:before {
+  transform: rotate(45deg);
+}
+.closebtn:after {
+  transform: rotate(-45deg);
+}

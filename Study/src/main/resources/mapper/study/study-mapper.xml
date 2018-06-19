@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="study">
- <select id="studyList" resultMap="mapList">
- 	select * from study order by regdate desc
+ <select id="studyList" resultMap="mapForStudy">
+ 	select  s.sno,s.mno,s.kno,s.tno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,to_char(s.regdate,'yyyy-mm-dd') regdate,m.profile,l.local1 lname,t.name tname, sb.name subname, k.name kname, d.name dname 
+ 	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+	where s.type='study'
+	order by s.regdate desc
  </select>
+ <resultMap type="map" id="mapForStudy">
+ </resultMap>
  
  <resultMap type="map" id="mapList">
  </resultMap>
@@ -27,7 +32,7 @@
  </select>
   <insert id="insertStudy">
   	insert into study values(SEQUENCE_STUDY.NEXTVAL,#{mno},#{kno},#{tno},#{dno},#{title},#{freq},
-  	#{content},#{price},null,#{recruit},'모집중',#{time},'study',#{ldate},#{sdate},#{edate},sysdate,${etc})
+  	#{content},#{price},null,#{recruit},'모집중',#{time},'study',#{etc},#{ldate},#{sdate},#{edate},sysdate)
   	<!-- 전달한 study vo 객체의 sno 프로퍼티에 결과값을 담는다. -->		
    	<selectKey keyProperty="sno"  resultType="_int" order="AFTER"> <!-- order 앞의 쿼리 후에 해라. -->
    		SELECT SEQUENCE_STUDY.CURRVAL FROM DUAL
@@ -35,6 +40,98 @@
   </insert>
   
   <update id="updateStudyImg">
-  	update study set upfile=#{upfile} where sno=#{sno}
+  	<if test="upfile ==null">
+  		update study set upfile=null where sno=#{sno}	
+  	</if>
+  	<if test="upfile != null">
+  		update study set upfile=#{upfile} where sno=#{sno}
+  	</if>
+  	
   </update>
+  
+  <select id="selectStudyForSearch" resultMap="mapList">
+	  select s.sno,s.mno, m.name mname, m.profile, m.id,k.name kname,k.kno,sb.subno,sb.name subname,l.lno,l.local1 lname,t.tno,t.name tname,
+	  		d.dno,d.name dname,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,to_char(s.ldate,'yyyy-mm-dd') ldate,
+	  		to_char(s.sdate,'yyyy-mm-dd') sdate, to_char(s.edate,'yyyy-mm-dd') edate, to_char(s.regdate,'yyyy-mm-dd') regdate 
+	  from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno 
+	  		join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+	  where s.type='study' 
+    <if test="lno!=0">
+	and l.lno =#{lno}
+	</if>
+	<if test="tno!=0">
+	and s.tno=#{tno}
+	</if>
+	<if test="subno!=0">
+	and sb.subno=#{subno}
+	</if>
+	<if test="kno!=0">
+	and s.kno=#{kno}
+	</if>
+	<if test="dno!=0">
+	and s.dno=#{dno}
+	</if>
+	<if test="leadername!=null and leadername !='' ">
+	and  m.mname like #{leadername} 
+	</if>
+    order by s.regdate desc
+  
+  </select>
+  <select id="selectStudyAdd" resultMap="mapList">
+  	select  s.sno,s.mno,s.kno,s.tno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,to_char(s.regdate,'yyyy-mm-dd') regdate,m.profile,l.local1 lname,t.name tname, sb.name subname, k.name kname, d.name dname 
+  	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+	where s.type='study' order by s.regdate desc
+  </select>
+  
+  <select id="selectStudyOne" resultMap="mapList">
+  	select  s.sno,s.mno,s.kno,s.tno,t.lno,sb.subno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,
+  		to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,
+  		to_char(s.regdate,'yyyy-mm-dd') regdate,m.profile,l.local1 lname,t.name tname, sb.name subname, k.name kname, d.name dname,
+  		m.name mname,m.cover,m.exp,m.point,m.npoint,(select count(*) cnt from apply where sno=#{sno}) cnt
+  	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno 
+  		  join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+  	where s.type='study' and s.sno=#{sno}	  
+	order by s.regdate desc
+  </select>
+  
+  <insert id="insertApplyStudy">
+  	insert into apply values (SEQUENCE_APPLY.NEXTVAL,#{mno},#{sno},sysdate)
+  </insert>
+  
+  <insert id="insertWishStudy">
+  	insert into wish values(SEQUENCE_WISH.NEXTVAL,#{mno},#{sno},sysdate)
+  </insert>
+  
+  <select id="studySearchTotalCount" resultType="_int">
+  	  select count(*) cnt
+	  from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on s.kno=k.kno 
+	  		join subject sb on k.subno=sb.subno join member m on s.mno=m.mno
+	  where s.type='study' 
+    <if test="lno!=0">
+	and l.lno =#{lno}
+	</if>
+	<if test="tno!=0">
+	and s.tno=#{tno}
+	</if>
+	<if test="subno!=0">
+	and sb.subno=#{subno}
+	</if>
+	<if test="kno!=0">
+	and s.kno=#{kno}
+	</if>
+	<if test="dno!=0">
+	and s.dno=#{dno}
+	</if>
+	<if test="leadername!=null and leadername !='' ">
+	and  m.mname like #{leadername} 
+	</if>
+  </select>
+  
+  
+  <update id="updateStudy">
+  	update study set kno=#{kno},tno=#{tno}, dno=#{dno}, title=#{title}, freq=#{freq}, content=#{content}, price=#{price}, 
+  		   recruit=#{recruit}, time=#{time}, etc=#{etc}, ldate=#{ldate}, sdate=#{sdate}, edate=#{edate} 
+  	where sno=#{sno}
+  </update>
+  
 </mapper>

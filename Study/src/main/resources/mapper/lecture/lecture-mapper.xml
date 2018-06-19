@@ -45,27 +45,27 @@
 		SELECT * FROM DIFF
 	</select>
 	
-	<select id="selectLectureList" resultMap="map">
+	<select id="selectLectureList" resultMap="map">		
 		SELECT SNO,
 		       (SELECT M.MNAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
 		       (SELECT L.LOCAL AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
 		       (SELECT T.TOWNNAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
 		       (SELECT K.KINDNAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,
 		       (SELECT SUB.SUBJECTNAME AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
-		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
-		        TIME,
-		        NVL(PRICE, 0) AS PRICE,
-		        STATUS,        
-		        LDATE,
-		        SDATE,
-		        EDATE,
-		        REGDATE
+		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME, 
+		       TIME,
+		       NVL(PRICE, 0) AS PRICE,
+		       STATUS,        
+		       LDATE,
+		       SDATE,
+		       EDATE,
+		       REGDATE
 		FROM (SELECT S.*, 
 		            (SELECT T.LNO AS LNO FROM TOWN T WHERE T.TNO = S.TNO) LNO,
 		            (SELECT SUB.KNO AS KNO FROM SUBJECT SUB WHERE SUB.SUBNO = S.SUBNO) KNO
 		      FROM STUDY S 
-		WHERE TYPE = 'study') A
-		ORDER BY SNO DESC;
+		WHERE TYPE = 'lecture') A
+		ORDER BY SNO DESC
 	</select>
 	
 	<select id="selectLectureOne" resultType="map">
@@ -75,20 +75,20 @@
 		       (SELECT T.TOWNNAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
 		       (SELECT K.KINDNAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,
 		       (SELECT SUB.SUBJECTNAME AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
-		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
-		        TIME,
-		        NVL(PRICE, 0) AS PRICE,
-		        STATUS,        
-		        LDATE,
-		        SDATE,
-		        EDATE,
-		        REGDATE
+		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,
+		       TIME,
+		       NVL(PRICE, 0) AS PRICE,
+		       STATUS,        
+		       LDATE,
+		       SDATE,
+		       EDATE,
+		       REGDATE
 		FROM (SELECT S.*, 
 		            (SELECT T.LNO AS LNO FROM TOWN T WHERE T.TNO = S.TNO) LNO,
 		            (SELECT SUB.KNO AS KNO FROM SUBJECT SUB WHERE SUB.SUBNO = S.SUBNO) KNO
 		      FROM STUDY S 
-		WHERE TYPE = 'study' AND SNO = #{sno}) A
-		ORDER BY SNO DESC;
+		WHERE TYPE = 'lecture' AND SNO = #{sno}) A
+		ORDER BY SNO DESC
 	</select>
 	
 	<delete id="deleteLecture">

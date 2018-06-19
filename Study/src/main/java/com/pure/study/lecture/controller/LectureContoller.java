@@ -65,6 +65,8 @@ public class LectureContoller {
 		// 빈도 배열을 join해서 setter로 setting해줌
 		String freq = String.join(",", freqs);
 		lecture.setFreqs(freq);
+		
+		System.out.println(lecture);
 
 		result = ls.insertLecture(lecture);
 
@@ -85,6 +87,8 @@ public class LectureContoller {
 		List<Map<String, String>> locList = ls.selectLocList();
 		List<Map<String, String>> kindList = ls.selectKindList();
 		List<Map<String, String>> diffList = ls.selectDiff();
+		
+		System.out.println(lectureList);
 		
 		mav.addObject("lectureList", lectureList);
 		mav.addObject("locList", locList);

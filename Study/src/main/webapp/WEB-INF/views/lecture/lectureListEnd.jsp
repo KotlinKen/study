@@ -19,7 +19,7 @@
 	
 	$(document).ready(function(){
 		$("#town").hide();
-		$("#kind").hide();
+		$("#sub").hide();
 		
 		// TOWN선택
 		$("#local").on("change", 	function(){
@@ -30,7 +30,6 @@
 				return;
 			}
 			$("#town").show();
-
 			$.ajax({
 				url: "selectTown.do",
 				data: {localNo : localNo},
@@ -39,7 +38,7 @@
 					var html="<option>세부 지역을 선택하세요</option>";
 					
 					for(var index in data){
-						html += "<option value='"+data[index].TNO +"'>" + data[index].NAME + "</option></br>";
+						html += "<option value='"+data[index].TNO +"'>" + data[index].TOWNNAME + "</option></br>";
 					}				
 					$("#town").html(html);
 				}			
@@ -55,7 +54,6 @@
 				return;
 			}
 			$("#sub").show();
-
 			$.ajax({
 				url: "selectSubject.do",
 				data: {kindNo : kindNo},
@@ -70,9 +68,7 @@
 					$("#sub").html(html);
 				}			
 			});
-		});
-		
-		
+		});		
 	});
 </script>
 <body>
@@ -104,7 +100,7 @@
 			</c:forEach>
 			</c:if>
 		</select>
-		<select name="kindNo" id="sub"> <!-- ajax로 kind가져오기 -->
+		<select name="subno" id="sub"> <!-- ajax로 kind가져오기 -->
 		
 		</select>
 		<!-- 카테고리 end -->
@@ -116,7 +112,7 @@
 			
 			<c:if test="${!empty diffList }">
 			<c:forEach var="diff" items="${diffList }" varStatus="vs">
-				<option value="${diff.DNO }">${diff.NAME }</option>
+				<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
 			</c:forEach>
 			</c:if>
 		</select>
