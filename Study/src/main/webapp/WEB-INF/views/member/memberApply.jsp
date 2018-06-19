@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <style>
 	table, th, td, tr{
-		border: 1px solid black;
+		border: 2px solid black;
 	}
 </style>
 
@@ -18,8 +18,13 @@
 		<tr>
 			<th>번호</th>
 			<th>강의/스터디명</th>
-			<th>아이디</th>
 			<th>팀장/강사명</th>
+			<th>분류</th>
+			<th>과목</th>
+			<th>스터디 장소</th>
+			<th>난이도</th>
+			<th>수업일정(주기)</th>
+			<th>스터디 기간 및 시간</th> <!-- 18/5/6 ~ 18/6/6(시간) -->			
 			<th>상태</th>
 			<th>신청인원</th>
 			<th>신청마감</th>
@@ -28,10 +33,15 @@
 		</tr>
 		<c:forEach var="a" items="${applyList}" varStatus="vs" >
 			<tr>
-				<td>${vs.index }</td>
+				<td>${vs.index+1 }</td>
 				<td>${a.title }</td>
-				<td>${a.mid}</td>
 				<td>${a.captain}</td>
+				<td>${a.type }</td>
+				<td>${a.subject }</td>
+				<td>${a.place}</td>
+				<td>${a.diff}</td>
+				<td>${a.freq}</td>
+				<td>${a.sdate} ~ ${a.edate}(${a.time })</td>
 				<td>${a.status}</td>
 				<td>${a.applycnt} / ${a.recruit}</td>
 				<td>${a.ldate}</td>
