@@ -37,4 +37,9 @@ public interface StudyService {
 
 	int insertWishStudy(Map<String, Integer> map);
 
+	int studySearchTotalCount(Map<String, Object> terms);
+
+	int updateStudy(Study study);
+
+
 }

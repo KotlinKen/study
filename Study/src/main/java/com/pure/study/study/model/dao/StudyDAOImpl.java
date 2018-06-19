@@ -105,4 +105,18 @@ public class StudyDAOImpl implements StudyDAO {
 		return sqlSession.insert("study.insertWishStudy", map);
 	}
 
+	@Override
+	public int studySearchTotalCount(Map<String, Object> terms) {
+		
+		return sqlSession.selectOne("study.studySearchTotalCount",terms);
+	
+	}
+
+	@Override
+	public int updateStudy(Study study) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("study.updateStudy",study);
+	}
+
+
 }

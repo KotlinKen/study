@@ -47,6 +47,17 @@ function studyWish(sno){
 		}
 	});
 }
+$(function(){
+	
+	$("button.editStudy").click(function(){
+		location.href="studyUpdate.do?sno="+${study.SNO};
+		
+	});
+		
+	
+	
+	
+});
 
 
 </script>
@@ -73,14 +84,18 @@ function studyWish(sno){
 <span>${study.COVER }</span>
 
 </div>
-<div id="forLeader"><!-- 팀장일때만 나타남. 신청 회원 목록. -->
+
+
+
+<!-- <div id="forLeader">팀장일때만 나타남. 신청 회원 목록.
 <ul id="applyList">
 
 </ul>
 <ul id="acceptList">
 
 </ul>
-</div>
+</div> -->
+
 <div id="review"><!-- 팀장에 대한 후기 -->
 
 

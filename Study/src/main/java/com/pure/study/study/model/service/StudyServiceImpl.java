@@ -101,4 +101,20 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.insertWishStudy(map);
 	}
 
+
+	@Override
+	public int studySearchTotalCount(Map<String, Object> terms) {
+		// TODO Auto-generated method stub
+		return studyDAO.studySearchTotalCount(terms);
+	}
+
+	@Override
+	public int updateStudy(Study study) {
+		// TODO Auto-generated method stub
+		return studyDAO.updateStudy(study);
+	}
+
+	
+
+
 }
