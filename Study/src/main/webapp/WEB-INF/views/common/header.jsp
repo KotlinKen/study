@@ -5,6 +5,7 @@
 <title>${param.pageTitle }</title>
 <!-- 부트스트랩관련 라이브러리 -->
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/common.js"></script>
 <script src="${pageContext.request.contextPath }/resources/js/jquery-ui.min.js"></script>
 <link rel="shortcut icon" href="">
 <link rel="stylesheet" href="${rootPath}/resources/css/bootstrap/bootstrap.css" />
