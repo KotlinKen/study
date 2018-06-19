@@ -21,10 +21,9 @@ function validate(){
 $(document).ready(function(){
 	$(".day").attr("disabled", true);
 });
-
 $(function(){	
 	// TOWN선택
-	$("#local").on("change", 	function(){
+	$("#local").on("change", function(){
 		var localNo = $("option:selected", this).val();
 		
 		if(localNo == ""){
@@ -33,7 +32,6 @@ $(function(){
 		}
 		
 		$("#town").show();
-
 		$.ajax({
 			url: "selectTown.do",
 			data: {localNo : localNo},
@@ -42,7 +40,7 @@ $(function(){
 				var html="<option>세부 지역을 선택하세요</option>";
 				
 				for(var index in data){
-					html += "<option value='"+data[index].TNO +"'>" + data[index].NAME + "</option></br>";
+					html += "<option value='"+data[index].TNO +"'>" + data[index].TOWNNAME + "</option></br>";
 				}				
 				$("#town").html(html);
 			}			
@@ -50,27 +48,26 @@ $(function(){
 	});
 	
 	// 세부 과목 선택
-	$("#subject").on("change", 	function(){
-		var subNo = $("option:selected", this).val();
+	$("#kind").on("change", function(){
+		var kindNo = $("option:selected", this).val();
 		
-		if(subNo == ""){
-			$("#kind").hide();
+		if(kindNo == ""){
+			$("#sub").hide();
 			return;
 		}
-		$("#kind").show();
-
+		$("#sub").show();
 		$.ajax({
-			url: "selectKind.do",
-			data: {subNo : subNo},
+			url: "selectSubject.do",
+			data: {kindNo : kindNo},
 			dataType: "json",
 			success : function(data){
 				var html="<option>세부 과목을 선택하세요</option>";
 				
 				for(var index in data){
-					html += "<option value='"+data[index].KNO +"'>" + data[index].NAME + "</option></br>";
+					html += "<option value='"+data[index].SUBNO +"'>" + data[index].SUBJECTNAME + "</option></br>";
 				}
 				
-				$("#kind").html(html);
+				$("#sub").html(html);
 			}			
 		});
 	});
@@ -103,6 +100,8 @@ $(function(){
 	
 	// 날짜를 조정해보자...
 	$("input[class=changeDate]").on("change", function(){
+		$("input[class=day]").prop("checked", false);
+		
 		var sdate = $("#sdate").val();
 		var sday = new Date(sdate).getDay();
 		var startArray = sdate.split("-");
@@ -113,10 +112,9 @@ $(function(){
 		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
 		
 		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
-		
-		if( difference >= 0 && difference < 7 ){
-			$(".day").attr("disabled", true);
-			
+		alert(difference);
+		if( difference >= 0 && difference < 7 ){			
+			$("input[class=day]").attr("disabled", true);
 		 	for( var i = 0; i < difference+1; i++ ){
 		 		if( sday + i < 7)			
 		 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
@@ -128,7 +126,6 @@ $(function(){
 			$(".day").attr("disabled", false);
 	});
 });
-
 </script>
 <div id="lecture-container">
 	<form action="lectureFormEnd.do" name="lectureFrm" method="post" onsubmit="return validate();" enctype="multipart/form-data">
@@ -139,7 +136,7 @@ $(function(){
 		<option value="" selected>지역</option>
 		<c:if test="${!empty locList}">
 			<c:forEach var="loc" items="${locList }" varStatus="vs">
-				<option value="${loc.LNO }">${loc.LOCAL1 }</option>
+				<option value="${loc.LNO }">${loc.LOCAL }</option>
 			</c:forEach>		
 		</c:if>
 	</select>
@@ -154,20 +151,20 @@ $(function(){
 	<label for="content">스터디 내용 : </label><textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력해주세요" class="form-control"></textarea><br />
 
 	<!-- 카테고리 -->
-	<label for="subject">카테고리</label>
-	<select name="subject" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
+	<label for="kind">카테고리</label>
+	<select name="kind" id="kind"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
 		<option value="">과목을 선택하세요.</option>
 		
-		<c:if test="${!empty subjectList }">
-		<c:forEach var="sub" items="${subjectList }" varStatus="vs">
-			<option value="${sub.SUBNO }">${sub.NAEM }</option>
+		<c:if test="${!empty kindList }">
+		<c:forEach var="kind" items="${kindList }" varStatus="vs">
+			<option value="${kind.KNO }">${kind.KINDNAME }</option>
 		</c:forEach>
 		</c:if>
 	</select>
-	<select name="kno" id="kind"> <!-- ajax로 kind가져오기 -->
-	<!-- 카테고리 end -->
+	<select name="subno" id="sub"> <!-- ajax로 kind가져오기 -->
 	
 	</select>
+	<!-- 카테고리 end -->
 	&nbsp;&nbsp;&nbsp;
 	
 	<label for="diff">난이도 : </label>
@@ -176,7 +173,7 @@ $(function(){
 		
 		<c:if test="${!empty diffList }">
 		<c:forEach var="diff" items="${diffList }" varStatus="vs">
-			<option value="${diff.DNO }">${diff.NAME }</option>
+			<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
 		</c:forEach>
 		</c:if>
 	</select>

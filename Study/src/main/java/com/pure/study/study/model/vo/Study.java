@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Study {
 	private int sno;
 	private int mno;
-	private int kno;
+	private int subno;
 	private int tno;
 	private int dno;
 	private String title;
@@ -26,13 +26,13 @@ public class Study {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Study(int sno, int mno, int kno, int tno, int dno, String title, String freq, String content, String price,
+	public Study(int sno, int mno, int subno, int tno, int dno, String title, String freq, String content, String price,
 			String upfile, String recruit, String status, String time, String type, Date ldate, Date sdate, Date edate,
 			Date regDate, String etc) {
 		super();
 		this.sno = sno;
 		this.mno = mno;
-		this.kno = kno;
+		this.subno = subno;
 		this.tno = tno;
 		this.dno = dno;
 		this.title = title;
@@ -52,7 +52,7 @@ public class Study {
 	}
 	@Override
 	public String toString() {
-		return "Study [sno=" + sno + ", mno=" + mno + ", kno=" + kno + ", tno=" + tno + ", dno=" + dno + ", title="
+		return "Study [sno=" + sno + ", mno=" + mno + ", subno=" + subno + ", tno=" + tno + ", dno=" + dno + ", title="
 				+ title + ", freq=" + freq + ", content=" + content + ", price=" + price + ", upfile="
 				+ upfile + ", recruit=" + recruit + ", status=" + status + ", time=" + time + ", type=" + type
 				+ ", ldate=" + ldate + ", sdate=" + sdate + ", edate=" + edate + ", regDate=" + regDate + ", etc=" + etc
@@ -70,11 +70,11 @@ public class Study {
 	public void setMno(int mno) {
 		this.mno = mno;
 	}
-	public int getKno() {
-		return kno;
+	public int getSubno() {
+		return subno;
 	}
-	public void setKno(int kno) {
-		this.kno = kno;
+	public void setSubno(int subno) {
+		this.subno = subno;
 	}
 	public int getTno() {
 		return tno;

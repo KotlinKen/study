@@ -30,15 +30,15 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectSubject() {
+	public List<Map<String, Object>> selectSubject(int kno) {
 		// TODO Auto-generated method stub
-		return studyDAO.selectSubject();
+		return studyDAO.selectSubject(kno);
 	}
 
 	@Override
-	public List<Map<String, Object>> selectKind(int subno) {
+	public List<Map<String, Object>> selectKind() {
 		// TODO Auto-generated method stub
-		return studyDAO.selectKind(subno);
+		return studyDAO.selectKind();
 	}
 
 	@Override

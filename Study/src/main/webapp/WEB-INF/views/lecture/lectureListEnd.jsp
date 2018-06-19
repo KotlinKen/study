@@ -19,7 +19,7 @@
 	
 	$(document).ready(function(){
 		$("#town").hide();
-		$("#kind").hide();
+		$("#sub").hide();
 		
 		// TOWN선택
 		$("#local").on("change", 	function(){
@@ -30,7 +30,6 @@
 				return;
 			}
 			$("#town").show();
-
 			$.ajax({
 				url: "selectTown.do",
 				data: {localNo : localNo},
@@ -39,7 +38,7 @@
 					var html="<option>세부 지역을 선택하세요</option>";
 					
 					for(var index in data){
-						html += "<option value='"+data[index].TNO +"'>" + data[index].NAME + "</option></br>";
+						html += "<option value='"+data[index].TNO +"'>" + data[index].TOWNNAME + "</option></br>";
 					}				
 					$("#town").html(html);
 				}			
@@ -47,32 +46,29 @@
 		});
 		
 		// 세부 과목 선택
-		$("#subject").on("change", 	function(){
-			var subNo = $("option:selected", this).val();
+		$("#kind").on("change", function(){
+			var kindNo = $("option:selected", this).val();
 			
-			if(subNo == ""){
-				$("#kind").hide();
+			if(kindNo == ""){
+				$("#sub").hide();
 				return;
 			}
-			$("#kind").show();
-
+			$("#sub").show();
 			$.ajax({
-				url: "selectKind.do",
-				data: {subNo : subNo},
+				url: "selectSubject.do",
+				data: {kindNo : kindNo},
 				dataType: "json",
 				success : function(data){
 					var html="<option>세부 과목을 선택하세요</option>";
 					
 					for(var index in data){
-						html += "<option value='"+data[index].KNO +"'>" + data[index].NAME + "</option></br>";
+						html += "<option value='"+data[index].SUBNO +"'>" + data[index].SUBJECTNAME + "</option></br>";
 					}
 					
-					$("#kind").html(html);
+					$("#sub").html(html);
 				}			
 			});
-		});
-		
-		
+		});		
 	});
 </script>
 <body>
@@ -85,7 +81,7 @@
 			<option value="" selected>지역</option>
 			<c:if test="${!empty locList}">
 				<c:forEach var="loc" items="${locList }" varStatus="vs">
-					<option value="${loc.LNO }">${loc.LOCAL1 }</option>
+					<option value="${loc.LNO }">${loc.LOCAL }</option>
 				</c:forEach>		
 			</c:if>
 		</select>
@@ -94,19 +90,20 @@
 		<select name="tno" id="town"></select> 
 		
 		<!-- 카테고리 -->
-		<label for="subject">카테고리</label>
-		<select name="subject" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
+		<label for="kind">카테고리</label>
+		<select name="kind" id="kind"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
 			<option value="">과목을 선택하세요.</option>
-			<c:if test="${!empty subjectList }">
-			<c:forEach var="sub" items="${subjectList }" varStatus="vs">
-				<option value="${sub.SUBNO }">${sub.NAEM }</option>
+			
+			<c:if test="${!empty kindList }">
+			<c:forEach var="kind" items="${kindList }" varStatus="vs">
+				<option value="${kind.KNO }">${kind.KINDNAME }</option>
 			</c:forEach>
 			</c:if>
 		</select>
+		<select name="subno" id="sub"> <!-- ajax로 kind가져오기 -->
 		
-		<select name="kno" id="kind"> <!-- ajax로 kind가져오기 -->
-		<!-- 카테고리 end -->
 		</select>
+		<!-- 카테고리 end -->
 		&nbsp; 		
 		
 		<label for="diff">난이도 : </label>
@@ -115,7 +112,7 @@
 			
 			<c:if test="${!empty diffList }">
 			<c:forEach var="diff" items="${diffList }" varStatus="vs">
-				<option value="${diff.DNO }">${diff.NAME }</option>
+				<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
 			</c:forEach>
 			</c:if>
 		</select>

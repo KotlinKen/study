@@ -13,9 +13,9 @@ public interface StudyService {
 
 	int studyTotalCount();
 
-	List<Map<String, Object>> selectSubject();
+	List<Map<String, Object>> selectSubject(int kno);
 
-	List<Map<String, Object>> selectKind(int subno);
+	List<Map<String, Object>> selectKind();
 
 	List<Map<String, Object>> selectLocal();
 
