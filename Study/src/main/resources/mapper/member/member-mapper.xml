@@ -128,7 +128,7 @@
 	<resultMap type="map" id="wishList"></resultMap>
  
  	<insert id="insertMailCertification">
- 		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})
+ 		INSERT INTO CERTIFICATION VALUES(#{tomail}, #{ranstr})
  	</insert>
  	<select id="checkEmail" resultType="_int">
  		SELECT COUNT(*) cnt FROM CERTIFICATION WHERE EMAIL = #{tomail}
