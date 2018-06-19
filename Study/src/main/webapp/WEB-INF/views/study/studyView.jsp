@@ -10,6 +10,10 @@
 .notLeader{
 	display:none;
 }
+
+div.sideInfo{
+
+}
 </style>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js" ></script>
 <script>
@@ -53,6 +57,10 @@ $(function(){
 		location.href="studyUpdate.do?sno="+${study.SNO};
 		
 	});
+	
+	$("button.removeStudy").click(function(){
+		location.href="deleteStudy.do?sno="+${study.SNO};
+	});
 		
 	
 	
@@ -70,7 +78,7 @@ $(function(){
 <span>${study.TITLE }</span>
 <span>스터디 소개 : ${study.CONTENT }</span>
 <div id="detail">
-<span>지역 : ${study.LNAME } ${study.TNAME }</span>
+<span>지역 : ${study.LNAME }-${study.TNAME }</span>
 <span>인원 : ${study.RECRUIT }명</span><br />
 <span>
 	${study.FREQ }
@@ -81,20 +89,17 @@ $(function(){
 <span>협의비 : ${study.PRICE }</span>
 <hr />
 <label for="">리더 소개</label>
+<c:if test="${study.MPROFILE!=null }">
+<img src="${pageContext.request.contextPath}/resources/upload/member/${study.MPROFILE}" alt="" />
+</c:if>
+<c:if test="${study.MPROFILE==null }">
+<img src="${pageContext.request.contextPath}/resources/upload/member/basicprofile.png" alt="" />
+</c:if>
+
 <span>${study.COVER }</span>
 
 </div>
 
-
-
-<!-- <div id="forLeader">팀장일때만 나타남. 신청 회원 목록.
-<ul id="applyList">
-
-</ul>
-<ul id="acceptList">
-
-</ul>
-</div> -->
 
 <div id="review"><!-- 팀장에 대한 후기 -->
 
@@ -104,11 +109,11 @@ $(function(){
 
 </div>
 <div id="side-info"> <!-- 오른쪽 fix창 -->
-<span>${study.SUBNAME } : ${study.KNAME }</span>
+<span>${study.KNAME } : ${study.SUBNAME }</span>
 <span>${study.TITLE }</span><br />
 <span>${study.SDATE }~${study.EDATE }</span>
-<button type="button" onclick="studyApply('${study.SNO}');">참여 신청하기</button>
-<button type="button" onclick="studyWish('${study.SNO}');">찜하기</button>
+<button type="button" onclick="studyApply('${study.SNO}');"><span>참여신청하기</span></button>
+<button type="button" onclick="studyWish('${study.SNO}');"><span>찜하기</span></button>
 
 
 </div>

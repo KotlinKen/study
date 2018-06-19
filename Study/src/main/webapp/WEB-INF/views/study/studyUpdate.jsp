@@ -24,7 +24,7 @@ $(function(){
 				//console.log(data[index]);
 				html +="<option value='"+data[index].LNO+"'";
 				if(${study.LNO}==data[index].LNO) html+="selected";
-				html += ">"+data[index].LOCAL1+"</option><br/>";
+				html += ">"+data[index].LOCAL+"</option><br/>";
 			}
 			$("select#local").html(html);
 			
@@ -45,7 +45,7 @@ $(function(){
 			for(var index in data){
 				html +="<option value='"+data[index].TNO+"'";
 				if(${study.TNO}==data[index].TNO) html+="selected";
-				html += ">"+data[index].NAME+"</option><br/>";
+				html += ">"+data[index].TOWNNAME+"</option><br/>";
 			}
 			$("select#town").html(html);
 			
@@ -65,7 +65,7 @@ $(function(){
 				
 				var html="";
 				for(var index in data){
-					html +="<option value='"+data[index].TNO+"'>"+data[index].NAME+"</option><br/>";
+					html +="<option value='"+data[index].TNO+"'>"+data[index].TOWNNAME+"</option><br/>";
 				}
 				$("select#town").html(html);
 				
@@ -75,18 +75,22 @@ $(function(){
 		});
 	});
 	 
-	//subject 리스트를 가져와 select 만듦. 프로그래밍, 회화, 운동 등등..
+	 
+	 
+	
+	 
+	//kind 리스트를 가져와 select 만듦. 프로그래밍, 회화, 운동 등등..
 	 $.ajax({
-		url:"selectSubject.do",
+		url:"selectKind.do",
 		dataType:"json",
 		success:function(data){
 			var html="<option>선택하세요</option>";
 			for(var index in data){
-				html +="<option value='"+data[index].SUBNO+"'";
-				if(${study.SUBNO}==data[index].SUBNO) html+="selected";
-				html+=">"+data[index].NAME+"</option><br/>";
+				html +="<option value='"+data[index].KNO+"'";
+				if(${study.KNO}==data[index].KNO) html+="selected";
+				html+=">"+data[index].KINDNAME+"</option><br/>";
 			}
-			$("select#subject").html(html);
+			$("select#kind").html(html);
 			
 		},error:function(){
 			
@@ -94,15 +98,15 @@ $(function(){
 	}); 
 	
 	$.ajax({
-		url:"selectKind.do",
+		url:"selectSubject.do",
 		dataType:"json",
-		data:{subno:${study.SUBNO}},
+		data:{kno:${study.KNO}},
 		success:function(data){
 			var html="";
 			for(var index in data){
-				html +="<option value='"+data[index].KNO+"'";
-				if(${study.KNO}==data[index].KNO) html+="selected";
-				html += ">"+data[index].NAME+"</option><br/>";
+				html +="<option value='"+data[index].SUBNO+"'";
+				if(${study.SUBNO}==data[index].SUBNO) html+="selected";
+				html += ">"+data[index].SUBJECTNAME+"</option><br/>";
 			}
 			$("select#kind").html(html);
 		},error:function(){
@@ -260,7 +264,7 @@ function validate(){
 		<label for="title">스터디 제목 : </label><input type="text" name="title" id="title" placeholder="제목" class="form-control" value="${study.TITLE }" required /><br />
 		<label for="content">스터디 내용 : </label><textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력해주세요" class="form-control">${study.CONTENT }</textarea><br />
 		<label for="depart">카테고리</label>
-		<select name="subject" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
+		<select name="subno" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
 		</select>
 		<select name="kno" id="kind"> <!-- ajax로 kind가져오기 -->
 		</select>&nbsp;&nbsp;&nbsp;<label for="diff">난이도 : </label>

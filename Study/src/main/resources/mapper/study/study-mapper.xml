@@ -136,4 +136,8 @@
   	where sno=#{sno}
   </update>
   
+  
+  <delete id="deleteStudy">
+  	delete from study where sno=#{sno}
+  </delete>
 </mapper>

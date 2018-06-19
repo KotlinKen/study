@@ -120,5 +120,11 @@ public class StudyDAOImpl implements StudyDAO {
 		return sqlSession.update("study.updateStudy",study);
 	}
 
+	@Override
+	public int deleteStudy(int sno) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("study.deleteStudy", sno);
+	}
+
 
 }
