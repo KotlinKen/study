@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pure.study.lecture.model.service.LectureService;
 import com.pure.study.lecture.model.vo.Lecture;
-import com.pure.study.study.model.vo.Study;
 
 @Controller
 public class LectureContoller {
@@ -31,14 +30,13 @@ public class LectureContoller {
 		// 지역리스트
 		List<Map<String, String>> locList = ls.selectLocList();
 		// 큰 분류 리스트
-		List<Map<String, String>> subjectList = ls.selectSubList();
+		List<Map<String, String>> kindList = ls.selectKindList();
 		// 난이도 
 		List<Map<String, String>> diffList = ls.selectDiff();
 
 		mav.addObject("locList", locList);
-		mav.addObject("subjectList", subjectList);
-		mav.addObject("diffList", diffList);
-		
+		mav.addObject("kindList", kindList);
+		mav.addObject("diffList", diffList);		
 
 		mav.setViewName("lecture/insertLecture");
 
@@ -53,12 +51,12 @@ public class LectureContoller {
 		return townList;
 	}
 
-	@RequestMapping("/lecture/selectKind.do")
+	@RequestMapping("/lecture/selectSubject.do")
 	@ResponseBody
-	public List<Map<String, Object>> selectKind(@RequestParam(value = "subNo") int subNo) {
-		List<Map<String, Object>> kindList = ls.selectKindList(subNo);
+	public List<Map<String, Object>> selectKind(@RequestParam(value = "kindNo") int kindNo) {
+		List<Map<String, Object>> subList = ls.selectSubList(kindNo);
 
-		return kindList;
+		return subList;
 	}
 
 	@RequestMapping("/lecture/lectureFormEnd.do")
@@ -66,7 +64,7 @@ public class LectureContoller {
 		int result = 0;
 		// 빈도 배열을 join해서 setter로 setting해줌
 		String freq = String.join(",", freqs);
-		lecture.setFreq(freq);
+		lecture.setFreqs(freq);
 
 		result = ls.insertLecture(lecture);
 
@@ -85,12 +83,12 @@ public class LectureContoller {
 
 		List<Map<String, String>> lectureList = ls.selectLectureList(cPage, numPerPage);
 		List<Map<String, String>> locList = ls.selectLocList();
-		List<Map<String, String>> subjectList = ls.selectSubList();
+		List<Map<String, String>> kindList = ls.selectKindList();
 		List<Map<String, String>> diffList = ls.selectDiff();
 		
 		mav.addObject("lectureList", lectureList);
 		mav.addObject("locList", locList);
-		mav.addObject("subjectList", subjectList);
+		mav.addObject("kindList", kindList);
 		mav.addObject("diffList", diffList);
 		
 		mav.setViewName("lecture/lectureListEnd");

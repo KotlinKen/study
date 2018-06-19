@@ -25,8 +25,8 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectSubList() {
-		return ld.selectSubList();
+	public List<Map<String, String>> selectKindList() {
+		return ld.selectKindList();
 	}
 	
 	@Override
@@ -35,8 +35,8 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectKindList(int subNo) {
-		return ld.selectKindList(subNo);
+	public List<Map<String, Object>> selectSubList(int kindNo) {
+		return ld.selectSubList(kindNo);
 	}
 
 	@Override

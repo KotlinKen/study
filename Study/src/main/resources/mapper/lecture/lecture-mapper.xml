@@ -4,9 +4,9 @@
 	<resultMap type="map" id="map"></resultMap>
 	
 	<insert id="insertLecture">
-		INSERT INTO STUDY VALUES(SEQUENCE_STUDY.NEXTVAL,
+		INSERT INTO STUDY VALUES(SEQ_STUDY.NEXTVAL,
 								 2, 
-								 #{kno}, 
+								 #{subno}, 
 								 #{tno}, 
 								 #{dno}, 
 								 #{title}, 
@@ -17,12 +17,12 @@
 								 #{recruit}, 
 								 '모집 중', 
 								 #{time}, 
-								 'lecture', 
-								 #{etc}, 
+								 'lecture', 								
 								 #{ldate}, 
 								 #{sdate}, 
 								 #{edate}, 
-								 sysdate)
+								 sysdate,
+								 #{etc})
 	</insert>
 
 	<select id="selectLocList" resultMap="map">
@@ -34,11 +34,11 @@
 	</select>
 	
 	<select id="selectSubList" resultMap="map">
-		SELECT * FROM SUBJECT
+		SELECT * FROM SUBJECT WHERE KNO = #{kindNo}
 	</select>
 	
 	<select id="selectKindList" resultMap="map">
-		SELECT * FROM KIND WHERE SUBNO = #{subNo}
+		SELECT * FROM KIND
 	</select>
 	
 	<select id="selectDiffList" resultMap="map">
@@ -47,12 +47,12 @@
 	
 	<select id="selectLectureList" resultMap="map">
 		SELECT SNO,
-		       (SELECT M.NAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
-		       (SELECT L.LOCAL1 AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
-		       (SELECT T.NAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
-		       (SELECT SUB.NAEM AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
-		       (SELECT K.NAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,  
-		       (SELECT D.NAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
+		       (SELECT M.MNAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
+		       (SELECT L.LOCAL AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
+		       (SELECT T.TOWNNAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
+		       (SELECT K.KINDNAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,
+		       (SELECT SUB.SUBJECTNAME AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
+		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
 		        TIME,
 		        NVL(PRICE, 0) AS PRICE,
 		        STATUS,        
@@ -62,20 +62,20 @@
 		        REGDATE
 		FROM (SELECT S.*, 
 		            (SELECT T.LNO AS LNO FROM TOWN T WHERE T.TNO = S.TNO) LNO,
-		            (SELECT K.SUBNO AS SUBNO FROM KIND K WHERE K.KNO = S.KNO) SUBNO
+		            (SELECT SUB.KNO AS KNO FROM SUBJECT SUB WHERE SUB.SUBNO = S.SUBNO) KNO
 		      FROM STUDY S 
-		WHERE TYPE = 'lecture') A
-		ORDER BY SNO DESC
+		WHERE TYPE = 'study') A
+		ORDER BY SNO DESC;
 	</select>
 	
 	<select id="selectLectureOne" resultType="map">
 		SELECT SNO,
-		       (SELECT M.NAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
-		       (SELECT L.LOCAL1 AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
-		       (SELECT T.NAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
-		       (SELECT SUB.NAEM AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
-		       (SELECT K.NAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,  
-		       (SELECT D.NAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
+		       (SELECT M.MNAME AS MNAME FROM MEMBER M WHERE M.MNO = A.MNO) MNAME,
+		       (SELECT L.LOCAL AS LOCAL FROM LOCAL L WHERE L.LNO = A.LNO) LOCAL, 
+		       (SELECT T.TOWNNAME AS TNAME FROM TOWN T WHERE T.TNO = A.TNO) TNAME,
+		       (SELECT K.KINDNAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,
+		       (SELECT SUB.SUBJECTNAME AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
+		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,     
 		        TIME,
 		        NVL(PRICE, 0) AS PRICE,
 		        STATUS,        
@@ -85,10 +85,10 @@
 		        REGDATE
 		FROM (SELECT S.*, 
 		            (SELECT T.LNO AS LNO FROM TOWN T WHERE T.TNO = S.TNO) LNO,
-		            (SELECT K.SUBNO AS SUBNO FROM KIND K WHERE K.KNO = S.KNO) SUBNO
+		            (SELECT SUB.KNO AS KNO FROM SUBJECT SUB WHERE SUB.SUBNO = S.SUBNO) KNO
 		      FROM STUDY S 
-		WHERE TYPE = 'lecture' AND SNO = #{sno}) A
-		ORDER BY SNO DESC
+		WHERE TYPE = 'study' AND SNO = #{sno}) A
+		ORDER BY SNO DESC;
 	</select>
 	
 	<delete id="deleteLecture">

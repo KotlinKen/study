@@ -26,8 +26,8 @@ public class LectureDAOImpl implements LectureDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> selectSubList() {
-		return session.selectList("lecture.selectSubList");
+	public List<Map<String, String>> selectKindList() {
+		return session.selectList("lecture.selectKindList");
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class LectureDAOImpl implements LectureDAO {
 	}	
 
 	@Override
-	public List<Map<String, Object>> selectKindList(int subNo) {
-		return session.selectList("lecture.selectKindList", subNo);
+	public List<Map<String, Object>> selectSubList(int kindNo) {
+		return session.selectList("lecture.selectSubList", kindNo);
 	}
 
 	@Override

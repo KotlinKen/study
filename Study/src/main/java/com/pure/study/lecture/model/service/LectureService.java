@@ -11,9 +11,9 @@ public interface LectureService {
 
 	List<Map<String, Object>> selectTownList(int localNo);
 
-	List<Map<String, String>> selectSubList();
+	List<Map<String, String>> selectKindList();
 
-	List<Map<String, Object>> selectKindList(int subNo);
+	List<Map<String, Object>> selectSubList(int kindNo);
 
 	int insertLecture(Lecture lecture);
 
