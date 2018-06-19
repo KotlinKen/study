@@ -161,7 +161,7 @@ $(function(){
 		$("form[name=studyFrm]").on("click","button.addFile",function(){
 			
 			if($("div.fileWrapper").length<10){
-				$("div.fileWrapper:last").after($("div.forCopy").clone().removeClass("forCopy").addClass("fileWrapper"));
+				$("div#upfile-container").append($("div.forCopy").clone().removeClass("forCopy").addClass("fileWrapper"));
 			}
 				
 		});
@@ -264,13 +264,13 @@ function validate(){
 		<label for="ldate">신청마감 : </label><input type="date" name="ldate" id="ldate" value="${study.LDATE }"/>
 		<label for="schedule">스터디 일정 : </label><input type="date" name="sdate" class="changeDate" id="sdate" value="${study.SDATE }"/>~<input type="date" name="edate" class="changeDate" id="edate" value="${study.EDATE }"/><br />
 		<label for="freq">스터디빈도 : </label>
-		<label>월 </label><input type="checkbox" name="freq" id="" value="일" ${fn:contains(study.FREQ, "일")? "checked":""}/>
-		<label>화 </label><input type="checkbox" name="freq" id="" value="월" ${fn:contains(study.FREQ, "월")? "checked":""}/>
-		<label>수 </label><input type="checkbox" name="freq" id="" value="화" ${fn:contains(study.FREQ, "화")? "checked":""}/>
-		<label>목 </label><input type="checkbox" name="freq" id="" value="수" ${fn:contains(study.FREQ, "수")? "checked":""}/>
-		<label>금 </label><input type="checkbox" name="freq" id="" value="목" ${fn:contains(study.FREQ, "목")? "checked":""}/>
-		<label>토 </label><input type="checkbox" name="freq" id="" value="금" ${fn:contains(study.FREQ, "금")? "checked":""}/>
-		<label>일 </label><input type="checkbox" name="freq" id="" value="토" ${fn:contains(study.FREQ, "토")? "checked":""}/> 
+		<label>일 </label><input type="checkbox" name="freq" id="" value="일" ${fn:contains(study.FREQ, "일")? "checked":""}/>
+		<label>월 </label><input type="checkbox" name="freq" id="" value="월" ${fn:contains(study.FREQ, "월")? "checked":""}/>
+		<label>화 </label><input type="checkbox" name="freq" id="" value="화" ${fn:contains(study.FREQ, "화")? "checked":""}/>
+		<label>수 </label><input type="checkbox" name="freq" id="" value="수" ${fn:contains(study.FREQ, "수")? "checked":""}/>
+		<label>목 </label><input type="checkbox" name="freq" id="" value="목" ${fn:contains(study.FREQ, "목")? "checked":""}/>
+		<label>금 </label><input type="checkbox" name="freq" id="" value="금" ${fn:contains(study.FREQ, "금")? "checked":""}/>
+		<label>토 </label><input type="checkbox" name="freq" id="" value="토" ${fn:contains(study.FREQ, "토")? "checked":""}/> 
 		
 		<label for="starttime">스터디 시간</label>
 		
@@ -305,25 +305,27 @@ function validate(){
 		<button type="button" class="addFile">파일 추가</button>
 		
 		
-		<!-- <button type="button" id="upfileAllDelete">첨부파일 모두 삭제</button> -->
-		<c:set var="imgFiles" value="${fn:split(study.UPFILE,',')}"/>
-		<c:forEach var="img" items="${imgFiles }">
-		<div class="input-group mb-3 fileWrapper" style="padding:0px">
-			  <div class="input-group-prepend" style="padding:0px">
-			    <span class="input-group-text">첨부파일</span>
-			  </div>
-			  <div class="custom-file">
-			    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
-			     <!-- 새로 첨부한 파일인지의 여부 -->
-			    <input type="hidden" name="isNew" value="false" />
-			    <label class="custom-file-label" for="upFile1">${img }</label>
-			  </div>
-			  <!-- <button type="button" class="addFile">+</button> -->
-			  
-			 
-			  <button type="button" class="removeFile">-</button>
+		<!-- 첨부파일 영역들 여기 다 있다. -->
+		<div id="upfile-container">
+			<c:set var="imgFiles" value="${fn:split(study.UPFILE,',')}"/>
+			<c:forEach var="img" items="${imgFiles }">
+			<div class="input-group mb-3 fileWrapper" style="padding:0px">
+				  <div class="input-group-prepend" style="padding:0px">
+				    <span class="input-group-text">첨부파일</span>
+				  </div>
+				  <div class="custom-file">
+				    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
+				     <!-- 새로 첨부한 파일인지의 여부 -->
+				    <input type="hidden" name="isNew" value="false" />
+				    <label class="custom-file-label" for="upFile1">${img }</label>
+				  </div>
+				  <!-- <button type="button" class="addFile">+</button> -->
+				  
+				 
+				  <button type="button" class="removeFile">-</button>
+			</div>
+			</c:forEach>
 		</div>
-		</c:forEach>
 		
 		
 		<input type="reset" value="취소하기" />

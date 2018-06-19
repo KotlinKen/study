@@ -19,53 +19,62 @@ div.forCopy{
 <script>
 function validate(){
 	
-	 // 유효성 검사 - 지역,도시
-	   var local = $("#local").val();
-	   var town = $("#town").val();
-	   
-	   if( local.equals("") || town.equals("")){
-	      alert("지역을 선택해주세요");
-	      return false;   
-	   }
-	   
-	   // 유효성 검사 - 카테고리, 세부종목
-	   var kind = $("#kind").val();
-	   var sub = $("#subject").val();
-	   
-	   if( kind.equals("") || sub.equals("")){
-	      alert("강의 과목을 선택해주세요");
-	      return false;
-	   }
-	   
-	   // 유효성 검사 - 난이도
-	   var diff = $("#diff").val();
-	   
-	   if(diff.equals("")){
-	      alert("난이도를 선택해주세요");
-	      return false;
-	   }
-	   
-	   // 유효성 검사 - 마감일
-	   var ldate = $("#ldate").val();
-	   var lArray = sdate.split("-");
-	   var deadline = new Date(startArray[0], startArray[1], startArray[2]);
-	   
-	   var year = date.getFullYear();
-	   var month = date.getMonth()+1;
-	   var day = date.getDay();
-	   
-	   if( (day+"").length < 2 )
-	      day = "0" + day;
-	   
-	   var today = new Date(year, month, day);
-	   
-	   if( (deadline - today) < 0 ){
-	      alert("과거가 마감일이 될 수 없습니다.");
-	      return false;   
-	   }
-
+		   var lectureFrm = $("form[name=studyFrm]");
+		   
+		  // event.preventDefault(); 
+		   
+		   // 유효성 검사 - 지역,도시
+		   var local = $("#local").val();
+		   var town = $("#town").val();
+		   
+		   if( local=="" || town=="세부 지역을 선택하세요"){
+		      alert("지역을 선택해주세요");
+		      return false;   
+		   }
+		   
+		   // 유효성 검사 - 카테고리, 세부종목
+		   var kind = $("#kind").val();
+		   var sub = $("#subject").val();
+		   
+		   if( kind=="" || sub=="세부 과목을 선택하세요"){
+		      alert("강의 과목을 선택해주세요");
+		      return false;
+		   }
+		   
+		   // 유효성 검사 - 난이도
+		   var diff = $("#diff").val();
+		   
+		   if(diff==""){
+		      alert("난이도를 선택해주세요");
+		      return false;
+		   }
+		   
+		   // 유효성 검사 - 마감일
+		   var ldate = $("#ldate").val();
+		   var lArray = ldate.split("-");
+		   var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
+		   
+		   var date = new Date();
+		   var year = date.getFullYear();
+		   var month = new String(date.getMonth()+1);
+		   var day = new String(date.getDate());
+		   
+		   if(month.length == 1 )
+		      month = "0" + month;
+		   if( day.length == 1 )
+		      day = "0" + day;
+		   
+		   var today = new Date(year, month, day).getTime();
+		   
+		   if( (deadline-today) < 0 ){
+		      alert("과거가 마감일이 될 수 없습니다.");
+		      return false;   
+		   }
+		   
+		   // 유효성 검사 - 일정, 빈도
+		   
 	
-	// time만들기.
+		// time만들기.
 	   var starttime = $("select#starttime option:checked").val();
 	   var endtime = $("select#endtime option:checked").val();   
 	   
@@ -92,13 +101,15 @@ $(function(){
 		url:"selectLocal.do",
 		dataType:"json",
 		success:function(data){
-			console.log("dddfsd");
-			var html="<option>선택하세요</option>";
+			console.log(data);
+			console.log(data.list);
+			console.log(data.cPage);
+	/* 		var html="<option>선택하세요</option>";
 			for(var index in data){
 				//console.log(data[index]);
 				html +="<option value='"+data[index].LNO+"'>"+data[index].LOCAL+"</option><br/>";
 			}
-			$("select#local").html(html);
+			$("select#local").html(html); */
 			
 			
 		},error:function(){
@@ -145,7 +156,7 @@ $(function(){
 		}
 	}); 	
 	
-	//subject를 선택하면 해당하는 과목들을들을 가져와 리스트를 생성한다.
+	//kind를 선택하면 해당하는 과목들을들을 가져와 리스트를 생성한다.
 	 $("select#kind").on("change",function(){
 		$.ajax({
 			url:"selectSubject.do",
@@ -174,7 +185,7 @@ $(function(){
 			for(var index in data){
 				html +="<option value='"+data[index].DNO+"'>"+data[index].DIFFICULTNAME+"</option><br/>";
 			}
-			$("select#dno").html(html);
+			$("select#diff").html(html);
 			
 		},error:function(){
 			
@@ -253,13 +264,13 @@ $(function(){
 		<label for="ldate">신청마감 : </label><input type="date" name="ldate" id="ldate" />
 		<label for="schedule">스터디 일정 : </label><input type="date" name="sdate" id="sdate" class="changeDate"/>~<input type="date" name="edate" id="edate" class="changeDate" /><br />
 		<label for="freq">스터디빈도 : </label>
-		<label>월 </label><input type="checkbox" name="freq" id="" value="일"/>
-		<label>화 </label><input type="checkbox" name="freq" id="" value="월"/>
-		<label>수 </label><input type="checkbox" name="freq" id="" value="화"/>
-		<label>목 </label><input type="checkbox" name="freq" id="" value="수"/>
-		<label>금 </label><input type="checkbox" name="freq" id="" value="목"/>
-		<label>토 </label><input type="checkbox" name="freq" id="" value="금"/>
-		<label>일 </label><input type="checkbox" name="freq" id="" value="토"/> 
+		<label>일 </label><input type="checkbox" name="freq" id="" value="일"/>
+		<label>월 </label><input type="checkbox" name="freq" id="" value="월"/>
+		<label>화 </label><input type="checkbox" name="freq" id="" value="화"/>
+		<label>수 </label><input type="checkbox" name="freq" id="" value="수"/>
+		<label>목 </label><input type="checkbox" name="freq" id="" value="목"/>
+		<label>금 </label><input type="checkbox" name="freq" id="" value="금"/>
+		<label>토 </label><input type="checkbox" name="freq" id="" value="토"/> 
 		
 		<label for="starttime">스터디 시간</label>
 		<select name="starttime" id="starttime">

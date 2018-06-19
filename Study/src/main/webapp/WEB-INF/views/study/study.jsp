@@ -93,6 +93,50 @@ $(function(){
 		}
 	});
 	
+	//카테고리를 선택하면 그에 맞는 과목들을 가져온다.
+	$("select#kind").on("change",function(){
+		var html="";
+		if($(this).val()!="0"){
+			$.ajax({
+				url:"selectSubject.do",
+				data:{kno:$(this).val()},
+				dataType:"json",
+				success:function(data){
+					for(var index in data){
+						html +="<option value='"+data[index].SUBNO+"'>"+data[index].SUBJECTNAME+"</option><br/>";
+						$("select#subject").html(html);
+					}
+				}
+			});
+		}else{
+			html ="<option value='0'>카테고리를 선택하세요</option><br/>";
+			$("select#subject").html(html);
+		}
+	});
+	
+	//지역을 선택하면 그에 맞는 도시들을 가져온다.
+	$("select#local").on("change",function(){
+		var html="";
+		if($(this).val()!="0"){
+			$.ajax({
+				url:"selectTown.do",
+				data:{lno:$(this).val()},
+				dataType:"json",
+				success:function(data){
+					for(var index in data){
+						html +="<option value='"+data[index].TNO+"'>"+data[index].TOWNNAME+"</option><br/>";
+						$("select#town").html(html);
+					}
+				}
+			});
+		}else{
+			html ="<option value='0'>지역을 선택하세요</option><br/>";
+			$("select#town").html(html);
+		}
+	});
+	
+	
+	
 	$("div#study-list").on("click","div.studyone",function(){
 		console.log("되나");
 		location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).children("input").val();

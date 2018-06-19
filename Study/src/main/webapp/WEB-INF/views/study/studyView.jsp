@@ -59,7 +59,10 @@ $(function(){
 	});
 	
 	$("button.removeStudy").click(function(){
-		location.href="deleteStudy.do?sno="+${study.SNO};
+		if(confirm("정말 삭제하시겠습니까?")){
+			location.href="deleteStudy.do?sno="+${study.SNO};
+
+		}
 	});
 		
 	

@@ -471,12 +471,28 @@ public class StudyController {
 		return list;
 		
 	}
-	@RequestMapping("/study/selectLocal.do")
+	//@ResponseBody
+/*	@RequestMapping("/study/selectLocal.do")
+	public ModelAndView selectLocal(){
+		
+		List<Map<String,Object>> list = studyService.selectLocal();
+		System.out.println("@@@@@@@localList="+list);
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("list", list);
+		resultMap.put("cPage", 1);
+		
+		
+		ModelAndView mav = new ModelAndView("jsonView",resultMap);
+		return mav;
+	}*/
+	
 	@ResponseBody
+	@RequestMapping("/study/selectLocal.do")
 	public List<Map<String,Object>> selectLocal(){
 		
 		List<Map<String,Object>> list = studyService.selectLocal();
 		System.out.println("@@@@@@@localList="+list);
+		
 		return list;
 	}
 	
