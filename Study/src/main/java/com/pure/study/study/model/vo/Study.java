@@ -22,10 +22,12 @@ public class Study {
 	private Date edate;
 	private Date regDate;
 	private String etc;
+	
 	public Study() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public Study(int sno, int mno, int subno, int tno, int dno, String title, String freq, String content, String price,
 			String upfile, String recruit, String status, String time, String type, Date ldate, Date sdate, Date edate,
 			Date regDate, String etc) {
