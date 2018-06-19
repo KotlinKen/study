@@ -88,17 +88,45 @@
 		update member set email=#{email} where mid=#{mid}
 	</update>
 	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
-		select * from study s join tbl_apply a on s.sno=a.sno 
-									join tbl_kind k on k.kno=s.kno
-									join tbl_town t on t.tno=s.tno
-									join tbl_depart d on d.dno=s.dno
-        where s.mno=#{mno}
+		select  s.title as "title", 
+	        (select mid from member where mno=#{mno}) as "mid", 
+	        (select mid from member where mno=(select mno from study where sno=(select sno from apply where mno=#{mno}))) as "captain",
+	        s.status as "status", 
+	        (select count(*) from apply where sno=(select sno from member where mno=#{mno}) ) as "applycnt",
+	        s.recruit as "recruit",
+	        extract(year from s.ldate)||'/'||extract(month from s.ldate)||'/'||extract(day from s.ldate) as "ldate",
+	        (select extract(year from a.adate)||'/'||extract(month from a.adate)||'/'||extract(day from a.adate) as "adate" 
+	        from apply a 
+	        where mno=#{mno}) as "adate"
+		from study s
 	</select>
 	<select id="selectApplyListCnt" parameterType="_int" resultType="_int">
-		select count(*) from tbl_apply where mno=#{mno}
+		select count(*) from apply where mno=#{mno}
 	</select>
 	<resultMap type="map" id="applyList"></resultMap>
-
+			
+	<select id="selectMyStudyList" parameterType="_int" resultMap="mystudyList">
+		select s.title as "title",
+	        (select mid from member where mno=2) as "mid", 
+	        (select mid from member where mno=(select mno from study where sno=(select sno from crew where mno=#{mno}))) as "captain",
+	        s.freq as "freq",
+	        extract(year from s.sdate)||'/'||extract(month from s.sdate)||'/'||extract(day from s.sdate) as "sdate",
+	        extract(year from s.edate)||'/'||extract(month from s.edate)||'/'||extract(day from s.edate) as "edate",
+	        s.time as "time"
+		from study s
+	</select>
+	<select id="selectMyStudyListCnt" parameterType="_int" resultType="_int">
+		select count(*) from crew where mno=#{mno}
+	</select>
+	<resultMap type="map" id="mystudyList"></resultMap>
+	
+	<select id="selectWishList" parameterType="_int" resultMap="wishList">
+		select * from wish
+	</select>
+	<select id="selectWishListCnt" parameterType="_int" resultType="_int">
+		select count(*) from wish where mno=#{mno}
+	</select>
+	<resultMap type="map" id="wishList"></resultMap>
  
  	<insert id="insertMailCertification">
  		INSERT INTO CERTIFICATION VALUES(seq_certification.nextval,#{tomail}, #{ranstr})

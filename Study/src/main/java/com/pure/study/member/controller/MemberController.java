@@ -745,13 +745,9 @@ public class MemberController {
 	@RequestMapping(value="/member/newEmail.do", method= RequestMethod.POST)
 	public String newEmail(HttpServletRequest request, @RequestParam("email") String email, Model model, @ModelAttribute("memberLoggedIn") Member m) {
 		//System.out.println(email+"로 이메일 변경해주기");
-		
-		//List<Map<String, String>> favor = memberService.selectKind();
-		
+				
 		m.setEmail(email);
 		int result = memberService.updateEmail(m);
-		
-		//model.addAttribute("favor",favor);
 		
 		if(result>0) {
 			model.addAttribute("memberLoggedIn", m);
@@ -772,11 +768,13 @@ public class MemberController {
 		
 		int numPerPage = 10;
 		
-		//List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(), numPerPage, cPage);
+		List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(), numPerPage, cPage);
 		
 		//int count = memberService.selectMyStudyListCnt(m.getMno());
 		
-		//mav.addObject("myStudyList", list);
+		System.out.println(list);
+		
+		mav.addObject("myStudyList", list);
 		//mav.addObject("count", count);
 		mav.addObject("count", 0);
 		mav.addObject("numPerPage", numPerPage);
