@@ -56,38 +56,36 @@ public class AdverstingController {
 			/************** MultipartFile을 이용한 파일 업로드 처리 로직 시작  ********************************************************/
 			
 			//
-			int cnt = 0; 
-			for(MultipartFile f : upFiles) {
-				cnt++;
-				logger.info("cnt"+saveDirectory);
-				logger.debug("cnt"+cnt);
-				if(!f.isEmpty()) {
-
-					//파일명 재생성
-					String originalFileName = f.getOriginalFilename();
-					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-					int rndNum = (int)(Math.random() * 1000);
-					String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
-					logger.info("renamedFileName"+renamedFileName);
-					try {
-						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					//VO객체 담기
-					adversting.setAdvImg(renamedFileName);
-				}
-			}
+			int cnt = 0;
 			
+			
+
+				for(MultipartFile f : upFiles) {
+					cnt++;
+					logger.info("cnt"+saveDirectory);
+					logger.debug("cnt"+cnt);
+					if(!f.isEmpty()) {
+	
+						//파일명 재생성
+						String originalFileName = f.getOriginalFilename();
+						String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+						int rndNum = (int)(Math.random() * 1000);
+						String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
+						logger.info("renamedFileName"+renamedFileName);
+						try {
+							f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						//VO객체 담기
+						adversting.setAdvImg(renamedFileName);
+					}
+				}
 			
 			int result = adverstingService.insertAdversting(adversting);
-			
-			
-			//2.비지니스로직
- 
 			
 			//3. view단 분기
 			String loc = "/";
@@ -163,36 +161,44 @@ public class AdverstingController {
 	public ModelAndView adverstingReWrite(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		
+		
+
+		
 		try {
+			if(adversting.getAdvImg() != null && adversting.getAdvImg() != "") {
 			//1.파일업로드 처리
-			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
+				String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
 					
 			/************** MultipartFile을 이용한 파일 업로드 처리 로직 시작  ********************************************************/
-			int cnt = 0; 
-			for(MultipartFile f : upFiles) {
-				cnt++;
-				logger.info("cnt"+saveDirectory);
-				logger.debug("cnt"+cnt);
-				if(!f.isEmpty()) {
-					//파일명 재생성
-					String originalFileName = f.getOriginalFilename();
-					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-					int rndNum = (int)(Math.random() * 1000);
-					String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
-					logger.info("renamedFileName"+renamedFileName);
-					try {
-						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
+				int cnt = 0; 
+				for(MultipartFile f : upFiles) {
+					cnt++;
+					logger.info("cnt"+saveDirectory);
+					logger.debug("cnt"+cnt);
+					if(!f.isEmpty()) {
+						//파일명 재생성
+						String originalFileName = f.getOriginalFilename();
+						String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+						int rndNum = (int)(Math.random() * 1000);
+						String renamedFileName = sdf.format(new Date(System.currentTimeMillis())) + "_" + rndNum + "." + ext;
+						logger.info("renamedFileName"+renamedFileName);
+						try {
+							f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						//VO객체 담기
+						adversting.setAdvImg(renamedFileName);
 					}
-					//VO객체 담기
-					adversting.setAdvImg(renamedFileName);
 				}
+			}else {
+				Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
+				map.get("ADVIMG");
+				adversting.setAdvImg(map.get("ADVIMG"));
 			}
-			
 			
 			int result = adverstingService.updateAdversting(adversting);
 			

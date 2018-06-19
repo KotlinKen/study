@@ -132,7 +132,7 @@ $(function(){
 		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
 		
 		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
-		
+		alert(difference);
 		if( difference >= 0 && difference < 7 ){			
 			$("input[class=day]").attr("disabled", true);
 		 	for( var i = 0; i < difference+1; i++ ){
@@ -145,7 +145,7 @@ $(function(){
 		else if( difference > 7 )
 			$(".day").attr("disabled", false);
 		else
-			$(".day").attr("disabled", true);
+			$(".day").attr("disabled", false);
 	});
 });
 </script>
