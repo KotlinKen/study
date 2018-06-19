@@ -104,7 +104,6 @@
 		select count(*) from apply where mno=#{mno}
 	</select>
 	<resultMap type="map" id="applyList"></resultMap>
-			
 	<select id="selectMyStudyList" parameterType="_int" resultMap="mystudyList">
 		select s.title as "title",
 	        (select mid from member where mno=2) as "mid", 
