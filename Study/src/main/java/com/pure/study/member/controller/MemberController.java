@@ -60,6 +60,7 @@ public class MemberController {
 	public ModelAndView memberAgreement() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원동의홈페이지");
+			
 		}
 		ModelAndView mav = new ModelAndView();
 		List <Map<String , String>> service = memberService.serviceagree();
