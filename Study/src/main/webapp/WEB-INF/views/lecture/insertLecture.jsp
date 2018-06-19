@@ -10,6 +10,24 @@ div.forCopy{
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
 <script>
 function validate(){	
+	// 유효성 검사 - 지역,도시
+	var local = $("#local").val();
+	var town = $("#town").val();
+	
+	if( local.equals("") || town.equals(""))
+		return false;	
+	
+	// 유효성 검사 - 제목
+	
+	// 유효성 검사 - 카테고리, 세부종목
+	
+	// 유효성 검사 - 난이도
+	
+	// 유효성 검사 - 마감일
+	
+	// 유효성 검사 - 일정, 빈도
+	
+	
 	// time만들기.
 	var startTime = $("#startTime option:checked").val();
 	var endTime = $("#endtime option:checked").val();	
@@ -18,9 +36,11 @@ function validate(){
 	
 	return true;
 }
+
 $(document).ready(function(){
 	$(".day").attr("disabled", true);
 });
+
 $(function(){	
 	// TOWN선택
 	$("#local").on("change", function(){
@@ -98,7 +118,7 @@ $(function(){
 		}
 	});	
 	
-	// 날짜를 조정해보자...
+	// 날짜를 조정해보자... 유효성 검사 포함.
 	$("input[class=changeDate]").on("change", function(){
 		$("input[class=day]").prop("checked", false);
 		
@@ -122,6 +142,8 @@ $(function(){
 		 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
 		 	}
 		}
+		else if( difference > 7 )
+			$(".day").attr("disabled", false);
 		else
 			$(".day").attr("disabled", true);
 	});
@@ -207,7 +229,7 @@ $(function(){
 	<input type="hidden" name="time" id="time" />
 	<br />
 	
-	<label for="price">일회 사용회비 : </label><input type="text" name="price" id="price" class="form-control" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
+	<label for="price">일회 사용회비 : </label><input type="number" name="price" id="price" class="form-control" min="0" step="1000" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
 	<br />
 	
 	<label for="recruit">모집 인원 : </label>
@@ -216,10 +238,6 @@ $(function(){
 		<option value="${i }">${i }명</option>
 		</c:forEach>
 	</select>
-	<br />
-	
-	<label for="cover">자기소개 : </label>
-	<textarea name="cover" id="cover" cols="30" rows="10" class="form-control" placeholder="자기소개 및 특이사항을 작성해주세요"></textarea>
 	<br /> 
 	
 	<label for="etc">기타 : </label>
@@ -237,6 +255,7 @@ $(function(){
 		  <button type="button" class="addFile">+</button>
 		  <button type="button" class="removeFile">-</button>
 	</div>
+	
 	<div class="input-group mb-3 forCopy" style="padding:0px">
 		  <div class="input-group-prepend" style="padding:0px">
 		    <span class="input-group-text">첨부파일</span>
@@ -251,7 +270,5 @@ $(function(){
 	
 	<input type="reset" value="취소하기" />
 	<input type="submit" value="등록하기" />
-	</form>
-	
+	</form>	
 </div>
-<%-- <jsp:include page="/WEB-INF/views/common/footer.jsp"/>	 --%>
