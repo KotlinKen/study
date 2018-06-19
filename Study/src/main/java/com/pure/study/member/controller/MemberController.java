@@ -338,7 +338,7 @@ public class MemberController {
 
 		ModelAndView mav = new ModelAndView();
 
-		mav.addObject("findType", findType);// findType - 아이디/비밀번호
+		mav.addObject("findType", findType); // findType - 아이디/비밀번호
 		mav.setViewName("member/memberFind");
 
 		return mav;
