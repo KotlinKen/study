@@ -1,3 +1,4 @@
+<%@page import="javax.print.attribute.standard.DateTimeAtCompleted"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -9,30 +10,68 @@ div.forCopy{
 </style>
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
 <script>
-function validate(){	
+function validate(){
 	// 유효성 검사 - 지역,도시
 	var local = $("#local").val();
 	var town = $("#town").val();
 	
-	if( local.equals("") || town.equals(""))
+	if( local=="" || town=="세부 지역을 선택하세요"){
+		alert("지역을 선택해주세요");
 		return false;	
-	
-	// 유효성 검사 - 제목
+	}
 	
 	// 유효성 검사 - 카테고리, 세부종목
+	var kind = $("#kind").val();
+	var sub = $("#sub").val();
+	
+	if( kind=="" || sub=="세부 과목을 선택하세요"){
+		alert("강의 과목을 선택해주세요");
+		return false;
+	}
 	
 	// 유효성 검사 - 난이도
+	var diff = $("#diff").val();
+	
+	if(diff==""){
+		alert("난이도를 선택해주세요");
+		return false;
+	}
 	
 	// 유효성 검사 - 마감일
+	var ldate = $("#ldate").val();
+	var lArray = ldate.split("-");
+	var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
+	
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = new String(date.getMonth()+1);
+	var day = new String(date.getDate());
+	
+	if(month.length == 1 )
+		month = "0" + month;
+	if( day.length == 1 )
+		day = "0" + day;
+	
+	var today = new Date(year, month, day);
+	
+	if( (deadline-today.getTime()) < 0 ){
+		alert("과거가 마감일이 될 수 없습니다.");
+		return false;	
+	}
 	
 	// 유효성 검사 - 일정, 빈도
-	
+	if( $(".day:checked").length == 0 ){
+		alert("요일을 선택하세요");
+		return false;	
+	}
 	
 	// time만들기.
 	var startTime = $("#startTime option:checked").val();
-	var endTime = $("#endtime option:checked").val();	
+	var endTime = $("#endTime option:checked").val();	
 	
 	$("#time").val(startTime + "~" + endTime);
+	
+ 	
 	
 	return true;
 }
@@ -132,7 +171,7 @@ $(function(){
 		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
 		
 		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
-		alert(difference);
+		
 		if( difference >= 0 && difference < 7 ){			
 			$("input[class=day]").attr("disabled", true);
 		 	for( var i = 0; i < difference+1; i++ ){
@@ -150,7 +189,7 @@ $(function(){
 });
 </script>
 <div id="lecture-container">
-	<form action="lectureFormEnd.do" name="lectureFrm" method="post" onsubmit="return validate();" enctype="multipart/form-data">
+	<form action="lectureFormEnd.do" id="lectureFrm" method="post" enctype="multipart/form-data" onsubmit="return validate();">
 	
 	<!-- 지역 -->
 	<label for="local">지역 : </label>
@@ -170,7 +209,7 @@ $(function(){
 	<!-- 지역 end -->	
 	
 	<label for="title">스터디 제목 : </label><input type="text" name="title" id="title" placeholder="제목" class="form-control" required /><br />
-	<label for="content">스터디 내용 : </label><textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력해주세요" class="form-control"></textarea><br />
+	<label for="content">스터디 내용 : </label><textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력해주세요" class="form-control" required></textarea><br />
 
 	<!-- 카테고리 -->
 	<label for="kind">카테고리</label>
@@ -214,13 +253,13 @@ $(function(){
     <label>토 </label><input type="checkbox" class="day" name="freqs" value="토" />
 	    
 	<label for="starttime">스터디 시간</label>
-	<select name="starttime" id="starttime">
+	<select name="startTime" id="startTime">
 		<c:forEach var="i" begin="6" end="23">
 		<option value="${i }:00">${i }:00</option>
 		
 		</c:forEach>
 	</select>
-	<select name="endtime" id="endtime">
+	<select name="endTime" id="endTime">
 		<c:forEach var="j" begin="7" end="24">
 			<option value="${j }:00">${j }:00</option>		
 		</c:forEach>
@@ -229,7 +268,7 @@ $(function(){
 	<input type="hidden" name="time" id="time" />
 	<br />
 	
-	<label for="price">일회 사용회비 : </label><input type="number" name="price" id="price" class="form-control" min="0" step="1000" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
+	<label for="price">일회 사용회비 : </label><input type="text" name="price" id="price" class="form-control" min="0" step="1000" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
 	<br />
 	
 	<label for="recruit">모집 인원 : </label>
@@ -269,6 +308,6 @@ $(function(){
 	</div>
 	
 	<input type="reset" value="취소하기" />
-	<input type="submit" value="등록하기" />
+	<input type="submit" value="등록"/>
 	</form>	
 </div>
