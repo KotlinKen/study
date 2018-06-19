@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.pure.study.study.model.vo.Study;
 
+
+
 @Repository
 public class StudyDAOImpl implements StudyDAO {
 	
@@ -102,4 +104,19 @@ public class StudyDAOImpl implements StudyDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("study.insertWishStudy", map);
 	}
+
+	@Override
+	public int studySearchTotalCount(Map<String, Object> terms) {
+		
+		return sqlSession.selectOne("study.studySearchTotalCount",terms);
+	
+	}
+
+	@Override
+	public int updateStudy(Study study) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("study.updateStudy",study);
+	}
+
+
 }

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -34,12 +33,17 @@ $(function(){
 	
 	//첨부파일 선택하면 파일 이름이 input창에 나타나게한다.
 	//첨부파일이름 표시
-	$("[name=upFile]").on("change",function(){
-		//var fileName= $(this).val();
+	$("form[name=studyFrm]").on("change","[name=upFile]",function(){
 		var fileName= $(this).prop("files")[0].name;
 		
 		$(this).next(".custom-file-label").html(fileName);
 	});
+	/* $("[name=upFile]").on("change",function(){
+		//var fileName= $(this).val();
+		var fileName= $(this).prop("files")[0].name;
+		
+		$(this).next(".custom-file-label").html(fileName);
+	}); */
 	
 	//local 지역 리스트를 가져와 select 만듦. 
 	 $.ajax({
@@ -97,8 +101,7 @@ $(function(){
 		},error:function(){
 			
 		}
-	}); 
-	
+	}); 	
 	
 	//subject를 선택하면 해당하는 과목들을들을 가져와 리스트를 생성한다.
 	 $("select#subject").on("change",function(){
@@ -133,8 +136,7 @@ $(function(){
 		},error:function(){
 			
 		}
-	}); 
-	
+	}); 	
 	
 	//첨부파일 + 버튼 클릭시 첨부파일창이 밑에 더 생긴다.
 	$("form[name=studyFrm]").on("click","button.addFile",function(){
@@ -151,9 +153,7 @@ $(function(){
 		if( $(this).parent("div.fileWrapper")[0]!==$("div.fileWrapper:eq(0)")[0]){ //맨첫번째 첨부파일은 삭제이벤트 발생안함.
 			$(this).parent("div.fileWrapper").remove();
 		}
-	});
-	
-	
+	});	
 });
 
 </script>
@@ -238,5 +238,6 @@ $(function(){
 		<input type="submit" value="등록하기" />
 	</form>
 	
+
 </div>
 <%-- <jsp:include page="/WEB-INF/views/common/footer.jsp"/>	 --%>

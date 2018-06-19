@@ -440,11 +440,29 @@ public class MemberController {
 		
 		//System.out.println("이동 중인 값 : "+ key);
 		
+		// 인코딩 된 키 값과 디비에 있는 값(임시 비밀번호)을 비교하고 맞으면 비밀번호를 바꿔준다.
+		Member m = memberService.selectOneMember(mid);
+		
+		if (key.equals(m.getPwd())) {
+			mav.setViewName("member/memberUpdatePwd");
+		}else {
+			System.out.println("값은 있지만 비번이 서로 매치가 안됨");// 유효성
+			mav.addObject("loc", "/");
+			mav.addObject("msg", "잘못된 접근입니다.");
+			mav.setViewName("common/msg");
+			
+		}
+
 		mav.addObject("mid", mid);
+		mav.addObject("key", key);
+	
+		return mav;
+		
+		/*mav.addObject("mid", mid);
 		mav.addObject("key", key);
 		mav.setViewName("member/memberUpdatePwd");
 
-		return mav;
+		return mav;*/
 	}
 
 	// 6. 디비의 임시 비밀번호와 페이지 이동을 통한 인증키 비교(페이지 유효성 검사)
@@ -456,7 +474,7 @@ public class MemberController {
 
 		// 인코딩 된 키 값과 디비에 있는 값(임시 비밀번호)을 비교하고 맞으면 비밀번호를 바꿔준다.
 		Member m = memberService.selectOneMember(mid);
-
+		
 		if (m == null) {
 			msg = "잘못된 접근입니다.";
 			System.out.println("mid 잘못 가져옴");
@@ -834,19 +852,3 @@ public class MemberController {
 	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

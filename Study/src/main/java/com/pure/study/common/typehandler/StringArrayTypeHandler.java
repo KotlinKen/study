@@ -12,6 +12,7 @@ import org.apache.ibatis.type.TypeHandler;
  * 3개의 getter메소드와 1개의 setter메소드를 오버라이딩해야함.
  * 
  * <h3>getter</h3>
+<<<<<<< HEAD
  * <p>1. ResultSet에서 컬럼이름 getter
  * <p>2. ResultSet에서 컬럼인덱스 getter
  * <p>3. 프로시져용 CallableStatement용 getter
@@ -44,6 +45,7 @@ public class StringArrayTypeHandler implements TypeHandler<String[]> {
 	            pstmt.setString(columnIndex, String.join(",", param));
 		 else
 				pstmt.setString(columnIndex, "");
+ 
 	}
 
 }
