@@ -101,15 +101,12 @@ $(function(){
 		url:"selectLocal.do",
 		dataType:"json",
 		success:function(data){
-			console.log(data);
-			console.log(data.list);
-			console.log(data.cPage);
-	/* 		var html="<option>선택하세요</option>";
+			var html="<option>선택하세요</option>";
 			for(var index in data){
 				//console.log(data[index]);
 				html +="<option value='"+data[index].LNO+"'>"+data[index].LOCAL+"</option><br/>";
 			}
-			$("select#local").html(html); */
+			$("select#local").html(html); 
 			
 			
 		},error:function(){

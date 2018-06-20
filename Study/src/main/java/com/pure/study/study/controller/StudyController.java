@@ -34,6 +34,8 @@ public class StudyController {
 	private StudyService studyService;
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private int numPerPage=6;
 
 	
 	@RequestMapping("/study/studyList.do")
@@ -53,8 +55,8 @@ public class StudyController {
 		mav.addObject("diffList",diffList);
 		
 		
-		int numPerPage = 6; // => limit
-		
+		/*int numPerPage = 6; // => limit
+*/		
 		//1. 현재 페이지 컨텐츠 구하기 
 		/*List<Map<String,String>> list = studyService.selectStudyList(cPage,numPerPage);
 		logger.debug("list="+list);
@@ -65,8 +67,8 @@ public class StudyController {
 		//mav.addObject("total",total);
 		//mav.addObject("list",list);
 		
-		mav.addObject("numPerPage",numPerPage);
-		mav.addObject("cPage",cPage);
+	/*	mav.addObject("numPerPage",numPerPage);
+		mav.addObject("cPage",cPage);*/
 		mav.setViewName("study/study");
 		
 		return mav;
@@ -74,23 +76,20 @@ public class StudyController {
 	
 	@RequestMapping("/study/selectStudyList.do")
 	public ModelAndView selectStudyList() {
-		
-		ModelAndView mav = new ModelAndView();
-		//HttpSession session = request.getSession();
-	//	int numPerPage = (int) session.getAttribute("numPerPage");
-		//int cPage=(int)session.getAttribute("cPage");
-		
-		int numPerPage = 6;
 		int cPage=1;
-		System.out.println("selectStudyList.do numPerPage="+numPerPage);
-		System.out.println("selectStudyList.do cPage="+cPage);
+		//Map<String,Object> resultmap = new HashMap<>();
 		List<Map<String,String>> list = studyService.selectStudyList(cPage,numPerPage);
 		int total = studyService.studyTotalCount();
-		mav.addObject("total",total);
+		//resultmap.put("list", list);
+		//resultmap.put("total",total);
+		ModelAndView mav = new ModelAndView("jsonView");
+		System.out.println("selectStudyList.do numPerPage="+numPerPage);
+		System.out.println("selectStudyList.do cPage="+cPage);
 		mav.addObject("list",list);
 		mav.addObject("numPerPage",numPerPage);
-		mav.setViewName("study/studyListResult");
 		mav.addObject("cPage",cPage);
+		mav.addObject("total",total);
+		
 		return mav;
 	}
 	
@@ -186,15 +185,18 @@ public class StudyController {
 		
 		return mav;
 	}
+	
+	
 	@RequestMapping("/study/searchStudy.do")
 	public ModelAndView selectStudyForSearch(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
 			,@RequestParam(value="cPage", required=false, defaultValue="1") int cPage) {
 		
-	
-		int numPerPage = 6; 
 		if(leadername.trim().length()<1) leadername=null;
-		ModelAndView mav= new ModelAndView();
+		
+		ModelAndView mav= new ModelAndView("jsonView");
+		
+		/* 쿼리에 넘길 조건들 Map*/
 		Map<String,Object> terms=new HashMap<>();
 		terms.put("lno", lno);
 		terms.put("tno", tno);
@@ -205,13 +207,17 @@ public class StudyController {
 		terms.put("cPage", cPage);
 		terms.put("numPerPage", numPerPage);
 		System.out.println("map="+terms);
+		
+		
+		//검색 조건에 따른 총 스터기 갯수
 		int total = studyService.studySearchTotalCount(terms);
+		
+		
+		//페이징 처리해서 가져온 리스트
 		List<Map<String,Object>> studyList = studyService.selectStudyForSearch(terms);
 		mav.addObject("list",studyList);
 		mav.addObject("total",total);
 		mav.addObject("cPage",cPage);
-		mav.addObject("numPerPage",numPerPage);
-		mav.setViewName("study/searcnResult");
 		System.out.println("studyList="+studyList);
 		
 		
@@ -221,14 +227,16 @@ public class StudyController {
 	//검색결과에서 무한스크롤시 리스트를 페이징 처리해서 더 가져옴.
 	
 	@RequestMapping("/study/searchStudyAdd.do")
-	@ResponseBody
-	public List<Map<String,Object>> selectSearchStudyAdd(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
+	public ModelAndView selectSearchStudyAdd(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
 			,@RequestParam(value="cPage", required=false, defaultValue="1") int cPage,@RequestParam(value="numPerPage") int numPerPage){
 		
+		ModelAndView mav = new ModelAndView("jsonView");
+		
 		if(leadername.trim().length()<1) leadername=null;
+		
+		/* 쿼리에 넘길 조건들 Map*/
 		Map<String,Object> terms=new HashMap<>();
-		System.out.println("cPage="+cPage);
 		terms.put("lno", lno);
 		terms.put("tno", tno);
 		terms.put("subno", subno);
@@ -237,23 +245,29 @@ public class StudyController {
 		terms.put("leadername", leadername);
 		terms.put("cPage", cPage);
 		terms.put("numPerPage", numPerPage);
+		
+		
 		List<Map<String,Object>> list = studyService.selectStudyForSearch(terms);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
 		
 		System.out.println("searchListAdd="+list);
-		return list;
+		return mav;
 		
 		
 	}
 	
 	
 	@RequestMapping("/study/studyListAdd.do")
-	@ResponseBody
-	public List<Map<String,Object>> selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam(value="numPerPage") int numPerPage){
-		
+	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam(value="numPerPage") int numPerPage){
+		ModelAndView mav = new ModelAndView("jsonView");
 		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage,numPerPage);
+		mav.addObject("addList",studyList);
+		mav.addObject("cPage",cPage+1);
+		
 		
 		System.out.println("studyList="+studyList);
-		return studyList;
+		return mav;
 		
 	}
 	
