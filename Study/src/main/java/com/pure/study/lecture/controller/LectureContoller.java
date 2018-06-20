@@ -1,8 +1,14 @@
 package com.pure.study.lecture.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pure.study.lecture.model.service.LectureService;
@@ -61,15 +68,58 @@ public class LectureContoller {
 	}
 
 	@RequestMapping("/lecture/lectureFormEnd.do")
-	public ModelAndView insetLecture(Lecture lecture, @RequestParam(value = "freqs", required = false) String[] freqs) {
+	public ModelAndView insetLecture(Lecture lecture, 
+			                         @RequestParam(value = "freqs") String[] freqs,
+			                         @RequestParam(value="upFile") MultipartFile[] upFiles,
+			                         HttpServletRequest request) {
 		int result = 0;
 		// 빈도 배열을 join해서 setter로 setting해줌
 		String freq = String.join(",", freqs);
 		lecture.setFreqs(freq);
 		
-		System.out.println(lecture);
-
-		result = ls.insertLecture(lecture);
+		//1.파일업로드처리
+		int i = 0;
+		int last = upFiles.length;
+		String img = "";
+		String saveDirectory = request.getSession()
+									  .getServletContext()
+									  .getRealPath("/resources/upload/board");
+		
+		/****** MultipartFile을 이용한 파일 업로드 처리로직 시작 ******/
+		for(MultipartFile f: upFiles) {
+			i++;
+			
+			if(!f.isEmpty()) {
+				//파일명 재생성
+				String originalFileName = f.getOriginalFilename();
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rndNum = (int)(Math.random()*1000);
+				String renamedFileName = sdf.format(new Date(System.currentTimeMillis()))+
+										"_"+rndNum+"."+ext;
+				
+				img += renamedFileName;
+				
+				if( i == last ) {
+					lecture.setUpfile(img);
+					result = ls.insertLecture(lecture);
+					
+					if( result > 0 ) {
+						try {
+							f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}						
+					}					
+				}				
+			}
+			else {
+				lecture.setUpfile(img);
+				result = ls.insertLecture(lecture);
+			}
+		}		
 
 		ModelAndView mav = new ModelAndView();
 

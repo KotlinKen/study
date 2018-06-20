@@ -18,6 +18,7 @@
 	//참여신청 버튼 클릭 이벤트
 	function lectureApply(){
 		var sno = ${lecture.SNO};
+		var mno = ${memberLoggedIn.getMno()};
 	   //세션에서 멤버의 mno 받아옴 로그인 안한상태에 대해서도 분기 처리.
 	   //이미 신청을 했으면 return;하게 만들어야 함. 
 	   //임시로 confirm. 계획은 부트스트랩 모달창에 주요 정보 나열 후 확인버튼누르면 아작스 실행.
@@ -26,7 +27,7 @@
 	         url:"applyLecture.do",
 	         data:{
 	        	    sno : sno,
-	        	 	mno : 2
+	        	 	mno : mno
 	         },
 	         success:function(data){
 	         	if( data == 1 ){
@@ -64,8 +65,8 @@
 	   });   
 	});
 </script>
-</head>
-<body>
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+
 	<div id="study-detail">
 	 	<!-- 팀장일때만 나타날 것임. -->
 		<button type="button" class="editLecture">강의 수정</button>	
@@ -105,5 +106,4 @@
 		<button type="button" onclick="lectureApply();">참여 신청하기</button>
 		<button type="button" onclick="lectureWish();">찜하기</button>		
 	</div>
-</body>
-</html>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

@@ -4,25 +4,48 @@
 	<resultMap type="map" id="map"></resultMap>
 	
 	<insert id="insertLecture">
-		INSERT INTO STUDY VALUES(SEQ_STUDY.NEXTVAL,
-								 2, 
-								 #{subno}, 
-								 #{tno}, 
-								 #{dno}, 
-								 #{title}, 
-								 #{freqs}, 
-								 #{content}, 
-								 #{price}, 
-								 NULL, 
-								 #{recruit}, 
-								 '모집 중', 
-								 #{time}, 
-								 'lecture', 								
-								 #{ldate}, 
-								 #{sdate}, 
-								 #{edate}, 
-								 sysdate,
-								 #{etc})
+		<if test="upfile.equals('')">		
+			INSERT INTO STUDY VALUES(SEQ_STUDY.NEXTVAL,
+									 #{mno}, 
+									 #{subno}, 
+									 #{tno}, 
+									 #{dno}, 
+									 #{title}, 
+									 #{freqs}, 
+									 #{content}, 
+									 #{price}, 
+									 NULL, 
+									 #{recruit}, 
+									 '모집 중', 
+									 #{time}, 
+									 'lecture', 								
+									 #{ldate}, 
+									 #{sdate}, 
+									 #{edate}, 
+									 sysdate,
+									 #{etc})
+		</if>
+		<if test="!upfile.equals('')">
+			INSERT INTO STUDY VALUES(SEQ_STUDY.NEXTVAL,
+										 #{mno}, 
+										 #{subno}, 
+										 #{tno}, 
+										 #{dno}, 
+										 #{title}, 
+										 #{freqs}, 
+										 #{content}, 
+										 #{price}, 
+										 #{upfile}, 
+										 #{recruit}, 
+										 '모집 중', 
+										 #{time}, 
+										 'lecture', 								
+										 #{ldate}, 
+										 #{sdate}, 
+										 #{edate}, 
+										 sysdate,
+										 #{etc})
+		</if>
 	</insert>
 	
 	<insert id="applyLecture">

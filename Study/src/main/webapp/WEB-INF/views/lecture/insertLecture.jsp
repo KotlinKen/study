@@ -224,9 +224,11 @@ $(function(){
 	});
 });
 </script>
+
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div id="lecture-container">
-	<form action="lectureFormEnd.do" id="lectureFrm" method="post" enctype="multipart/form-data" onsubmit="return validate();">
-	
+	<form action="lectureFormEnd.do" id="lectureFrm" name="lectureFrm" method="post" enctype="multipart/form-data" onsubmit="return validate();">
+	<input type="hidden" name="mno" value="${memberLoggedIn.getMno()}"/>
 	<!-- 지역 -->
 	<label for="local">지역 : </label>
 	<select name="local" id="local">
@@ -347,3 +349,4 @@ $(function(){
 	<input type="submit" value="등록"/>
 	</form>	
 </div>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
