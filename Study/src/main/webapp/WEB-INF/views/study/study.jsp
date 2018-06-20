@@ -90,7 +90,7 @@ $(function(){
         		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
         		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
         		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/><hr>";
-        		html
+        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
         		html+="</div>";
         	}
 			$("div#study-list").html(html); 
@@ -241,9 +241,10 @@ $(function(){
 		        data:{cPage:cPage,total:total,numPerPage:numPerPage},
 		        success:function(data){
 		        	console.log(data);
-		        	var html="<div class='studyone'>";
+		        	var html="";
 		        	
 		        	for(index in data.addList){
+		        		html+="<div class='studyone'>";
 		        		html+="<span class='studyinfo'>신청기간 : ~"+data.addList[index].LDATE+"</span><br/>";
 		        		html+="<span class='studyinfo'>"+data.addList[index].LNAME+"-"+data.addList[index].TNAME+data.addList[index].DNAME+"</span><br/>";
 		        		html+="<span class='studyinfo'>"+data.addList[index].SUBNAME+ data.addList[index].KNAME+"</span><br/>";
@@ -252,9 +253,11 @@ $(function(){
 		        		html+="<span class='studyinfo'>"+ data.addList[index].PROFILE +"</span><br/>";
 		        		html+="<span class='studyinfo'>"+ data.addList[index].UPFILE +"</span><br/>";
 		        		html+="<span class='studyinfo'>"+ data.addList[index].STATUS +"</span><br/>";
+		        		html+="<input type='hidden' value='"+data.addList[index].SNO+"'/>";
+		        		html+="</div>";
 		        	}
 		        	
-		        	html+="</div>";
+		        	
 		        	$("input#cPageNo").val(data.cPage);
 		        	$("div#study-list").append(html);
 		        },error:function(){
