@@ -142,6 +142,6 @@
   </delete>
   
   <select id="selectByDeadLine">
-  	select * from study where ldate>=sysdate order by ldate;
+  	select * from study where type='study' and ldate>=sysdate order by ldate;
   </select>
 </mapper>
