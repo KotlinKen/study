@@ -47,7 +47,7 @@
 				<td>${a.ldate}</td>
 				<td>${a.adate}</td>
 				<td>
-					<button type=button>자세히</button>
+					<button type=button id="btn-detail" value="${a.sno }">자세히</button>
 				</td>
 			</tr>
 		</c:forEach>
@@ -65,6 +65,15 @@
 		}
 	%>
 	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"memberApplyList.do") %>
+	
+	<script>
+		$(function(){
+			$("#btn-detail").click(function(){
+				console.log($(this).val());
+				location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).val();
+			});
+		})
+	</script>
 	
 	
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

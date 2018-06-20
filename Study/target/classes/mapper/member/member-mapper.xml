@@ -143,7 +143,7 @@
 	</select>
 	<resultMap type="map" id="applyList"></resultMap>
 	<select id="selectMyStudyList" parameterType="map" resultMap="mystudyList">
-		select 
+		select distinct
 				c.cno as "cno", -- 스터디 팀원 목록 번호
 				m.mno as "mno", -- 스터디 팀원의 회원 번호
 				s.sno as "sno", -- 스터디 번호
@@ -184,25 +184,121 @@
 				to_char(s.regdate,'yyyy/mm/dd') as "sregdate" -- 스터디 등록일
 		from crew c join study s on s.sno=c.sno
 				    join member m on m.mno=c.mno
-		where c.mno=#{mno} 
-		<if test="kwd != null and searchKwd== title">
+		where c.mno=#{mno}
+		<if test="type== 'study'">
+		and s.type='study'
+		</if>
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
 		and s.title like '%'||#{kwd}||'%'
 		</if>
-		<if test="kwd != null and searchKwd== captain">
+		<if test="kwd != null and searchKwd== 'captain'">
 		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
 		</if>
-
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
+		</if>
 	</select>
+	
 	<select id="selectMyStudyListCnt" parameterType="map" resultType="_int">
-		select count(*) 
+		select distinct count(*) 
 		from crew c join study s on s.sno=c.sno
 					join member m on m.mno=c.mno
-		where c.mno=#{mno} 
-		<if test="kwd != null and searchKwd== title">
-			and s.title like '%'||#{kwd}||'%'
+		where c.mno=#{mno}
+		<if test="type== 'study'">
+		and s.type='study'
 		</if>
-		<if test="kwd != null and searchKwd== captain">
-			and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) '%'||#{kwd}||'%'
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
+		and s.title like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'captain'">
+		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
 		</if>
 	</select>
 	<resultMap type="map" id="mystudyList"></resultMap>

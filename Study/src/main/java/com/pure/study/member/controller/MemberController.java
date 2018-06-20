@@ -825,14 +825,17 @@ public class MemberController {
 		map.put("mno", String.valueOf(m.getMno()));
 		map.put("kwd", null);
 		map.put("searchKwd", null);
+		map.put("type", "study");
 		
 		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
 		
 		int count = memberService.selectMyStudyListCnt(map);
 				
+		mav.addObject("type", "study");
 		mav.addObject("myStudyList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("member/memberMyStudy");
 		
 		return mav;
@@ -843,25 +846,41 @@ public class MemberController {
 	public ModelAndView searchMyPage (@RequestParam(value="cPage", required=false, defaultValue="1") int cPage
 									, @RequestParam("searchKwd") String searchKwd
 									, @RequestParam(value="kwd") String kwd
+									, @RequestParam(value="type") String type									
 									, @ModelAttribute("memberLoggedIn") Member m
 									) {
-		
 		ModelAndView mav = new ModelAndView();
 		
 		int numPerPage = 10;
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("mno", String.valueOf(m.getMno()));
-		map.put("kwd", kwd);
+		System.out.println("확인:"+kwd);
+		if("term".equals(searchKwd) || "freq".equals(searchKwd)) { 
+			String[] termKwd = kwd.split(",");
+			map.put("kwd", termKwd[0]);
+			if(termKwd.length>1) {	
+				for(int i=1; i<termKwd.length; i++) {
+					map.put("kwd"+i, termKwd[i]);	
+					System.out.println(termKwd[i]);
+				}
+			}
+		}else{
+			map.put("kwd", kwd);			
+		}
 		map.put("searchKwd", searchKwd);
-		
+		map.put("type", type);
 		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
 		
 		int count = memberService.selectMyStudyListCnt(map);
-				
+		
+		mav.addObject("type", type);
+		mav.addObject("kwd", kwd);
+		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("myStudyList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("member/memberMyStudy");
 		
 		return mav;
