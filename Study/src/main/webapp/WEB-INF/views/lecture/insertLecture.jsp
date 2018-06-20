@@ -160,11 +160,16 @@ $(function(){
 			ldate.val("");
 		}
 		
-		var sdate = $("#sdate");
+		var sdate = $("#sdate");		
 		var edate = $("#edate");
+		sdate.val("");
+		edate.val("");
+		
+		$("input[class=day]").prop("checked", false);
+		$("input[class=day]").attr("disabled", true);
 		
 		sdate.attr("min", $(this).val());
-		edate.attr("min", $(this).val());
+		edate.attr("min", $(this).val());		
 	});
 	
 	// 유효성 검사 - 강의기간
