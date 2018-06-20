@@ -42,14 +42,6 @@ public interface MemberService {
 
 	int updateEmail(Member m);
 
-	List<Map<String, String>> selectApplyList(int mno, int numPerPage, int cPage);
-
-	int selectApplyListCnt(int mno);
-
-	List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage);
-
-	int selectWishListCnt(int mno);
-
 	List<Map<String, String>> selectKind();
 	
 	List<Map<String, String>> serviceagree();
@@ -59,5 +51,13 @@ public interface MemberService {
 	List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage);
 
 	int selectMyStudyListCnt(Map<String, String> map);
+
+	int selectApplyListCnt(Map<String, String> map);
+
+	List<Map<String, String>> selectApplyList(Map<String, String> map, int numPerPage, int cPage);
+
+	List<Map<String, String>> selectWishList(Map<String, String> map, int numPerPage, int cPage);
+
+	int selectWishListCnt(Map<String, String> map);
 
 }

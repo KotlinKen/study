@@ -29,7 +29,7 @@
 		<option value="freq" ${searchKwd eq 'freq'?'selected':'' }>주기</option>
 	</select>
 	<form action="searchMyPageKwd.do" 
-		  method="post" id="formSearch" onsubmit="return fn_search();">
+		  method="post" id="formSearch" >
 		<c:if test="${kwd != null and searchKwd != null and searchKwd != 'term' and searchKwd != 'freq' }">
 			<input type='text' name='kwd' value="${kwd }" />
 			<input type='hidden' name='searchKwd' value='${searchKwd }' />
@@ -117,6 +117,10 @@
 	<%
 		int totalContents = Integer.parseInt(String.valueOf(request.getAttribute("count")));
 		int numPerPage = Integer.parseInt(String.valueOf(request.getAttribute("numPerPage")));
+		String searchKwd = String.valueOf(request.getAttribute("searchKwd"));
+		String kwd = String.valueOf(request.getAttribute("kwd"));
+		String type = String.valueOf(request.getAttribute("type"));
+		
 		int cPage = 1;
 		try{
 			cPage = Integer.parseInt(request.getParameter("cPage"));
@@ -124,7 +128,7 @@
 			
 		}
 	%>
-	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"memberMyStudyList.do") %>
+	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"searchMyPageKwd.do?searchKwd="+searchKwd+"&kwd="+kwd+"&type="+type) %>
 	
 	<script>
 		var exec = 0;
@@ -233,12 +237,7 @@
 		
 			
 		});
-		function fn_search(){
-			console.log($("#formSearch > input").val());
-			var search = $("#formSearch > input").val();
-			
-			return true;
-		}
+	
 	</script>
 	
 	

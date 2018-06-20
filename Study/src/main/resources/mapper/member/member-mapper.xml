@@ -92,7 +92,7 @@
 		update member set email=#{email} where mid=#{mid}
 	</update>
 	<select id="selectApplyList" parameterType="_int" resultMap="applyList">
-		select
+		select distinct
 			a.ano as "ano", -- 신청 번호
 			a.mno as "mno", -- 신청한 회원 번호
 			a.sno as "sno", -- 신청한 스터디 번호
@@ -136,10 +136,132 @@
 		from apply a join study s on s.sno=a.sno
 			            join member m on m.mno=a.mno
 		where a.mno=#{mno}
-		
+		<if test="type== 'study'">
+		and s.type='study'
+		</if>
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
+		and s.title like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'captain'">
+		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
+		</if>
+		<if test="applyDate == 'present'">
+		and s.ldate <![CDATA[ >= ]]> sysdate
+		</if>    
+		<if test="applyDate == 'last'">
+		and s.ldate <![CDATA[ < ]]> sysdate
+		</if>    
 	</select>
 	<select id="selectApplyListCnt" parameterType="_int" resultType="_int">
-		select count(*) from apply where mno=#{mno}
+		select distinct count(*) 
+		from apply a join study s on s.sno=a.sno
+				    join member m on m.mno=a.mno
+		where a.mno=#{mno} 
+		<if test="type== 'study'">
+		and s.type='study'
+		</if>
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
+		and s.title like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'captain'">
+		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
+		</if>
+		<if test="applyDate == 'present'">
+		and s.ldate <![CDATA[ >= ]]> sysdate
+		</if>    
+		<if test="applyDate == 'last'">
+		and s.ldate <![CDATA[ < ]]> sysdate
+		</if>    
 	</select>
 	<resultMap type="map" id="applyList"></resultMap>
 	<select id="selectMyStudyList" parameterType="map" resultMap="mystudyList">
@@ -304,7 +426,7 @@
 	<resultMap type="map" id="mystudyList"></resultMap>
 	
 	<select id="selectWishList" parameterType="_int" resultMap="wishList">
-		select 
+		select distinct
 				w.wno as "wno", --찜번호
 				m.mno as "mno", --찜한 회원 번호
 				s.sno as "sno", --찜한 스터디 번호
@@ -347,11 +469,121 @@
 				to_char(s.regdate,'yyyy/mm/dd') as "sregdate" -- 스터디 등록일
 		from wish w join member m on w.mno=m.mno
 				    join study s on w.sno=s.sno
-		where w.mno=#{mno}		    
-
+		where w.mno=#{mno}		
+		<if test="type== 'study'">
+		and s.type='study'
+		</if>
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
+		and s.title like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'captain'">
+		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
+		</if>    
 	</select>
 	<select id="selectWishListCnt" parameterType="_int" resultType="_int">
-		select count(*) from wish where mno=#{mno}
+		select distinct count(*) 
+		from wish w join member m on w.mno=m.mno
+				    join study s on w.sno=s.sno
+		where w.mno=#{mno}
+		<if test="type== 'study'">
+		and s.type='study'
+		</if>
+		<if test="type== 'lecture'">
+		and s.type='lecture'
+		</if>
+		<if test="kwd != null and searchKwd== 'title'">
+		and s.title like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'captain'">
+		and (select mm.mname||'('||mm.mid||')' from member mm where s.mno=mm.mno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'subject'">
+		and (select ss.subjectname from subject ss where ss.subno=s.subno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'place'">
+		and (select ll.local||'/'||tt.townname from town tt join local ll on ll.lno=tt.lno where tt.tno=s.tno) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'diff'">
+		and (select dd.difficultname from diff dd where dd.dno=s.dno ) like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd != null and searchKwd== 'term'  ">
+		and #{kwd} = extract( year from s.sdate) 
+		</if>
+		<if test="kwd != null and searchKwd== 'term' and kwd1 != null ">
+		and #{kwd1} = extract( month from s.sdate)
+		</if>
+		<if test="searchKwd=='freq'">
+		and ( 1=0
+		</if>
+		<if test="kwd != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd}||'%'
+		</if>
+		<if test="kwd1 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd1}||'%'
+		</if>
+		<if test="kwd2 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd2}||'%'
+		</if>
+		<if test="kwd3 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd3}||'%'
+		</if>
+		<if test="kwd4 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd4}||'%'
+		</if>
+		<if test="kwd5 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd5}||'%'
+		</if>
+		<if test="kwd6 != null and searchKwd=='freq'">
+		or s.freq like '%'||#{kwd6}||'%'
+		</if>
+		<if test="searchKwd=='freq'">
+		or 1=0 )
+		</if>
 	</select>
 	<resultMap type="map" id="wishList"></resultMap>
  
