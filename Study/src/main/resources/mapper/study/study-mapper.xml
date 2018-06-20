@@ -140,4 +140,8 @@
   <delete id="deleteStudy">
   	delete from study where sno=#{sno}
   </delete>
+  
+  <select id="selectByDeadLine">
+  	select * from study where type='study' and ldate>=sysdate order by ldate;
+  </select>
 </mapper>
