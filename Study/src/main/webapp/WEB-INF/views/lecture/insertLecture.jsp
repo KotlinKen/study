@@ -47,9 +47,7 @@ function validate(){
 	var startTime = $("#startTime option:checked").val();
 	var endTime = $("#endTime option:checked").val();	
 	
-	$("#time").val(startTime + "~" + endTime);
-	
- 	
+	$("#time").val(startTime + "~" + endTime);	
 	
 	return true;
 }
@@ -69,6 +67,7 @@ $(function(){
 		}
 		
 		$("#town").show();
+		
 		$.ajax({
 			url: "selectTown.do",
 			data: {localNo : localNo},
@@ -123,8 +122,7 @@ $(function(){
 		console.log("adddd");
 		if($("div.fileWrapper").length<10){
 			$("div.fileWrapper:last").after($("div.forCopy").clone().removeClass("forCopy").addClass("fileWrapper"));
-		}
-			
+		}			
 	});
 	
 	//첨부파일 - 버튼 클릭시  해당 첨부파일 영역이 사라진다.
@@ -193,14 +191,14 @@ $(function(){
 		// 신청 마감일
 		var ldateVal = $("#ldate").val();
 		
-		// 날짜 차이
-		var difference = (end_date - start_date)/1000/24/60/60;
-		
 		if( ldateVal == "" ){
 			alert("마감일 먼저 설정해주세요.");
 			sdate.val("");
 			edate.val("");
 		}			
+		
+		// 날짜 차이
+		var difference = (end_date - start_date)/1000/24/60/60;			
 		
 		// 알고리즘
 		if( sdateVal != "" && edateVal != "" ){
@@ -215,11 +213,38 @@ $(function(){
 			}
 			else if( difference > 7 )
 				$(".day").attr("disabled", false);
+			// 강의 끝나는 날이 시작하는 날보다 빠를 경우 초기화.
+			else if( difference < 0 ){
+				alert("강의가 끝나는 날이 시작하는 날보다 빠를 수 없습니다.");
+				sdate.val("");
+				edate.val("");
+			}
 			else
 				$(".day").attr("disabled", false);	
 		}
 		else{
 			$(".day").attr("disabled", true);	
+		}		
+	});
+	
+	$(".time").on("change", function(){
+		// 시작 시간
+		var startTime = $("#startTime");
+		var startTimeVal = startTime.val();
+		var startTimeArray = startTimeVal.split(":");
+		var start = Number(startTimeArray[0]);		
+		
+		// 마감 시간
+		var endTime = $("#endTime");
+		var endTimeVal = $("#endTime").val();
+		var endTimeArray = endTimeVal.split(":");
+		var end = Number(endTimeArray[0]);	
+		
+		// 시작시간이 마감시간보다 클 경우.
+		if( start > end ){
+			alert("시작하는 시간이 끝나는 시간보다 클 수 없습니다.");
+			startTime.val("6:00");
+			endTime.val("7:00");
 		}
 	});
 });
@@ -291,13 +316,12 @@ $(function(){
     <label>토 </label><input type="checkbox" class="day" name="freqs" value="토" />
 	    
 	<label for="starttime">스터디 시간</label>
-	<select name="startTime" id="startTime">
+	<select name="startTime" id="startTime" class="time">
 		<c:forEach var="i" begin="6" end="23">
-		<option value="${i }:00">${i }:00</option>
-		
+			<option value="${i }:00">${i }:00</option>		
 		</c:forEach>
 	</select>
-	<select name="endTime" id="endTime">
+	<select name="endTime" id="endTime" class="time">
 		<c:forEach var="j" begin="7" end="24">
 			<option value="${j }:00">${j }:00</option>		
 		</c:forEach>
@@ -312,7 +336,7 @@ $(function(){
 	<label for="recruit">모집 인원 : </label>
 	<select name="recruit" id="recruit">
 		<c:forEach var="i" begin="2" end="10">
-		<option value="${i }">${i }명</option>
+			<option value="${i }">${i }명</option>
 		</c:forEach>
 	</select>
 	<br /> 
