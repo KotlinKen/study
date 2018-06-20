@@ -33,6 +33,7 @@
 		<option value="term" ${searchKwd eq 'term'?'selected':'' }>스터디 시작일</option>
 		<option value="freq" ${searchKwd eq 'freq'?'selected':'' }>주기</option>
 	</select>
+	
 	<form action="searchMyApplyKwd.do" 
 		  method="post" id="formSearch">
 		<c:if test="${kwd != null and searchKwd != null and searchKwd != 'term' and searchKwd != 'freq' }">
