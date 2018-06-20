@@ -114,6 +114,12 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.updateStudy(study);
 	}
 
+	@Override
+	public int deleteStudy(int sno) {
+		// TODO Auto-generated method stub
+		return studyDAO.deleteStudy(sno);
+	}
+
 	
 
 

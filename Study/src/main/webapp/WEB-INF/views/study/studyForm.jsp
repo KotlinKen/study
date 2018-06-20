@@ -18,16 +18,63 @@ div.forCopy{
 </style>
 <script>
 function validate(){
+	
+	 // 유효성 검사 - 지역,도시
+	   var local = $("#local").val();
+	   var town = $("#town").val();
+	   
+	   if( local.equals("") || town.equals("")){
+	      alert("지역을 선택해주세요");
+	      return false;   
+	   }
+	   
+	   // 유효성 검사 - 카테고리, 세부종목
+	   var kind = $("#kind").val();
+	   var sub = $("#subject").val();
+	   
+	   if( kind.equals("") || sub.equals("")){
+	      alert("강의 과목을 선택해주세요");
+	      return false;
+	   }
+	   
+	   // 유효성 검사 - 난이도
+	   var diff = $("#diff").val();
+	   
+	   if(diff.equals("")){
+	      alert("난이도를 선택해주세요");
+	      return false;
+	   }
+	   
+	   // 유효성 검사 - 마감일
+	   var ldate = $("#ldate").val();
+	   var lArray = sdate.split("-");
+	   var deadline = new Date(startArray[0], startArray[1], startArray[2]);
+	   
+	   var year = date.getFullYear();
+	   var month = date.getMonth()+1;
+	   var day = date.getDay();
+	   
+	   if( (day+"").length < 2 )
+	      day = "0" + day;
+	   
+	   var today = new Date(year, month, day);
+	   
+	   if( (deadline - today) < 0 ){
+	      alert("과거가 마감일이 될 수 없습니다.");
+	      return false;   
+	   }
+
+	
 	// time만들기.
 	   var starttime = $("select#starttime option:checked").val();
 	   var endtime = $("select#endtime option:checked").val();   
 	   
 	   $("input#time").val(starttime + "~" + endtime);
-	
-	
+	   
 	return true;
 }
 $(function(){
+	
 	
 	
 	
@@ -152,9 +199,8 @@ $(function(){
 	});	
 	
 	
-	// 날짜를 조정해보자...
-	   $("input[class=changeDate]").on("change", function(){
-	      var week = [ "일", "월", "화", "수", "목", "금", "토" ];
+	$("input[class=changeDate]").on("change", function(){
+	      $("input[class=day]").prop("checked", false);
 	      
 	      var sdate = $("#sdate").val();
 	      var sday = new Date(sdate).getDay();
@@ -165,19 +211,23 @@ $(function(){
 	      var endArray = edate.split("-");
 	      var end_date = new Date(endArray[0], endArray[1], endArray[2]);   
 	      
-	      var difference = (end_date.getTime() - start_date.getTime())/1000/24/60/60;
-	      
-	      if( difference >= 0 && difference < 7 ){
-	         $(".day").attr("disabled", true);
-	         
+	      var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
+	      alert(difference);
+	      if( difference >= 0 && difference < 7 ){         
+	         $("input[class=day]").attr("disabled", true);
 	          for( var i = 0; i < difference+1; i++ ){
 	             if( sday + i < 7)         
 	                $("input[class=day]").eq(sday+i).attr("disabled", false);             
 	             else
 	                $("input[class=day]").eq(sday+i-7).attr("disabled", false);   
 	          }
-	      }      
+	      }
+	      else if( difference > 7 )
+	         $(".day").attr("disabled", false);
+	      else
+	         $(".day").attr("disabled", false);
 	   });
+	
 });
 
 </script>
@@ -197,7 +247,7 @@ $(function(){
 		<select name="subno" id="subject"> <!-- kind선택시 ajax로 그에 맞는 과목 가져오기 -->
 		</select>
 		<label for="diff">난이도 : </label>
-		<select name="dno" id="dno">
+		<select name="dno" id="diff">
 			<option value="1">입문</option>
 		</select><br />
 		<label for="ldate">신청마감 : </label><input type="date" name="ldate" id="ldate" />

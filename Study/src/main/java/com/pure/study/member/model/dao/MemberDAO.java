@@ -54,4 +54,10 @@ public interface MemberDAO {
 
 	List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage);
 
+	List<Map<String, String>> selectKind();
+	
+	List<Map<String, String>> serviceagree();
+
+	List<Map<String, String>> informationagree();
+
 }

@@ -10,8 +10,15 @@ import com.pure.study.admin.model.service.AdminService;
 @Controller
 public class AdminController {
 	@Autowired
-	private AdminService as;
+	private AdminService adminService;
 
+	
+	@RequestMapping("/admin/adminLogin")
+	public void adminLogin() {
+		
+	}
+	
+	
 	/* 관리자 페이지로 이동 */
 	@RequestMapping("/admin/adminMain.do")
 	public ModelAndView moveAdminPage() {

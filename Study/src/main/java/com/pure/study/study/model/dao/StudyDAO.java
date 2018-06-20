@@ -41,6 +41,8 @@ public interface StudyDAO {
 
 	int updateStudy(Study study);
 
+	int deleteStudy(int sno);
+
 	
 
 }

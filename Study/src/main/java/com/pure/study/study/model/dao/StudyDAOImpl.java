@@ -1,6 +1,5 @@
 package com.pure.study.study.model.dao;
 
-	
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +7,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+//github.com/KotlinKen/study.git
 import com.pure.study.study.model.vo.Study;
 
 
@@ -118,6 +119,12 @@ public class StudyDAOImpl implements StudyDAO {
 	public int updateStudy(Study study) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("study.updateStudy",study);
+	}
+
+	@Override
+	public int deleteStudy(int sno) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("study.deleteStudy", sno);
 	}
 
 

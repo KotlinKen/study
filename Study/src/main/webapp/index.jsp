@@ -11,4 +11,4 @@
 	section
 	<a href="${pageContext.request.contextPath }/study/studyList.do">스터디</a>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-	
+

@@ -4,6 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@page import = 'com.pure.study.member.model.vo.Member' %>
+<!-- 주소 api -->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <style>
 	span.check-no{
 		color: red;
@@ -24,7 +26,7 @@
 				<c:if test="${memberLoggedIn != null }">
 						<input type="hidden" name="mno" id="mno" value="${memberLoggedIn.mno }" />
 						회원 아이디 : 
-						<input type="text" name="mid" id="mid" value="${memberLoggedIn.mid }" />					
+						<input type="text" name="mid" id="mid" value="${memberLoggedIn.mid }" readonly/>					
 						<br />
 						
 						회원 이름 : 
@@ -43,14 +45,26 @@
 						<br />
 						
 						주소 : 
-						<input type="text" name="addr" id="addr" value="${memberLoggedIn.addr }" />
+						<input type="text" name="post" id="sample4_postcode" placeholder="우편번호" value="${memberLoggedIn.post }">
+						<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+						<input type="text" name="addr1" id="sample4_jibunAddress" placeholder="지번주소" size="100" value="${memberLoggedIn.addr1 }">
+						<br />
+						<input type="text" name="addr2" id="sample4_roadAddress" placeholder="도로명주소" size="100" value="${memberLoggedIn.addr2 }">
+						<br />
+						<input type="text" name="addrDetail" id="addrDetail" size="100" value="${memberLoggedIn.addrDetail }" />
+						<span id="guide" style="color:#999"></span>
 						<br />
 						
 						사진 : 
-						<img src="${pageContext.request.contextPath }/resources/upload/member/${memberLoggedIn.mprofile}" alt="${memberLoggedIn.mprofile}" style="width:100px;" /> 
+						<c:if test="${!memberLoggedIn.mprofile eq 'no'}">
+							<img src="${pageContext.request.contextPath }/resources/upload/member/${memberLoggedIn.mprofile}" alt="${memberLoggedIn.mprofile}" style="width:100px;" /> 
+						</c:if>
+						<c:if test="${memberLoggedIn.mprofile eq 'no'}">
+							<p>프로필 사진이 없습니다.</p>
+						</c:if>
 						<br />
 						<input type="file" name="post-file" id="post-file" />
-						<input type="hidden" name="pre-file" id="pre-file" value="${memberLoggedIn.mprofile }" />
+						<input type="hidden" name="pre_mprofile" id="pre-file" value="${memberLoggedIn.mprofile }" />
 						<br />
 						
 						이메일 변경 : 
@@ -58,7 +72,7 @@
 								class="btn btn-outline-success"
 					    		data-toggle="modal" 
 					    		data-target="#emailUpdate">이메일 변경</button>
-						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" /> 
+						<input type="email" name="email" id="email" value="${memberLoggedIn.email }" readonly /> 
 						<br />
 						
 						생년월일 : 
@@ -74,15 +88,15 @@
 						
 						관심사 : 
 						<c:forEach var="f" items="${favor }" varStatus="vs">
-							<input type="checkbox" name="favor" id="favor${vs.index }" value="${f.DNAME}" ${ f.DNAME eq memberLoggedIn.favor[vs.index] ?'checked':''}/>
-							<label for="favor${vs.index }">${f.DNAME }</label>							
+							<input type="checkbox" name="favor" id="favor${vs.index }" value="${f.KINDNAME}" ${ f.KINDNAME eq memberLoggedIn.favor[vs.index] ?'checked':''}/>
+							<label for="favor${vs.index }">${f.KINDNAME }</label>							
 						</c:forEach>		
 						<br />
 						
 						자기 소개 : 
 						<textarea class="form-control" name="cover" cols="30" rows="10" placeholder="자기소개 및 특이 사항">${memberLoggedIn.cover }</textarea>
 						<br/>
-						<button type="submit" id="submit">수정</button>				
+						<button type="submit" id="submit">수정</button>						
 				</c:if>
 				
 			</form>
@@ -178,7 +192,6 @@
 					$("#submit").click(function(){
 						if($("#post-file").val()==""){
 							console.log("pre");
-							$("input[name=pre-file]").attr("name","pre_mprofile");
 						}else{
 							console.log("post");
 							$("input[name=post-file]").attr("name","mprofile");
@@ -198,7 +211,6 @@
 								success: function(data){
 									console.log(data);
 									if(data.isUsable==true){
-										$("#send").val("send");
 										//console.log(data.tempPwd);
 										$("#keyCheck").val(data.tempPwd);
 									}else{
@@ -256,7 +268,56 @@
 					
 					return true;
 				}
-				
+				 //주소 api
+			    function sample4_execDaumPostcode() {
+			        new daum.Postcode({
+			            oncomplete: function(data) {
+			                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+			                // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+			                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+			                var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
+			                var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+
+			                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+			                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+			                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+			                    extraRoadAddr += data.bname;
+			                }
+			                // 건물명이 있고, 공동주택일 경우 추가한다.
+			                if(data.buildingName !== '' && data.apartment === 'Y'){
+			                   extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+			                }
+			                // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+			                if(extraRoadAddr !== ''){
+			                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+			                }
+			                // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
+			                if(fullRoadAddr !== ''){
+			                    fullRoadAddr += extraRoadAddr;
+			                }
+
+			                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+			                document.getElementById('sample4_postcode').value = data.zonecode; //5자리 새우편번호 사용
+			                document.getElementById('sample4_roadAddress').value = fullRoadAddr;
+			                document.getElementById('sample4_jibunAddress').value = data.jibunAddress;
+
+			                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+			                if(data.autoRoadAddress) {
+			                    //예상되는 도로명 주소에 조합형 주소를 추가한다.
+			                    var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+			                    document.getElementById('guide').innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+
+			                } else if(data.autoJibunAddress) {
+			                    var expJibunAddr = data.autoJibunAddress;
+			                    document.getElementById('guide').innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+
+			                } else {
+			                    document.getElementById('guide').innerHTML = '';
+			                }
+			            }
+			        }).open();
+			    }
 			</script>
 	
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

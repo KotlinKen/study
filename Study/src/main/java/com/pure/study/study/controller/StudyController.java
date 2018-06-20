@@ -1,28 +1,23 @@
 package com.pure.study.study.controller;
- 
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -263,7 +258,7 @@ public class StudyController {
 	}
 	
 	//스터디 상세보기
-	@RequestMapping("/study/studyView")
+	@RequestMapping("/study/studyView.do")
 	public ModelAndView selectStudyOne(@RequestParam(value="sno", required=true) int sno) {
 		ModelAndView mav = new ModelAndView();
 		
@@ -307,6 +302,7 @@ public class StudyController {
 		
 		Map<String,Object> study = new HashMap<>();
 		study=studyService.selectStudyOne(sno);
+		System.out.println("@@@@@@@study="+study);
 		mav.addObject("study", study);
 		mav.setViewName("study/studyUpdate");
 		return mav;
@@ -334,7 +330,7 @@ public class StudyController {
 		
 		System.out.println("upFiles.length="+upFiles.length);
 		 
-		if(study.getPrice()==null) study.setPrice(0+"원");
+		if(study.getPrice()==null) study.setPrice("0");
 		System.out.println("study="+study);
 		
 		
@@ -363,7 +359,7 @@ public class StudyController {
 				try { //최초 메소드 부른 곳은 controller이기때문에 여기서 에러 처리함. 
 					
 					//1. 파일 업로드 처리 
-					String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/studyImg");
+					String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/study");
 					
 					System.out.println("save"+saveDirectory);
 					/********* MultipartFile을 이용한 파일 업로드 처리 로직 시작 ********/
@@ -430,6 +426,28 @@ public class StudyController {
 		return mav;
 	 }
 			
+	
+	@RequestMapping("/study/deleteStudy.do")
+	public ModelAndView deleteStudy(@RequestParam(value="sno") int sno) {
+		
+		ModelAndView mav = new ModelAndView();
+		int result = studyService.deleteStudy(sno);
+		
+		String msg="";
+		String loc="";
+		if(result>0) {
+			msg="스터디 삭제 성공";
+			loc="/study/studyList.do";
+		}else {
+			msg="스터디 삭제 실패";
+			loc="/study/studyView?sno="+sno;
+		}
+		
+		mav.setViewName("common/msg");
+		
+		
+		return mav;
+	}
 		
 		
 	

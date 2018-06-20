@@ -49,6 +49,13 @@ public class AdverstingController {
 		ModelAndView mav = new ModelAndView();
 		
 		
+		if(adversting.getStatus().equals("on")) {
+			adversting.setStatus("Y");
+		}else {
+			adversting.setStatus("N");
+		}
+		
+		
 		try {
 			//1.파일업로드 처리
 			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
@@ -113,7 +120,6 @@ public class AdverstingController {
 	public String  selectAdversting(Model model) {
 		
 		logger.debug("adversting list");
-		model.addAttribute("auth", "555");
 		return "selectAdversting";
 		
 	}
@@ -161,11 +167,19 @@ public class AdverstingController {
 	public ModelAndView adverstingReWrite(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		
+		if(adversting.getStatus() != null) {
+			adversting.setStatus("Y");
+		}else {
+			adversting.setStatus("N");
+		}
 		
-
+		Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
+		
+		logger.debug("test======================================================================================"+adversting);
+		logger.debug("test======================================================================================"+map);
 		
 		try {
-			if(adversting.getAdvImg() != null && adversting.getAdvImg() != "") {
+			if((!adversting.getAdvImg().equals(map.get("ADVIMG")) || adversting.getAdvImg() != null)) {
 			//1.파일업로드 처리
 				String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/adversting");
 					
@@ -195,7 +209,6 @@ public class AdverstingController {
 					}
 				}
 			}else {
-				Map<String, String> map = adverstingService.selectAdverstingOne(adversting.getAno());
 				map.get("ADVIMG");
 				adversting.setAdvImg(map.get("ADVIMG"));
 			}
@@ -263,6 +276,7 @@ public class AdverstingController {
 	@ResponseBody
 	public void popupClose( Model model, HttpSession session )  throws JsonProcessingException {
 		session.setAttribute("popUpSession", "checked");
-		session.setMaxInactiveInterval(20);
+//		session.setMaxInactiveInterval(24*60*60);
+		session.setMaxInactiveInterval(60);
 	}
 }

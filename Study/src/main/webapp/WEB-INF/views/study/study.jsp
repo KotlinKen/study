@@ -20,27 +20,29 @@
 			<select name="lno" id="local">
 			<option value="0">전체</option>
 			<c:forEach var="local" items="${localList }">
-				<option value="${local.LNO }">${local.LOCAL1 }</option>
+				<option value="${local.LNO }">${local.LOCAL }</option>
 			</c:forEach>
 			</select>&nbsp;
 			<select name="tno" id="town">
 			<option value="0">지역을 선택하세요</option>
 			</select>
 			<label for="subject">카테고리 :</label>
-			<select name="subno" id="subject">
-			<option value="0">전체</option>
-			<c:forEach var="sub" items="${subjectList }">
-				<option value="${sub.SUBNO }">${sub.NAME }</option>
-			</c:forEach>
-			</select>
 			<select name="kno" id="kind">
-			<option value="0">카테고리를 선택하세요</option>
+			<option value="0">전체</option>
+			<c:forEach var="k" items="${kindList }">
+				<option value="${k.KNO }">${k.KINDNAME }</option>
+			</c:forEach>
 			</select>&nbsp;
+			<select name="subno" id="subject">
+			<option value="0">카테고리를 선택하세요</option>
+		
+			</select>
+			
 			<label for="diff">난이도 : </label>
 			<select name="dno" id="diff">
 			<option value="0">전체</option>
 			<c:forEach var="diff" items="${diffList }">
-				<option value="${diff.DNO }">${diff.NAME }</option>
+				<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
 			</c:forEach>
 			</select>
 			<input type="text" name="leadername" id="leadername" placeholder="팀장명을 적어주세요" />
@@ -93,7 +95,7 @@ $(function(){
 	
 	$("div#study-list").on("click","div.studyone",function(){
 		console.log("되나");
-		location.href="${pageContext.request.contextPath}/study/studyView?sno="+$(this).children("input").val();
+		location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).children("input").val();
 	});//스터디를 클릭하면..
 	
 	
