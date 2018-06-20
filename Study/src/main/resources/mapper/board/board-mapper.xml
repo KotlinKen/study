@@ -60,5 +60,9 @@ UPDATE BOARD SET BOARDTITLE=#{boardTitle}, BOARDCONTENT=#{boardContent} WHERE BO
 <delete id="deleteBoard">
 DELETE FROM BOARD WHERE BOARDNO = #{boardNo}
 </delete>
+<insert id = "insertBoardComment" parameterType="com.pure.study.board.model.vo.BoardComment">
+INSERT INTO REPLY(REPLYNO, MEMBERNO, BOARDNO, PARENTNO, REPLYCONTENT)
+VALUES (SEQ_REPLYNO.NEXTVAL, #{MEMBERNO}, #{BOARDNO}, #{PARENTNO}, #{REPLYCONTENT},#{REPLYREGDATE})
+</insert>
 </mapper>
 

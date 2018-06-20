@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
+import com.pure.study.board.model.vo.BoardComment;
 @Repository
 public class BoardDAOImpl implements BoardDAO {
 
@@ -88,6 +89,11 @@ public class BoardDAOImpl implements BoardDAO {
 	public int deleteBoard(int boardNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.delete("board.deleteBoard", boardNo);
+	}
+
+	@Override
+	public int insertBoardComment(BoardComment boardComment) {
+		return sqlSession.insert("boardComment.insertBoardComment", boardComment);
 	}
 
 

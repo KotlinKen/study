@@ -33,6 +33,18 @@ div#board-container label.custom-file-label{text-align:left;}
    </c:forEach>
   
   <textarea class="form-control" name="boardContent" placeholder="내용" required>${board.boardContent }</textarea> 
+<div class="container">
+<label for="content">comment</label>
+<div class="input-group">
+<input type="hidden" name="boardNo"/>
+<input type="text" class="form-control" id="replyContent" name="replyContent" placeholder="내용을 입력하세요">
+<span class="input-group-btn">
+<input type="button" class="insertBtn" value="등록" onclick="location.href='${pageContext.request.contextPath}/board/boardCommentInsert.do?'">
+</span>
+</div>
+</div>
+  <!-- <form action = "boardComment.do" name="boardComment" method="post"> -->
+  
        <input type="button" class="updateBtn" value="글수정" onclick="location.href='${pageContext.request.contextPath}/board/boardUpdate.do?no='+${board.boardNo}">
        <input type="button" class="delBtn" value="글삭제" onclick="location.href='${pageContext.request.contextPath}/board/boardDelete.do?no='+${board.boardNo}">
 </div>

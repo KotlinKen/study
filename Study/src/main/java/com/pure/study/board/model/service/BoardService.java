@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
+import com.pure.study.board.model.vo.BoardComment;
 
 
 public interface BoardService {
@@ -18,6 +19,7 @@ public interface BoardService {
 	Board selectOneBoardFix(int boardNo);
 	int updateBoard(Board board, List<Attachment> attachList);
 	int deleteBoard(int boardNo);
+	int insertBoardComment(BoardComment boardComment);
 	
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.pure.study.board.model.dao.BoardDAO;
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
+import com.pure.study.board.model.vo.BoardComment;
 @Service
 public class BoardServiceImpl implements BoardService {
 	Logger logger = LoggerFactory.getLogger(getClass());
@@ -133,6 +134,18 @@ int result = 0;
 		return result;
 
 	}
+
+	@Override
+	public int insertBoardComment(BoardComment boardComment) {
+	int result = 0;
+		
+		
+			result = boardDAO.insertBoardComment(boardComment);
+			
+			return result;			
+	}
+
+
 }
 
 	

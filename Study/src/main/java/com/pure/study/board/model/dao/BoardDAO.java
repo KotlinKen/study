@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
+import com.pure.study.board.model.vo.BoardComment;
 
 public interface BoardDAO {
 
@@ -33,6 +34,8 @@ public interface BoardDAO {
 	int updateBoard(Board board);
 
 	int deleteBoard(int boardNo);
+
+	int insertBoardComment(BoardComment boardComment);
 
 	
 

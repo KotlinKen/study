@@ -29,6 +29,7 @@ import com.pure.study.board.model.excption.BoardException;
 import com.pure.study.board.model.service.BoardService;
 import com.pure.study.board.model.vo.Attachment;
 import com.pure.study.board.model.vo.Board;
+import com.pure.study.board.model.vo.BoardComment;
 
 @Controller
 public class BoardController {
@@ -322,8 +323,15 @@ public class BoardController {
 			/************** MultipartFile을 이용한 파일 업로드 처리 로직 끝  ********************************************************/
 			return mav;
 		}
+	      @RequestMapping("/board/boardCommentInsert.do")
+	      public ModelAndView insertBoardComment(Board board , BoardComment boardComment ) {
+	      ModelAndView mav = new ModelAndView();
+	      int result = boardService.insertBoardComment(boardComment);
+	      int boardNo = board.getBoardNo();
+	      return mav;
+	      
 	      }
-
+}
 
 	      
 	      
