@@ -7,20 +7,17 @@
 <form action="${rootPath }/adv/adverstingListPaging" >
 	<div class="form-row">
 		<div class="form-group col-md-3">
-			<input type="text" name="searchKeyword" class="form-control" value="${param.searchKeyword }"/>
+			<input type="text" name="searchKeyword" class="form-control" value="${param.searchKeyword }" autocomplete="off"/>
 		</div>
 		<div class="form-group col-md-1">
 			<button type="submit" class="form-control btn btn-primary btn-lg active">검색</button>
 		</div>
 	</div>
 </form>
-
-
-
 <div class="form-row">
 	<div class="form-group col-md-3">
 		<select id="position" name="position" class="form-control" id="position">
-			<option selected>메인TOP</option>
+			<option selected>TOP</option>
 			<option>윙 1</option>
 			<option>윙 2</option>
 			<option>윙 3</option>

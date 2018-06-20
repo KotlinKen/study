@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/views/admin/adminLogin.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/adv/adverstingListPaging.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/adv/adverstingView.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/adv/adverstingWrite.jsp=UTF-8

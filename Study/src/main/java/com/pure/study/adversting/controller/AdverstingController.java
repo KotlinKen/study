@@ -276,6 +276,7 @@ public class AdverstingController {
 	@ResponseBody
 	public void popupClose( Model model, HttpSession session )  throws JsonProcessingException {
 		session.setAttribute("popUpSession", "checked");
-		session.setMaxInactiveInterval(24*60*60);
+//		session.setMaxInactiveInterval(24*60*60);
+		session.setMaxInactiveInterval(60);
 	}
 }

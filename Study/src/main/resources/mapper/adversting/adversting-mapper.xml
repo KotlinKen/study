@@ -36,14 +36,8 @@
 	</select>
 	
 	
-<!-- 	<select resultMap="boardMap" id="boardList"> -->
-	<select id="boardList" resultMap="boardMap">
-		SELECT A.*, (SELECT COUNT(*) FROM ATTACHMENT WHERE BOARDNO = A.BOARDNO AND STATUS = 'Y') FILECOUNT FROM BOARD A ORDER BY BOARDNO DESC
-	</select>
-	
-	
 	<select id="adverstingListPaging" resultMap="adverstingMap">
-		SELECT * FROM ADVERSTING
+		SELECT A.*, TO_CHAR(A.STARTAD,'YYYY-MM-DD') STARTDATE, TO_CHAR(A.ENDAD,'YYYY-MM-DD') ENDDATE FROM ADVERSTING A
 		<trim prefix="WHERE" prefixOverrides ="AND | OR ">
 			<if test="searchKeyword != null and searchKeyword != '' ">
 				AND TITLE LIKE '%'||#{searchKeyword}||'%' OR CONTENT LIKE '%'||#{searchKeyword}||'%'				
@@ -66,11 +60,11 @@
 	</select>
 	
 	<select id="selectAdverstingOne" resultMap="boardMap">
-		SELECT * FROM ADVERSTING WHERE ANO = #{ano}
+		SELECT A.*, TO_CHAR(A.STARTAD,'YYYY-MM-DD') STARTDATE, TO_CHAR(A.ENDAD,'YYYY-MM-DD') ENDDATE FROM ADVERSTING A WHERE ANO = #{ano}
 	</select>
 	
 	<select id="adverstingCall" resultMap="adverstingMap">
-		SELECT * FROM (SELECT * FROM ADVERSTING WHERE POSITION=#{type} AND ENDAD > SYSDATE ORDER BY ANO DESC) WHERE ROWNUM=1
+		SELECT A.*, TO_CHAR(A.STARTAD,'YYYY-MM-DD') STARTDATE, TO_CHAR(A.ENDAD,'YYYY-MM-DD') ENDDATE FROM (SELECT * FROM ADVERSTING WHERE STATUS='Y' AND POSITION=#{type} AND ENDAD > SYSDATE ORDER BY ANO DESC) A WHERE ROWNUM=1
 	</select>
 	
 	<delete id="adverstingDelete">
