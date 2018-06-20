@@ -35,29 +35,7 @@ function validate(){
 	if(diff==""){
 		alert("난이도를 선택해주세요");
 		return false;
-	}
-	
-	// 유효성 검사 - 마감일
-	var ldate = $("#ldate").val();
-	var lArray = ldate.split("-");
-	var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
-	
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = new String(date.getMonth()+1);
-	var day = new String(date.getDate());
-	
-	if(month.length == 1 )
-		month = "0" + month;
-	if( day.length == 1 )
-		day = "0" + day;
-	
-	var today = new Date(year, month, day);
-	
-	if( (deadline-today.getTime()) < 0 ){
-		alert("과거가 마감일이 될 수 없습니다.");
-		return false;	
-	}
+	}	
 	
 	// 유효성 검사 - 일정, 빈도
 	if( $(".day:checked").length == 0 ){
@@ -158,33 +136,86 @@ $(function(){
 	});	
 	
 	// 날짜를 조정해보자... 유효성 검사 포함.
+	// 유효성 검사 - 마감일
+	$("#ldate").on("change", function(){		
+		var ldate = $(this);
+		var ldateVal = ldate.val();
+		var lArray = ldateVal.split("-");
+		var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
+		
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = new String(date.getMonth()+1);
+		var day = new String(date.getDate());
+		
+		if(month.length == 1 )
+			month = "0" + month;
+		if( day.length == 1 )
+			day = "0" + day;
+		
+		var today = new Date(year, month, day);
+		
+		if( (deadline-today.getTime()) < 0 ){
+			alert("과거가 마감일이 될 수 없습니다.");
+			ldate.val("");
+		}
+		
+		var sdate = $("#sdate");
+		var edate = $("#edate");
+		
+		sdate.attr("min", $(this).val());
+		edate.attr("min", $(this).val());
+	});
+	
+	// 유효성 검사 - 강의기간
 	$("input[class=changeDate]").on("change", function(){
 		$("input[class=day]").prop("checked", false);
+		$("input[class=day]").attr("disabled", true);
 		
-		var sdate = $("#sdate").val();
-		var sday = new Date(sdate).getDay();
-		var startArray = sdate.split("-");
-		var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+		// 시작하는 날
+		var sdate = $("#sdate");
+		var sdateVal = sdate.val();
+		var sday = new Date(sdateVal).getDay();
+		var startArray = sdateVal.split("-");
+		var start_date = new Date(startArray[0], startArray[1], startArray[2]).getTime();
 		
-		var edate = $("#edate").val();
-		var endArray = edate.split("-");
-		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
+		// 끝나는 날
+		var edate = $("#edate");
+		var edateVal = edate.val();
+		var endArray = edateVal.split("-");
+		var end_date = new Date(endArray[0], endArray[1], endArray[2]).getTime();	
 		
-		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
+		// 신청 마감일
+		var ldateVal = $("#ldate").val();
 		
-		if( difference >= 0 && difference < 7 ){			
-			$("input[class=day]").attr("disabled", true);
-		 	for( var i = 0; i < difference+1; i++ ){
-		 		if( sday + i < 7)			
-		 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
-		 		else
-		 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
-		 	}
+		// 날짜 차이
+		var difference = (end_date - start_date)/1000/24/60/60;
+		
+		if( ldateVal == "" ){
+			alert("마감일 먼저 설정해주세요.");
+			sdate.val("");
+			edate.val("");
+		}			
+		
+		// 알고리즘
+		if( sdateVal != "" && edateVal != "" ){
+			if( difference >= 0 && difference < 7 ){			
+				$("input[class=day]").attr("disabled", true);
+			 	for( var i = 0; i < difference+1; i++ ){
+			 		if( sday + i < 7)			
+			 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
+			 		else
+			 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
+			 	}
+			}
+			else if( difference > 7 )
+				$(".day").attr("disabled", false);
+			else
+				$(".day").attr("disabled", false);	
 		}
-		else if( difference > 7 )
-			$(".day").attr("disabled", false);
-		else
-			$(".day").attr("disabled", false);
+		else{
+			$(".day").attr("disabled", true);	
+		}
 	});
 });
 </script>
