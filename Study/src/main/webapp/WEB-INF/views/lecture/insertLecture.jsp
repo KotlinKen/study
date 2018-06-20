@@ -47,9 +47,7 @@ function validate(){
 	var startTime = $("#startTime option:checked").val();
 	var endTime = $("#endTime option:checked").val();	
 	
-	$("#time").val(startTime + "~" + endTime);
-	
- 	
+	$("#time").val(startTime + "~" + endTime);	
 	
 	return true;
 }
@@ -69,6 +67,7 @@ $(function(){
 		}
 		
 		$("#town").show();
+		
 		$.ajax({
 			url: "selectTown.do",
 			data: {localNo : localNo},
@@ -193,14 +192,16 @@ $(function(){
 		// 신청 마감일
 		var ldateVal = $("#ldate").val();
 		
-		// 날짜 차이
-		var difference = (end_date - start_date)/1000/24/60/60;
-		
 		if( ldateVal == "" ){
 			alert("마감일 먼저 설정해주세요.");
 			sdate.val("");
 			edate.val("");
 		}			
+		
+		// 날짜 차이
+		var difference = (end_date - start_date)/1000/24/60/60;	
+		
+		
 		
 		// 알고리즘
 		if( sdateVal != "" && edateVal != "" ){
@@ -215,12 +216,19 @@ $(function(){
 			}
 			else if( difference > 7 )
 				$(".day").attr("disabled", false);
+			// 강의 끝나는 날이 시작하는 날보다 빠를 경우 초기화.
+			else if( difference < 0 ){
+				alert("강의가 끝나는 날이 시작하는 날보다 빠를 수 없습니다.");
+				sdate.val("");
+				edate.val("");
+			}
 			else
 				$(".day").attr("disabled", false);	
 		}
 		else{
 			$(".day").attr("disabled", true);	
 		}
+		
 	});
 });
 </script>
