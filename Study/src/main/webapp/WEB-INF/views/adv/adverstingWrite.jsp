@@ -11,7 +11,7 @@
 				<option value="TOP" selected>TOP</option>
 				<option value="BANNER">베너</option>
 				<option value="POPUP">팝업</option>
-				<option>윙 2</option> 
+				<option value="WINGRIGHT">오른쪽 윙</option> 
 				<option>윙 3</option>
 			</select>
 		</div>

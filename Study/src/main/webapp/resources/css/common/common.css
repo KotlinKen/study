@@ -131,13 +131,19 @@ footer{ background:#333; margin-bottom:160px;  }
 
 /* 윙 */
 .adverstingWingWrap {
-	position:relative; 
+	top:73px;
+	position:relative;
+	
 }
 .adverstingWing {
+	display:none; 
+	background-clip:content-box;
+	background-size:cover;
+	background-position:center;
 	position: absolute;
 	width: 120px;
-	height: 250px;
+	height: 500px;
 	border: 1px solid #ececec;
 	right:-120px; 
-	top:75px; 
+	top:0px; 
 }

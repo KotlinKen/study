@@ -22,7 +22,6 @@ function imgError(img){
 	img.src="${rootPath}/resources/upload/adversting/20180617_161710579_2.jpg";
 }
 $(function(){
-
 	var type = "TOP";
 	$.ajax({
 		url : "${rootPath}/adv/call",
@@ -41,8 +40,7 @@ $(function(){
 });	
 	
 $(function(){
-	var type = "팝업";
-
+var type = "POPUP";
  if("${popUpSession}" == "" || "${popUpSession}" == null) {
 	$.ajax({
 		url : "${rootPath}/adv/call",
@@ -75,7 +73,25 @@ $(function(){
  
 });	
 	
-	
+$(function(){
+	var type = "WINGRIGHT";
+		$.ajax({
+			url : "${rootPath}/adv/call",
+			data : {type : type},
+			dataType : "json",
+			success : function(data){
+				console.log(data);
+				
+				if(data.adv == null){
+					console.log('등록된 윙 광고가  없습니다.');
+				}else{
+					$(".adverstingWing").css({"display": "block" , "background-image" : "url('${rootPath}/resources/upload/adversting/"+data.adv.ADVIMG+"')"});
+					
+				}
+			}
+		});
+	});	
+		
 
 	
 	
@@ -91,13 +107,11 @@ $(function(){
 	<div class="adverstingPopup">
 		<div class="adverstingPopupCloseBtn closebtn"></div>
 	</div>
-	
-<div class="container adverstingWingWrap">
-		<div class="adverstingWing">
-			12334
-		</div>
-</div>	
-	
+
+	<div class="container adverstingWingWrap">
+		<div class="adverstingWing"></div>
+	</div>
+
 
 	<header>
 		<div class="container">
