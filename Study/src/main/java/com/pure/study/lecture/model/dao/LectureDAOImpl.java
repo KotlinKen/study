@@ -61,4 +61,14 @@ public class LectureDAOImpl implements LectureDAO {
 		return session.delete("lecture.deleteLecture", sno);
 	}
 
+	@Override
+	public int applyLecture(Map<String, Integer> map) {
+		return session.insert("lecture.applyLecture", map);
+	}
+
+	@Override
+	public int preinsertApply(Map<String, Integer> map) {
+		return session.selectOne("lecture.preinsertApply", map);
+	}
+
 }

@@ -1,5 +1,6 @@
 package com.pure.study.lecture.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -121,5 +122,24 @@ public class LectureContoller {
 		mav.setViewName("/lecture/lectureList");
 				
 		return mav;
+	}
+	
+	@RequestMapping("/lecture/applyLecture.do")
+	@ResponseBody
+	public int applyLecture(@RequestParam int sno, @RequestParam int mno) {
+		int result = 0;
+		ModelAndView mav = new ModelAndView();
+		
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("sno", sno);
+		map.put("mno", mno);
+		
+		int cnt = ls.preinsertApply(map);
+		
+		if(cnt == 0 )
+			result = ls.applyLecture(map);
+		
+		return result;
 	}
 }

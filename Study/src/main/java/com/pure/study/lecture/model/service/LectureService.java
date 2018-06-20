@@ -25,4 +25,8 @@ public interface LectureService {
 
 	int deleteLecture(int sno);
 
+	int applyLecture(Map<String, Integer> map);
+
+	int preinsertApply(Map<String, Integer> map);
+
 }

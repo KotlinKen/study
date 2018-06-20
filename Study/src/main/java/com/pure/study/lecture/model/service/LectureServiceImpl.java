@@ -59,4 +59,14 @@ public class LectureServiceImpl implements LectureService {
 		return ld.deleteLecture(sno);
 	}
 
+	@Override
+	public int applyLecture(Map<String, Integer> map) {
+		return ld.applyLecture(map);
+	}
+
+	@Override
+	public int preinsertApply(Map<String, Integer> map) {
+		return ld.preinsertApply(map);
+	}
+
 }

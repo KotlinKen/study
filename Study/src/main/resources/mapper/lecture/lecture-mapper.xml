@@ -24,6 +24,10 @@
 								 sysdate,
 								 #{etc})
 	</insert>
+	
+	<insert id="applyLecture">
+		INSERT INTO APPLY VALUES( SEQ_APPLY.NEXTVAL, #{mno}, #{sno}, DEFAULT)
+	</insert>
 
 	<select id="selectLocList" resultMap="map">
 		SELECT * FROM LOCAL
@@ -76,6 +80,7 @@
 		       (SELECT K.KINDNAME AS KNAME FROM KIND K WHERE K.KNO = A.KNO) KNAME,
 		       (SELECT SUB.SUBJECTNAME AS SUBNAME FROM SUBJECT SUB WHERE SUB.SUBNO = A.SUBNO) SUBNAME,
 		       (SELECT D.DIFFICULTNAME AS DNAME FROM DIFF D WHERE D.DNO = A.DNO) DNAME,
+		       (SELECT M.COVER AS COVER FROM MEMBER M WHERE M.MNO = A.MNO) COVER,
 		       TIME,
 		       NVL(PRICE, 0) AS PRICE,
 		       STATUS,        
@@ -89,6 +94,10 @@
 		      FROM STUDY S 
 		WHERE TYPE = 'lecture' AND SNO = #{sno}) A
 		ORDER BY SNO DESC
+	</select>
+	
+	<select id="preinsertApply" resultType="_int">
+		SELECT COUNT(*) FROM APPLY WHERE SNO = #{sno} AND MNO = #{mno}
 	</select>
 	
 	<delete id="deleteLecture">
