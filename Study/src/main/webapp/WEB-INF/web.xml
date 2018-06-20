@@ -33,6 +33,28 @@
    </servlet-mapping>
    
    
+   
+   
+   
+   <!-- Processes application requests -->
+   <servlet>
+      <servlet-name>appServletDo</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+         <param-name>contextConfigLocation</param-name>
+         <param-value>/WEB-INF/spring/appServlet/*-context.xml</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>appServletDo</servlet-name>
+      <url-pattern>*.do</url-pattern>
+   </servlet-mapping>
+   
+   
+   
+   
+   
    <!-- #4. post방식 인코딩 설정 UTF-8 필터 -->
    <filter>
       <filter-name>encodingFilter</filter-name>
