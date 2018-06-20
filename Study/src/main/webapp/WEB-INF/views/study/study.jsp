@@ -52,7 +52,7 @@
 			
 	
 		<button type="button" id="sort-deadline">마감임박순</button>
-		<button type="button" id="sort-deadline">인기스터디순</button>
+		<button type="button" id="sort-pop">인기스터디순</button>
 		
 		<hr />
 		<div id="study-list">
@@ -63,7 +63,7 @@
 	<input type="hidden" id="total" value="0" />
 	<input type="hidden" id="numPerPage" />
 	<input type="hidden" name="case" value="none" /> <!-- 조건없이 리스트를 가져오나, 조건있이 리스트를 가져오나 여부. 임시방편. -->
-	<!-- <input type="hidden" name="cPageNo" value="1"/>cPage 번호 저장. -->
+	
 	
 	
 
@@ -71,7 +71,7 @@
 <script>
 $(function(){
 	
-	
+	/* 처음에 조건없이 리스트를 가져오는 ajax */
 	$.ajax({
 		url:"selectStudyList.do",
 		dataType:"json",
@@ -98,6 +98,8 @@ $(function(){
 			
 		}
 	});
+	/* 처음에 조건없이 리스트를 가져오는 ajax */
+	
 	
 	//카테고리를 선택하면 그에 맞는 과목들을 가져온다.
 	$("select#kind").on("change",function(){
@@ -142,7 +144,7 @@ $(function(){
 	});
 	
 	
-	
+	//스터디 클릭시 스터디 상세보기 페이지로 이동하는 이벤트
 	$("div#study-list").on("click","div.studyone",function(){
 		console.log("되나");
 		location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).children("input").val();
@@ -174,7 +176,7 @@ $(function(){
 	        		html+="<span class='studyinfo'>"+ data.list[index].SDATE+"~"+data.list[index].EDATE+"</span><br/>";
 	        		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
 	        		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/><hr>";
 	        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
 	        		html+="</div>"; 
 	        	} 
@@ -192,10 +194,75 @@ $(function(){
 		});
 	});
 	
+	$("button#sort-deadline").click(function(){
+		$("input#case").val("deadline");
+		
+		$.ajax({
+			url:"selectByDeadline.do",
+			dataType:"json",
+			success:function(data){
+				
+				var html="";
+				for(var index in data.list){
+					var s = data.list[index];
+					html+="<div class='studyone'>";
+	        		html+="<span class='studyinfo'>신청기간 : ~"+data.list[index].LDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].LNAME+"-"+data.list[index].TNAME+data.list[index].DNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].SUBNAME+ data.list[index].KNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].TITLE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].SDATE+"~"+data.list[index].EDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/><hr>";
+	        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
+	        		html+="</div>"; 
+					
+				}
+				$("div#study-list").html(html); 
+				$("input#cPageNo").val(data.cPage);
+				$("input#total").val(data.total);
+			}
+		});
+	});
+	
+	
+	//인기순 정렬(신청자순)
+	$("button#sort-pop").click(function(){
+		$("input#case").val("pop");
+		
+		$.ajax({
+			url:"selectByApply.do",
+			dataType:"json",
+			success:function(data){
+				
+				var html="";
+				for(var index in data.list){
+					var s = data.list[index];
+					html+="<div class='studyone'>";
+	        		html+="<span class='studyinfo'>신청기간 : ~"+data.list[index].LDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].LNAME+"-"+data.list[index].TNAME+data.list[index].DNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].SUBNAME+ data.list[index].KNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].TITLE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].SDATE+"~"+data.list[index].EDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/><hr>";
+	        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
+	        		html+="</div>"; 
+					
+				}
+				$("div#study-list").html(html); 
+				$("input#cPageNo").val(data.cPage);
+				$("input#total").val(data.total);
+			}
+		});
+	});
+	
+	
+	
+	
 	//무한 스크롤.
 	//내려갈 때 계속 해당하는 스터디 리스트가 나옴
-	//내용이 없을 때도 내려가는데 그건 어떻게 막지? --나중 우선순위
-	
 	var scrollTime=500;
 	var timer = null;
 	
@@ -210,7 +277,6 @@ $(function(){
 	});
 	
 	function listAddbyPaging(){
-		console.log("페이징되어서 가져옴");
 		
 	    var urlPath="";
 		var cPage=Number($("input#cPageNo").val());
@@ -224,8 +290,9 @@ $(function(){
 	    }else if(listCase=="search"){
 	    	urlPath="searchStudyAdd.do";
 	    }else if(listCase=="deadline"){
-			urlPath="";	    	
+			urlPath="studyDeadlinAdd.do";	    	
 	    }else{
+	    	urlPath="studyApplyAdd.do";
 	    	
 	    } 
 	    
@@ -238,7 +305,7 @@ $(function(){
 		      $.ajax({
 		        url:urlPath,
 		        dataType:"json",
-		        data:{cPage:cPage,total:total,numPerPage:numPerPage},
+		        data:{cPage:cPage},
 		        success:function(data){
 		        	console.log(data);
 		        	var html="";
@@ -252,7 +319,7 @@ $(function(){
 		        		html+="<span class='studyinfo'>"+ data.addList[index].SDATE+"~"+data.addList[index].EDATE+"</span><br/>";
 		        		html+="<span class='studyinfo'>"+ data.addList[index].PROFILE +"</span><br/>";
 		        		html+="<span class='studyinfo'>"+ data.addList[index].UPFILE +"</span><br/>";
-		        		html+="<span class='studyinfo'>"+ data.addList[index].STATUS +"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].STATUS +"</span><br/><hr>";
 		        		html+="<input type='hidden' value='"+data.addList[index].SNO+"'/>";
 		        		html+="</div>";
 		        	}

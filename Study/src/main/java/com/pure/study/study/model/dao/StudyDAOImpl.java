@@ -127,5 +127,35 @@ public class StudyDAOImpl implements StudyDAO {
 		return sqlSession.delete("study.deleteStudy", sno);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectByDeadline(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
+		return sqlSession.selectList("study.selectByDeadline",null,rowBounds);
+	}
+
+	@Override
+	public int studyDeadlineCount() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("study.studyDeadlineCount");
+	}
+
+	@Override
+	public List<Map<String, Object>> selectByApply(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
+		return sqlSession.selectList("study.selectByApply",null,rowBounds);
+	}
+
+	@Override
+	public int studyByApplyCount() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("study.studyByApplyCount");
+	}
+
+	@Override
+	public int preinsertApply(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("study.preinsertApply", map);
+	}
+
 
 }

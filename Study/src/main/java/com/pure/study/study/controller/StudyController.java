@@ -74,6 +74,7 @@ public class StudyController {
 		return mav;
 	}
 	
+	
 	@RequestMapping("/study/selectStudyList.do")
 	public ModelAndView selectStudyList() {
 		int cPage=1;
@@ -186,7 +187,7 @@ public class StudyController {
 		return mav;
 	}
 	
-	
+	//검색조건으로 첫 페이징 결과를 가져옴. total, list, cPage 넘김
 	@RequestMapping("/study/searchStudy.do")
 	public ModelAndView selectStudyForSearch(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
@@ -224,8 +225,7 @@ public class StudyController {
 		return mav;
 	}
 	
-	//검색결과에서 무한스크롤시 리스트를 페이징 처리해서 더 가져옴.
-	
+	//검색결과에서 무한스크롤시 리스트를 페이징 처리해서 더 가져오기.
 	@RequestMapping("/study/searchStudyAdd.do")
 	public ModelAndView selectSearchStudyAdd(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
@@ -257,9 +257,9 @@ public class StudyController {
 		
 	}
 	
-	
+	//스터디 리스트 추가로 페이징해서 가져오기 - 처음에 아무 조건 없을 때
 	@RequestMapping("/study/studyListAdd.do")
-	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam(value="numPerPage") int numPerPage){
+	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage){
 		ModelAndView mav = new ModelAndView("jsonView");
 		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage,numPerPage);
 		mav.addObject("addList",studyList);
@@ -294,7 +294,12 @@ public class StudyController {
 		Map<String,Integer> map = new HashMap<>();
 		map.put("sno", sno);
 		map.put("mno", mno);
-		int result = studyService.insertApplyStudy(map);
+		
+		int result =0;
+		//먼저 이미 신청했는지 검사한다.
+		int cnt = studyService.preinsertApply(map);
+		if(cnt == 0 )
+	         result = studyService.insertApplyStudy(map);
 		return result;
 	}
 	
@@ -463,7 +468,63 @@ public class StudyController {
 		return mav;
 	}
 		
+	//마감임박순 첫 페이징 처리.
+	@RequestMapping("/study/selectByDeadline.do")
+	public ModelAndView selectByDeadline() {
 		
+		ModelAndView mav = new ModelAndView("jsonView");
+		
+		int cPage=1;
+		List<Map<String,Object>> list = studyService.selectByDeadline(cPage,numPerPage);
+		int total = studyService.studyDeadlineCount();
+	
+		System.out.println("selectStudyList.do numPerPage="+numPerPage);
+		System.out.println("selectStudyList.do cPage="+cPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		mav.addObject("total",total);
+		
+		return mav;
+	}
+	
+	//마감임박순 스크롤 페이징 처리. 
+	@RequestMapping("/study/studyDeadlinAdd.do")
+	public ModelAndView selectByDeadlineAdd(@RequestParam(value="cPage") int cPage) {
+		ModelAndView mav = new ModelAndView("jsonView");
+		
+		List<Map<String,Object>> list= studyService.selectByDeadline(cPage,numPerPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		return mav;
+	}
+	
+	//인기스터디순 첫 페이징 처리.
+	@RequestMapping("/study/selectByApply.do")
+	public ModelAndView selectByApply() {
+		ModelAndView mav=  new ModelAndView("jsonView");
+		int cPage=1;
+		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
+		int total = studyService.studyByApplyCount();
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		mav.addObject("total", total);
+		
+		return mav;
+		
+	}
+	//인기스터디순 스크롤 페이징 처리. 
+	@RequestMapping("/study/studyApplyAdd.do")
+	public ModelAndView selectByApplyAdd(@RequestParam(value="cPage") int cPage) {
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		return mav;
+	}
+	
+	
+	
 	
 	
 	/* ---------------------------------------study form에 필요한 select ------------------------------------------------*/
