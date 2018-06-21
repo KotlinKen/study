@@ -66,7 +66,7 @@ public class StudyController {
 	public ModelAndView selectStudyList() {
 		int cPage=1;
 		//Map<String,Object> resultmap = new HashMap<>();
-		List<Map<String,String>> list = studyService.selectStudyList(cPage,numPerPage);
+		List<Map<String,Object>> list = studyService.selectStudyList(cPage,numPerPage);
 		int total = studyService.studyTotalCount();
 		//resultmap.put("list", list);
 		//resultmap.put("total",total);
@@ -170,6 +170,7 @@ public class StudyController {
 		
 		mav.addObject("msg",msg);
 		mav.addObject("loc",loc);
+		mav.addObject("memberLoggedIn",m);
 		mav.setViewName("common/msg");
 		
 		return mav;

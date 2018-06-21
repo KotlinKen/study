@@ -9,7 +9,7 @@ import com.pure.study.study.model.vo.Study;
 
 public interface StudyService {
 
-	List<Map<String, String>> selectStudyList(int cPage, int numPerPage);
+	List<Map<String, Object>> selectStudyList(int cPage, int numPerPage);
 
 	int studyTotalCount();
 
