@@ -227,6 +227,7 @@ $(function(){
 		}		
 	});
 	
+	// 유효성 검사 - 시간
 	$(".time").on("change", function(){
 		// 시작 시간
 		var startTime = $("#startTime");
@@ -350,7 +351,7 @@ $(function(){
 		    <span class="input-group-text">첨부파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
+		    <input type="file" class="custom-file-input" name="upFile">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		  <button type="button" class="addFile">+</button>
@@ -362,7 +363,7 @@ $(function(){
 		    <span class="input-group-text">첨부파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
+		    <input type="file" class="custom-file-input" name="upFile">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		  <button type="button" class="addFile">+</button>
