@@ -23,6 +23,8 @@ function imgError(img){
 	img.src="${rootPath}/resources/upload/adversting/20180617_161710579_2.jpg";
 }
 $(function(){
+	
+console.log("${cookie.popupValue.value}");
 	var type = "TOP";
 	$.ajax({
 		url : "${rootPath}/adv/call",
@@ -42,30 +44,10 @@ $(function(){
 });	
 	
 $(function(){
-var type = "POPUP";
-	$.ajax({
-		url : "${rootPath}/adv/call",
-		data : {type : type},
-		dataType : "json",
-		success : function(data){
-			if(data.adv == null){
-				console.log('등록된 팝업이 없습니다.');
-			}else{
-				$(".adverstingPopup").draggable();
-				$(".adverstingPopup").css("display", "block").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG+ "' />");
-			}
-		}
-	});
+var popCookie = "${cookie.popupValue.value}";
 
-	
-	$(".adverstingPopup .adverstingPopupCloseBtn").on("click", function(){
-		$(this).parent().css("display", "none");
-		setCookie("popupYN", "N", 1);
-	});
-});	
-	
-$(function(){
-	var type = "WINGRIGHT";
+if(popCookie != "Y"){
+var type = "POPUP";
 	$.ajax({
 		url : "${rootPath}/adv/call",
 		data : {type : type},
@@ -74,16 +56,45 @@ $(function(){
 			console.log(data);
 			
 			if(data.adv == null){
-				console.log('등록된 윙 광고가  없습니다.');
+				console.log('등록된 팝업이 없습니다.');
 			}else{
-				$(".adverstingWing").css({"display": "block" , "background-image" : "url('${rootPath}/resources/upload/adversting/"+data.adv.ADVIMG+"')"});
-				
+				$(".adverstingPopup").draggable();
+				$(".adverstingPopup").css("display", "block").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG+ "' />");
 			}
 		}
 	});
+	
+	$(".adverstingPopup .adverstingPopupCloseBtn").on("click", function(){
+		$(this).parent().css("display", "none");
+		$.ajax({
+			url : "${rootPath}/adv/popupClose",
+			success: function(data){
+				console.log("test");
+				
+			}
+		})
+	});
+}
 });	
-
-
+	
+$(function(){
+	var type = "WINGRIGHT";
+		$.ajax({
+			url : "${rootPath}/adv/call",
+			data : {type : type},
+			dataType : "json",
+			success : function(data){
+				console.log(data);
+				
+				if(data.adv == null){
+					console.log('등록된 윙 광고가  없습니다.');
+				}else{
+					$(".adverstingWing").css({"display": "block" , "background-image" : "url('${rootPath}/resources/upload/adversting/"+data.adv.ADVIMG+"')"});
+					
+				}
+			}
+		});
+	});	
 
 </script>
 

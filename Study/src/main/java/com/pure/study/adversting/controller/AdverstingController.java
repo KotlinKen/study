@@ -43,6 +43,17 @@ public class AdverstingController {
 	
 	
 	
+	@RequestMapping(value="/adv/", method=RequestMethod.GET)
+	@ResponseBody
+	public Adversting selectAdverstingRest(@RequestParam(value="filter", required=false) String filter) {
+		
+		Adversting adversting = new Adversting();
+		
+		adversting.setAdvImg("kkk22222");
+		
+		return adversting;
+	}
+	
 	@RequestMapping(value="/adv/{advIdx}", method=RequestMethod.GET)
 	@ResponseBody
 	public Adversting selectTestRest(@PathVariable int advIdx, @RequestParam(value="filter", required=false) String filter) {
@@ -63,6 +74,8 @@ public class AdverstingController {
 	@RequestMapping(value="/advs/{advIdx}", method= {RequestMethod.PUT, RequestMethod.POST})
 	@ResponseBody
 	public boolean updateTestRest(@PathVariable int advIdx, @RequestParam Adversting adversting) {
+		
+		
 		return false;
 	}
 	
@@ -318,9 +331,10 @@ public class AdverstingController {
 	@RequestMapping("/adv/popupClose")
 	@ResponseBody
 	public void popupClose( HttpServletResponse response)  throws JsonProcessingException {
-		Cookie setCookie = new Cookie("popupValue", ""); // 쿠키 생성
-		setCookie.setMaxAge(10); // 기간을 하루로 지정
-		response.addCookie(setCookie);
+		Cookie popupCookie = new Cookie("popupValue", "Y"); // 쿠키 생성
+		popupCookie.setMaxAge(60); // 기간을 하루로 지정
+		popupCookie.setPath("/");
+		response.addCookie(popupCookie);
 		
 	}
 }

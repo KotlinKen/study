@@ -18,7 +18,6 @@
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${rootPath}/resources/css/style.css" />
 <script>
-
 function imgError(img){ 
 	img.src="${rootPath}/resources/upload/adversting/20180617_161710579_2.jpg";
 }
@@ -34,45 +33,44 @@ $(function(){
 				$(".mainTop").append("<a href='"+data.adv.URL+"' ><img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG + "' onerror='imgError(this)'/></a>");
 				$(".topBanner").css({"display": "block", "background-color" : data.adv.BACKCOLOR});
 			}else{
-
 			}
 		}
 	});
 });	
 	
 $(function(){
-var type = "POPUP";
- if("${popUpSession}" == "" || "${popUpSession}" == null) {
-	$.ajax({
-		url : "${rootPath}/adv/call",
-		data : {type : type},
-		dataType : "json",
-		success : function(data){
-			console.log(data);
-			
-			if(data.adv == null){
-				console.log('등록된 팝업이 없습니다.');
-			}else{
-				$(".adverstingPopup").draggable();
-				$(".adverstingPopup").css("display", "block").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG+ "' />");
-			}
-		}
-	});
+	var popCookie = "${cookie.popupValue.value}";
 
-	
-	$(".adverstingPopup .adverstingPopupCloseBtn").on("click", function(){
-		$(this).parent().css("display", "none");
+	if(popCookie != "Y"){
+	var type = "POPUP";
 		$.ajax({
-			url : "${rootPath}/adv/popupClose",
-			success: function(data){
-				console.log("test");
+			url : "${rootPath}/adv/call",
+			data : {type : type},
+			dataType : "json",
+			success : function(data){
+				console.log(data);
 				
+				if(data.adv == null){
+					console.log('등록된 팝업이 없습니다.');
+				}else{
+					$(".adverstingPopup").draggable();
+					$(".adverstingPopup").css("display", "block").append("<img src='${rootPath}/resources/upload/adversting/" + data.adv.ADVIMG+ "' />");
+				}
 			}
-		})
-	});
- }
- 
-});	
+		});
+		
+		$(".adverstingPopup .adverstingPopupCloseBtn").on("click", function(){
+			$(this).parent().css("display", "none");
+			$.ajax({
+				url : "${rootPath}/adv/popupClose",
+				success: function(data){
+					console.log("test");
+					
+				}
+			})
+		});
+	}
+	});	
 	
 $(function(){
 	var type = "WINGRIGHT";
@@ -93,7 +91,6 @@ $(function(){
 		});
 	});	
 		
-
 	
 	
 </script>
