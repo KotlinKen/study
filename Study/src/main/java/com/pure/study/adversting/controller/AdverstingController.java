@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -17,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -38,6 +42,37 @@ public class AdverstingController {
 	private AdverstingService adverstingService;
 	
 	
+	
+	@RequestMapping(value="/adv/{advIdx}", method=RequestMethod.GET)
+	@ResponseBody
+	public Adversting selectTestRest(@PathVariable int advIdx, @RequestParam(value="filter", required=false) String filter) {
+		
+		Adversting adversting = new Adversting();
+		
+		adversting.setAdvImg("kkk");
+		adversting.setAno(advIdx);
+		return adversting;
+	}
+	
+	@RequestMapping(value="/adv", method=RequestMethod.POST)
+	@ResponseBody
+	public boolean insertTestRest(@RequestParam Adversting adversting) {
+		return true;
+	}
+	
+	@RequestMapping(value="/advs/{advIdx}", method= {RequestMethod.PUT, RequestMethod.POST})
+	@ResponseBody
+	public boolean updateTestRest(@PathVariable int advIdx, @RequestParam Adversting adversting) {
+		return false;
+	}
+	
+	@RequestMapping(value="/advs/{advIdx}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public boolean deleteTestRest(@PathVariable int advIdx) {
+		return true;
+	}
+	
+	
 	@RequestMapping("/adv/adverstingWrite")
 	public void adverstingWrite() {
 		logger.info("test");
@@ -48,6 +83,7 @@ public class AdverstingController {
 	public ModelAndView adverstingWriteEnd(Adversting adversting, @RequestParam(value="img", required=false) MultipartFile[] upFiles, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		
+		adversting.setAno(3);
 		
 		if(adversting.getStatus().equals("on")) {
 			adversting.setStatus("Y");
@@ -94,6 +130,12 @@ public class AdverstingController {
 			
 			int result = adverstingService.insertAdversting(adversting);
 			
+			if(result == -1) {
+				mav.addObject("msg", "에러테스트");
+				mav.addObject("loc", "/adv/adverstingWrite");
+				mav.setViewName("common/msg");
+				return mav;
+			}
 			//3. view단 분기
 			String loc = "/";
 			String msg = "";
@@ -110,6 +152,7 @@ public class AdverstingController {
 			mav.addObject("loc", loc);
 			mav.setViewName("common/msg");
 		} catch(Exception e) {
+			e.printStackTrace();
 /*			throw new BoardException("게시물 등록 오류");*/
 		}
 		
@@ -274,9 +317,10 @@ public class AdverstingController {
 	
 	@RequestMapping("/adv/popupClose")
 	@ResponseBody
-	public void popupClose( Model model, HttpSession session )  throws JsonProcessingException {
-		session.setAttribute("popUpSession", "checked");
-//		session.setMaxInactiveInterval(24*60*60);
-		session.setMaxInactiveInterval(60);
+	public void popupClose( HttpServletResponse response)  throws JsonProcessingException {
+		Cookie setCookie = new Cookie("popupValue", ""); // 쿠키 생성
+		setCookie.setMaxAge(60*60*24); // 기간을 하루로 지정
+		response.addCookie(setCookie);
+		
 	}
 }
