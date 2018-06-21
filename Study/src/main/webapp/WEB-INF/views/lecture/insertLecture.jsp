@@ -330,7 +330,7 @@ $(function(){
 	<input type="hidden" name="time" id="time" />
 	<br />
 	
-	<label for="price">일회 사용회비 : </label><input type="text" name="price" id="price" class="form-control" min="0" step="1000" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
+	<label for="price">일회 사용회비 : </label><input type="number" name="price" id="price" class="form-control" min="0" step="1000" placeholder="협의 - 스터디 카페 대여비 - 6000원" />
 	<br />
 	
 	<label for="recruit">모집 인원 : </label>

@@ -252,9 +252,7 @@ public class StudyController {
 		mav.addObject("cPage",cPage+1);
 		
 		System.out.println("searchListAdd="+list);
-		return mav;
-		
-		
+		return mav;		
 	}
 	
 	
