@@ -71,21 +71,26 @@ $(function(){
 			$("input#cPageNo").val(data.cPage);
 			var rmHtml = "";
         	for(index in data.list){
-        		rmHtml += "<li>";
-        		rmHtml += "<div class='pixel'>";
-       			rmHtml += "<a href=''>";
-   				rmHtml += "<div class='photoSection'>";
-   				rmHtml += 	"<img src=''/>";
-   				rmHtml += "</div>";
-				rmHtml += "<div class='inforSection'>";
-  				rmHtml += 	"<h4>"+data.list[index].TITLE+"</h4>";
-   				rmHtml += "</div>";
-				rmHtml += "<div class='metaSection'>";
-  				rmHtml += 	"<p></p>";
-   				rmHtml += "</div>";
-   				rmHtml += "</a>"
-        		rmHtml += "</div>"
-        		rmHtml += "</li>"
+        		
+        		var upfile = (data.list[index].UPFILE);
+        		if(upfile != undefined){
+        			upfiles = upfile.split(",")[0];
+	        		rmHtml += "<li>";
+	        		rmHtml += "<div class='pixel'>";
+	       			rmHtml += "<a href=''>";
+	   				rmHtml += "<div class='photoSection'>";
+	   				rmHtml += 	"<img src='${rootPath}/resources/upload/study/"+upfiles+"'/>";
+	   				rmHtml += "</div>";
+					rmHtml += "<div class='inforSection'>";
+	  				rmHtml += 	"<h4>"+data.list[index].TITLE+"</h4>";
+	   				rmHtml += "</div>";
+					rmHtml += "<div class='metaSection'>";
+	  				rmHtml += 	"<p></p>";
+	   				rmHtml += "</div>";
+	   				rmHtml += "</a>"
+	        		rmHtml += "</div>"
+	        		rmHtml += "</li>"
+        		}
         	}
 			$(".rm_study_list ul").html(rmHtml);
 		},error:function(){
