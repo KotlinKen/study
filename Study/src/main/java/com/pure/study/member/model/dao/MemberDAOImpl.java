@@ -114,7 +114,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage) {
-		return sqlSession.selectOne("member.selectWishList", mno);
+		return sqlSession.selectList("member.selectWishList", mno);
 	}
 
 	@Override
@@ -123,13 +123,13 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int selectMyStudyListCnt(int mno) {
-		return sqlSession.selectOne("member.selectMyStudyListCnt", mno);
+	public List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage) {
+		return sqlSession.selectList("member.selectMyStudyList", map);
 	}
 
 	@Override
-	public List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage) {
-		return sqlSession.selectList("member.selectMyStudyList", mno);
+	public int selectMyStudyListCnt(Map<String, String> map) {
+		return sqlSession.selectOne("member.selectMyStudyListCnt", map);
 	}
 
 	@Override
@@ -146,5 +146,7 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<Map<String, String>> informationagree() {
 		return sqlSession.selectList("member.informationagree");
 	}
+
+	
 
 }

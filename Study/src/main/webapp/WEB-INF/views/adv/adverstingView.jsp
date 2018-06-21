@@ -9,7 +9,7 @@
 				<option value="TOP">TOP</option>
 				<option value="BANNER" ${("베너" eq adversting.POSITION) ? "selected" : ""}>베너</option>
 				<option value="POPUP" ${("POPUP" eq adversting.POSITION) ? "selected" : ""}>팝업</option>
-				<option ${("윙 2" eq adversting.POSITION) ? "selected" : ""}>윙 2</option>
+				<option value="WINGRIGHT" ${("WINGRIGHT" eq adversting.POSITION) ? "selected" : ""}>윙 2</option>
 				<option ${("윙 3" eq adversting.POSITION) ? "selected" : ""}>윙 3</option>
 			</select>
 		</div>
