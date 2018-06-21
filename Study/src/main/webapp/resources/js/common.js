@@ -64,4 +64,15 @@ $(function() {
 	});
 	
 	
+	
+	$(window).scroll(function(){
+		var curpos = $(window).scrollTop();
+		if(curpos < 50 ){
+			$(".adverstingWing").stop().animate({"top" : 0});
+		}
+		if(curpos > 100){
+			$(".adverstingWing").stop().animate({"top" : curpos-120});
+		}
+	});
+	
 });

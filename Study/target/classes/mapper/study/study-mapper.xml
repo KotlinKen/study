@@ -81,7 +81,7 @@
   <select id="selectStudyAdd" resultMap="mapList">
   	select  s.sno,s.mno,sb.subno,k.kno,s.tno,s.dno,s.title,s.freq,s.content,s.price,s.upfile,s.recruit,s.status,s.time,s.type,s.etc,to_char(s.ldate,'yyyy-mm-dd') ldate,to_char(s.sdate,'yyyy-mm-dd') sdate,to_char(s.edate,'yyyy-mm-dd') edate,to_char(s.regdate,'yyyy-mm-dd') regdate,
   			m.mprofile,l.lno,l.local lname,t.townname tname, sb.subjectname subname, k.kindname kname, d.DIFFICULTNAME dname 
-  	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join kind k on sb.kno=k.kno  join subject sb on s.subno=sb.subno join member m on s.mno=m.mno
+  	from study s join diff d on s.dno=d.dno join town t on s.tno=t.tno join local l on t.lno=l.lno join subject sb on s.subno=sb.subno join kind k on sb.kno=k.kno  join member m on s.mno=m.mno
 	where s.type='study' order by s.regdate desc
   </select>
   
@@ -140,4 +140,8 @@
   <delete id="deleteStudy">
   	delete from study where sno=#{sno}
   </delete>
+  
+  <select id="selectByDeadLine">
+  	select * from study where type='study' and ldate>=sysdate order by ldate;
+  </select>
 </mapper>

@@ -821,20 +821,72 @@ public class MemberController {
 		
 		int numPerPage = 10;
 		
-		List<Map<String,String>> list = memberService.selectMyStudyList(m.getMno(), numPerPage, cPage);
+		Map<String,String> map = new HashMap<>();
+		map.put("mno", String.valueOf(m.getMno()));
+		map.put("kwd", null);
+		map.put("searchKwd", null);
+		map.put("type", "study");
 		
-		//int count = memberService.selectMyStudyListCnt(m.getMno());
+		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
 		
-		System.out.println(list);
-		
+		int count = memberService.selectMyStudyListCnt(map);
+				
+		mav.addObject("type", "study");
 		mav.addObject("myStudyList", list);
-		//mav.addObject("count", count);
-		mav.addObject("count", 0);
+		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("member/memberMyStudy");
 		
 		return mav;
 	}
+	
+	@RequestMapping("/member/searchMyPageKwd.do")
+	@ResponseBody
+	public ModelAndView searchMyPage (@RequestParam(value="cPage", required=false, defaultValue="1") int cPage
+									, @RequestParam("searchKwd") String searchKwd
+									, @RequestParam(value="kwd") String kwd
+									, @RequestParam(value="type") String type									
+									, @ModelAttribute("memberLoggedIn") Member m
+									) {
+		ModelAndView mav = new ModelAndView();
+		
+		int numPerPage = 10;
+		
+		Map<String,String> map = new HashMap<>();
+		map.put("mno", String.valueOf(m.getMno()));
+		System.out.println("확인:"+kwd);
+		if("term".equals(searchKwd) || "freq".equals(searchKwd)) { 
+			String[] termKwd = kwd.split(",");
+			map.put("kwd", termKwd[0]);
+			if(termKwd.length>1) {	
+				for(int i=1; i<termKwd.length; i++) {
+					map.put("kwd"+i, termKwd[i]);	
+					System.out.println(termKwd[i]);
+				}
+			}
+		}else{
+			map.put("kwd", kwd);			
+		}
+		map.put("searchKwd", searchKwd);
+		map.put("type", type);
+		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
+		
+		int count = memberService.selectMyStudyListCnt(map);
+		
+		mav.addObject("type", type);
+		mav.addObject("kwd", kwd);
+		mav.addObject("searchKwd", searchKwd);
+		mav.addObject("myStudyList", list);
+		mav.addObject("count", count);
+		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
+		mav.setViewName("member/memberMyStudy");
+		
+		return mav;
+	}
+	
+	
 	
 	/*내 스터디 목록 끝*******************************/
 	
@@ -849,7 +901,6 @@ public class MemberController {
 		List<Map<String,String>> list = memberService.selectApplyList(m.getMno(), numPerPage, cPage);
 		
 		int count = memberService.selectApplyListCnt(m.getMno());
-		
 		mav.addObject("applyList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
@@ -868,13 +919,12 @@ public class MemberController {
 		
 		int numPerPage = 10;
 		
-		//List<Map<String,String>> list = memberService.selectWishList(m.getMno(), numPerPage, cPage);
+		List<Map<String,String>> list = memberService.selectWishList(m.getMno(), numPerPage, cPage);
 		
-		//int count = memberService.selectWishListCnt(m.getMno());
+		int count = memberService.selectWishListCnt(m.getMno());
 		
-		//mav.addObject("wishList", list);
-		//mav.addObject("count", count);
-		mav.addObject("count", 0);
+		mav.addObject("wishList", list);
+		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
 		mav.setViewName("member/memberWish");
 		
