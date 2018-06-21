@@ -30,8 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pure.study.member.model.service.MemberService;
-import com.pure.study.member.model.vo.Member;
+
+import src.main.java.com.pure.study.member.model.service.MemberService;
+import src.main.java.com.pure.study.member.model.vo.Member;
 
 @SessionAttributes({ "memberLoggedIn" })
 @Controller
@@ -173,7 +174,7 @@ public class MemberController {
 		logger.debug("upFile1="+upFiles[0].getOriginalFilename());
 		
 		Map<String , String> map = new HashMap<>();
-	
+		
 		//1.파일업로드처리
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
 		String renamedFileName ="";
