@@ -1215,7 +1215,7 @@ public class MemberController {
 		파일이름변경 파일이름+ 아이디 + 날짜  */
 		List<String> list = new ArrayList<>();
 		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/instructor");
-		String renamedFileName ="";
+		String renamedFileName =""; 
 		for(MultipartFile f: psFiles) {
 			if(!f.isEmpty()) {
 				//파일명 재생성
