@@ -33,7 +33,7 @@ function studyApply(sno){
 	if(confirm("신청하시겠습니까")) {
 		$.ajax({
 			url:"applyStudy.do",
-			data:{sno:sno,mno:2},
+			data:{sno:sno,mno:${memberLoggedIn.getMno()}},
 			success:function(data){
 				if(data!=0){
 					alert("신청되었습니다.");
@@ -54,7 +54,7 @@ function studyWish(sno){
 	//찜하기를 이미 선택했다면 다시 누르면 찜하기에서 삭제됨.
 	$.ajax({
 		url:"wishStudy.do",
-		data:{sno:sno,mno:2},
+		data:{sno:sno,mno:${memberLoggedIn.getMno()}},
 		success:function(data){
 			console.log("찜했다");
 			//신청 완료 후 button에 스타일 주어서 이미 신청했음을 표시하게 한다.

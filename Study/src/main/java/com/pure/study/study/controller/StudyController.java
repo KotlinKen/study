@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pure.study.member.model.vo.Member;
 import com.pure.study.study.model.service.StudyService;
 import com.pure.study.study.model.vo.Study;
 
 
 
-@SessionAttributes({"cPage","total","case","numPerPage"})
+@SessionAttributes({"cPage","total","case","numPerPage","memberLoggedIn"})
 @Controller
 public class StudyController {
 	
@@ -85,7 +87,7 @@ public class StudyController {
 	}
 	@RequestMapping("/study/studyFormEnd.do") 
 	public ModelAndView insertStudy(Study study, @RequestParam(value="freq") String[] freq, @RequestParam(value="upFile", required=false) MultipartFile[] upFiles,
-			HttpServletRequest request) {
+			HttpServletRequest request, @ModelAttribute("memberLoggedIn") Member m) {
 		
 		ModelAndView mav= new ModelAndView();
 		String dayname="";
@@ -103,7 +105,8 @@ public class StudyController {
 
 		if(study.getPrice()==null) study.setPrice(0+"원");
 		System.out.println("study="+study);
-		study.setMno(2); //임시로
+		study.setMno(m.getMno()); 
+		System.out.println("study.mno"+study.getMno());
 		//스터디 생성하기 
 		int result = studyService.insertStudy(study);
 		
