@@ -54,21 +54,6 @@ public class StudyController {
 		List<Map<String,Object>> diffList=studyService.selectLv();
 		mav.addObject("diffList",diffList);
 		
-		
-		/*int numPerPage = 6; // => limit
-*/		
-		//1. 현재 페이지 컨텐츠 구하기 
-		/*List<Map<String,String>> list = studyService.selectStudyList(cPage,numPerPage);
-		logger.debug("list="+list);
-		//2. 페이지바 처리를 위한 전체 컨텐츠 수 구하기 
-		int total = studyService.studyTotalCount();
-		logger.debug("total="+total);
-		*/
-		//mav.addObject("total",total);
-		//mav.addObject("list",list);
-		
-	/*	mav.addObject("numPerPage",numPerPage);
-		mav.addObject("cPage",cPage);*/
 		mav.setViewName("study/study");
 		
 		return mav;
@@ -229,7 +214,7 @@ public class StudyController {
 	@RequestMapping("/study/searchStudyAdd.do")
 	public ModelAndView selectSearchStudyAdd(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
-			,@RequestParam(value="cPage", required=false, defaultValue="1") int cPage,@RequestParam(value="numPerPage") int numPerPage){
+			,@RequestParam(value="cPage", required=false) int cPage){
 		
 		ModelAndView mav = new ModelAndView("jsonView");
 		
@@ -243,7 +228,7 @@ public class StudyController {
 		terms.put("kno", kno);
 		terms.put("dno", dno);
 		terms.put("leadername", leadername);
-		terms.put("cPage", cPage);
+		terms.put("cPage", cPage+1);
 		terms.put("numPerPage", numPerPage);
 		
 		
@@ -261,8 +246,8 @@ public class StudyController {
 	@RequestMapping("/study/studyListAdd.do")
 	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage){
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage,numPerPage);
-		mav.addObject("addList",studyList);
+		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage+1,numPerPage);
+		mav.addObject("list",studyList);
 		mav.addObject("cPage",cPage+1);
 		
 		
@@ -492,7 +477,7 @@ public class StudyController {
 	public ModelAndView selectByDeadlineAdd(@RequestParam(value="cPage") int cPage) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		
-		List<Map<String,Object>> list= studyService.selectByDeadline(cPage,numPerPage);
+		List<Map<String,Object>> list= studyService.selectByDeadline(cPage+1,numPerPage);
 		mav.addObject("list",list);
 		mav.addObject("cPage",cPage+1);
 		return mav;
@@ -517,7 +502,7 @@ public class StudyController {
 	public ModelAndView selectByApplyAdd(@RequestParam(value="cPage") int cPage) {
 		
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
+		List<Map<String,Object>> list = studyService.selectByApply(cPage+1,numPerPage);
 		mav.addObject("list",list);
 		mav.addObject("cPage",cPage+1);
 		return mav;
@@ -546,21 +531,7 @@ public class StudyController {
 		return list;
 		
 	}
-	//@ResponseBody
-/*	@RequestMapping("/study/selectLocal.do")
-	public ModelAndView selectLocal(){
-		
-		List<Map<String,Object>> list = studyService.selectLocal();
-		System.out.println("@@@@@@@localList="+list);
-		Map<String,Object> resultMap = new HashMap<>();
-		resultMap.put("list", list);
-		resultMap.put("cPage", 1);
-		
-		
-		ModelAndView mav = new ModelAndView("jsonView",resultMap);
-		return mav;
-	}*/
-	
+
 	@ResponseBody
 	@RequestMapping("/study/selectLocal.do")
 	public List<Map<String,Object>> selectLocal(){

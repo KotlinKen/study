@@ -67,7 +67,7 @@
 	and sb.subno=#{subno}
 	</if>
 	<if test="kno!=0">
-	and s.kno=#{kno}
+	and k.kno=#{kno}
 	</if>
 	<if test="dno!=0">
 	and s.dno=#{dno}
@@ -119,7 +119,7 @@
 	and sb.subno=#{subno}
 	</if>
 	<if test="kno!=0">
-	and s.kno=#{kno}
+	and k.kno=#{kno}
 	</if>
 	<if test="dno!=0">
 	and s.dno=#{dno}
