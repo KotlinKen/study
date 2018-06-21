@@ -73,7 +73,7 @@ public class StudyController {
 		System.out.println("selectStudyList.do cPage="+cPage);
 		mav.addObject("list",list);
 		mav.addObject("numPerPage",numPerPage);
-		mav.addObject("cPage",cPage);
+		mav.addObject("cPage",cPage+1);
 		mav.addObject("total",total);
 		
 		return mav;
@@ -190,7 +190,7 @@ public class StudyController {
 		terms.put("kno", kno);
 		terms.put("dno", dno);
 		terms.put("leadername", leadername);
-		terms.put("cPage", cPage);
+		terms.put("cPage", cPage+1);
 		terms.put("numPerPage", numPerPage);
 		System.out.println("map="+terms);
 		
@@ -228,7 +228,7 @@ public class StudyController {
 		terms.put("kno", kno);
 		terms.put("dno", dno);
 		terms.put("leadername", leadername);
-		terms.put("cPage", cPage+1);
+		terms.put("cPage", cPage);
 		terms.put("numPerPage", numPerPage);
 		
 		
@@ -246,7 +246,7 @@ public class StudyController {
 	@RequestMapping("/study/studyListAdd.do")
 	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage){
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage+1,numPerPage);
+		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage,numPerPage);
 		mav.addObject("list",studyList);
 		mav.addObject("cPage",cPage+1);
 		
@@ -477,7 +477,7 @@ public class StudyController {
 	public ModelAndView selectByDeadlineAdd(@RequestParam(value="cPage") int cPage) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		
-		List<Map<String,Object>> list= studyService.selectByDeadline(cPage+1,numPerPage);
+		List<Map<String,Object>> list= studyService.selectByDeadline(cPage,numPerPage);
 		mav.addObject("list",list);
 		mav.addObject("cPage",cPage+1);
 		return mav;
@@ -502,7 +502,7 @@ public class StudyController {
 	public ModelAndView selectByApplyAdd(@RequestParam(value="cPage") int cPage) {
 		
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<Map<String,Object>> list = studyService.selectByApply(cPage+1,numPerPage);
+		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
 		mav.addObject("list",list);
 		mav.addObject("cPage",cPage+1);
 		return mav;
