@@ -22,13 +22,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pure.study.member.model.vo.Member;
 import com.pure.study.study.model.service.StudyService;
 import com.pure.study.study.model.vo.Study;
 
+import net.sf.json.JSONException;
 
 
-@SessionAttributes({"cPage","total","case","numPerPage","memberLoggedIn"})
+
+@SessionAttributes({"memberLoggedIn"})
 @Controller
 public class StudyController {
 	
@@ -41,7 +44,7 @@ public class StudyController {
 
 	
 	@RequestMapping("/study/studyList.do")
-	public ModelAndView studyList(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage) {
+	public ModelAndView studyList() {
 		ModelAndView mav = new ModelAndView();
 		
 		//지역 리스트
@@ -63,13 +66,16 @@ public class StudyController {
 	
 	
 	@RequestMapping("/study/selectStudyList.do")
-	public ModelAndView selectStudyList() {
+	public ModelAndView selectStudyList(){
 		int cPage=1;
-		//Map<String,Object> resultmap = new HashMap<>();
+		Map<String,Object> resultmap = new HashMap<>();
 		List<Map<String,Object>> list = studyService.selectStudyList(cPage,numPerPage);
 		int total = studyService.studyTotalCount();
-		//resultmap.put("list", list);
-		//resultmap.put("total",total);
+		/*resultmap.put("list", list);
+		resultmap.put("total",total);
+		resultmap.put("numPerPage", numPerPage);
+		resultmap.put("cPage", cPage+1);*/
+		
 		ModelAndView mav = new ModelAndView("jsonView");
 		System.out.println("selectStudyList.do numPerPage="+numPerPage);
 		System.out.println("selectStudyList.do cPage="+cPage);
@@ -77,7 +83,7 @@ public class StudyController {
 		mav.addObject("numPerPage",numPerPage);
 		mav.addObject("cPage",cPage+1);
 		mav.addObject("total",total);
-		
+	
 		return mav;
 	}
 	
@@ -262,7 +268,7 @@ public class StudyController {
 	
 	//스터디 상세보기
 	@RequestMapping("/study/studyView.do")
-	public ModelAndView selectStudyOne(@RequestParam(value="sno", required=true) int sno) {
+	public ModelAndView selectStudyOne(@RequestParam(value="sno", required=true) int sno, @ModelAttribute("memberLoggedIn") Member m ) {
 		ModelAndView mav = new ModelAndView();
 		
 		//스터디 정보 가져오기 +보고 있는 유저의 점수들 가져와야함..
@@ -270,6 +276,7 @@ public class StudyController {
 		System.out.println("study="+study);
 		
 		mav.addObject("study", study);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("study/studyView");
 		return mav;
 	}

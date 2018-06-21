@@ -6,6 +6,63 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="" name="pageTitle"/>
 </jsp:include>	 
+<div id="studylist-container">
+	
+	<button type="button" onclick="location.href='${pageContext.request.contextPath}/study/studyForm.do'">스터디 작성</button>
+		<!-- <form action="searchStudy.do" name="filterFrm" id="filterFrm" method="post"> -->
+		<div id="study-search">
+			<label for="local">지역:</label>
+			<select name="lno" id="local">
+			<option value="0">전체</option>
+			<c:forEach var="local" items="${localList }">
+				<option value="${local.LNO }">${local.LOCAL }</option>
+			</c:forEach>
+			</select>&nbsp;
+			<select name="tno" id="town">
+			<option value="0">지역을 선택하세요</option>
+			</select>
+			<label for="subject">카테고리 :</label>
+			<select name="kno" id="kind">
+			<option value="0">전체</option>
+			<c:forEach var="k" items="${kindList }">
+				<option value="${k.KNO }">${k.KINDNAME }</option>
+			</c:forEach>
+			</select>&nbsp;
+			<select name="subno" id="subject">
+			<option value="0">카테고리를 선택하세요</option>
+		
+			</select>
+			
+			<label for="diff">난이도 : </label>
+			<select name="dno" id="diff">
+			<option value="0">전체</option>
+			<c:forEach var="diff" items="${diffList }">
+				<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
+			</c:forEach>
+			</select>
+			<input type="text" name="leadername" id="leadername" placeholder="팀장명을 적어주세요" />
+			<input type="button" id="filterSearch" value="필터 검색" />
+			
+		</div>
+			
+	
+		<button type="button" id="sort-deadline">마감임박순</button>
+		<button type="button" id="sort-pop">인기스터디순</button>
+		
+		<hr />
+		<div id="study-list">
+		
+		</div>
+	
+	<input type="hidden" id="cPageNo" value="1" />
+	<input type="hidden" id="total" value="0" />
+	<input type="hidden" id="numPerPage" />
+	<input type="hidden" name="case" value="none" /> <!-- 조건없이 리스트를 가져오나, 조건있이 리스트를 가져오나 여부. 임시방편. -->
+	
+	
+	
+
+</div>
 <script>
 $(function(){
 	
@@ -13,6 +70,7 @@ $(function(){
 	$.ajax({
 		url:"selectStudyList.do",
 		dataType:"json",
+		type:"post",
 		success:function(data){
 			$("input#total").val(data.total);
 			$("input#numPerPage").val(data.numPerPage);
@@ -101,6 +159,7 @@ $(function(){
 			url:"searchStudy.do",
 			data:filter,
 			dataType:"json",
+			type:"post",
 			success:function(data){
 				console.log(data);
 			 	
@@ -138,6 +197,7 @@ $(function(){
 		$.ajax({
 			url:"selectByDeadline.do",
 			dataType:"json",
+			type:"post",
 			success:function(data){
 				
 				var html="";
@@ -171,6 +231,7 @@ $(function(){
 		$.ajax({
 			url:"selectByApply.do",
 			dataType:"json",
+			type:"post",
 			success:function(data){
 				
 				var html="";
@@ -249,6 +310,7 @@ $(function(){
 		      $.ajax({
 		        url:urlPath,
 		        dataType:"json",
+		        type:"post",
 		        data:dataForList,
 		        success:function(data){
 		        	console.log(data);
@@ -278,65 +340,7 @@ $(function(){
 	}
 });
 
-
 </script>
-<div id="studylist-container">
-	
-	<button type="button" onclick="location.href='${pageContext.request.contextPath}/study/studyForm.do'">스터디 작성</button>
-		<!-- <form action="searchStudy.do" name="filterFrm" id="filterFrm" method="post"> -->
-		<div id="study-search">
-			<label for="local">지역:</label>
-			<select name="lno" id="local">
-			<option value="0">전체</option>
-			<c:forEach var="local" items="${localList }">
-				<option value="${local.LNO }">${local.LOCAL }</option>
-			</c:forEach>
-			</select>&nbsp;
-			<select name="tno" id="town">
-			<option value="0">지역을 선택하세요</option>
-			</select>
-			<label for="subject">카테고리 :</label>
-			<select name="kno" id="kind">
-			<option value="0">전체</option>
-			<c:forEach var="k" items="${kindList }">
-				<option value="${k.KNO }">${k.KINDNAME }</option>
-			</c:forEach>
-			</select>&nbsp;
-			<select name="subno" id="subject">
-			<option value="0">카테고리를 선택하세요</option>
-		
-			</select>
-			
-			<label for="diff">난이도 : </label>
-			<select name="dno" id="diff">
-			<option value="0">전체</option>
-			<c:forEach var="diff" items="${diffList }">
-				<option value="${diff.DNO }">${diff.DIFFICULTNAME }</option>
-			</c:forEach>
-			</select>
-			<input type="text" name="leadername" id="leadername" placeholder="팀장명을 적어주세요" />
-			<input type="button" id="filterSearch" value="필터 검색" />
-			
-		</div>
-			
-	
-		<button type="button" id="sort-deadline">마감임박순</button>
-		<button type="button" id="sort-pop">인기스터디순</button>
-		
-		<hr />
-		<div id="study-list">
-		
-		</div>
-	
-	<input type="hidden" id="cPageNo" value="1" />
-	<input type="hidden" id="total" value="0" />
-	<input type="hidden" id="numPerPage" />
-	<input type="hidden" name="case" value="none" /> <!-- 조건없이 리스트를 가져오나, 조건있이 리스트를 가져오나 여부. 임시방편. -->
-	
-	
-	
-
-</div>
 </section>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

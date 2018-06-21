@@ -18,7 +18,7 @@ public class StudyServiceImpl implements StudyService {
 	private StudyDAO studyDAO;
 
 	@Override
-	public List<Map<String, String>> selectStudyList(int cPage, int numPerPage) {
+	public List<Map<String, Object>> selectStudyList(int cPage, int numPerPage) {
 		// TODO Auto-generated method stub
 		return studyDAO.selectStudyList(cPage,numPerPage);
 	}
