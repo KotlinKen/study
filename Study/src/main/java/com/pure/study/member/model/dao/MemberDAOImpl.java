@@ -103,28 +103,27 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> selectApplyList(int mno, int numPerPage, int cPage) {
-		return sqlSession.selectList("member.selectApplyList", mno, new RowBounds(numPerPage*(cPage-1),numPerPage));
+	public List<Map<String, String>> selectApplyList(Map<String, String> map, int numPerPage, int cPage) {
+		return sqlSession.selectList("member.selectApplyList", map, new RowBounds(numPerPage*(cPage-1),numPerPage));
 	}
 
 	@Override
-	public int selectApplyListCnt(int mno) {
-		return sqlSession.selectOne("member.selectApplyListCnt", mno);
+	public int selectApplyListCnt(Map<String, String> map) {
+		return sqlSession.selectOne("member.selectApplyListCnt", map);
+	}
+	@Override
+	public List<Map<String, String>> selectWishList(Map<String, String> map, int numPerPage, int cPage) {
+		return sqlSession.selectList("member.selectWishList", map, new RowBounds(numPerPage*(cPage-1),numPerPage));
 	}
 
 	@Override
-	public List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage) {
-		return sqlSession.selectList("member.selectWishList", mno);
-	}
-
-	@Override
-	public int selectWishListCnt(int mno) {
-		return sqlSession.selectOne("member.selectWishListCnt", mno);
+	public int selectWishListCnt(Map<String, String> map) {
+		return sqlSession.selectOne("member.selectWishListCnt", map);
 	}
 
 	@Override
 	public List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage) {
-		return sqlSession.selectList("member.selectMyStudyList", map);
+		return sqlSession.selectList("member.selectMyStudyList", map, new RowBounds(numPerPage*(cPage-1),numPerPage));
 	}
 
 	@Override
@@ -146,6 +145,17 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<Map<String, String>> informationagree() {
 		return sqlSession.selectList("member.informationagree");
 	}
+
+	@Override
+	public List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage) {
+		return sqlSession.selectList("member.selectLeaderList", map, new RowBounds(numPerPage*(cPage-1),numPerPage));
+	}
+
+	@Override
+	public int selectLeaderListCnt(Map<String, String> map) {
+		return sqlSession.selectOne("member.selectLeaderListCnt",map);
+	}
+
 
 	
 

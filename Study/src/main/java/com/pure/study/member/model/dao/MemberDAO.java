@@ -42,13 +42,9 @@ public interface MemberDAO {
 
 	int updateEmail(Member m);
 
-	List<Map<String, String>> selectApplyList(int mno, int numPerPage, int cPage);
+	List<Map<String, String>> selectWishList(Map<String, String> map, int numPerPage, int cPage);
 
-	int selectApplyListCnt(int mno);
-
-	List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage);
-
-	int selectWishListCnt(int mno);
+	int selectWishListCnt(Map<String, String> map);
 
 	List<Map<String, String>> selectKind();
 	
@@ -59,5 +55,13 @@ public interface MemberDAO {
 	List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage);
 
 	int selectMyStudyListCnt(Map<String, String> map);
+
+	List<Map<String, String>> selectApplyList(Map<String, String> map, int numPerPage, int cPage);
+
+	int selectApplyListCnt(Map<String, String> map);
+
+	List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage);
+
+	int selectLeaderListCnt(Map<String, String> map);
 
 }

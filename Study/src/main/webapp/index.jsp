@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 
+
 	<jsp:include page="/WEB-INF/views/common/header.jsp"> 
 		<jsp:param value="메인" name="pageTitle"/>
 	</jsp:include>

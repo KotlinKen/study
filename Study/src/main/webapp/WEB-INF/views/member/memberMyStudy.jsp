@@ -14,6 +14,9 @@
 	</jsp:include>
 	<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp" />
 	<br />
+	<a href="${rootPath }/member/searchMyPageKwd.do?leader=y" ${leader eq 'y' ? "style='color:red'" :'' }>팀장</a>|
+	<a href="${rootPath }/member/searchMyPageKwd.do?leader=n" ${leader eq 'n' ? "style='color:red'" :'' }>팀원</a>
+	<br />
 	<input type="radio" name="type" id="study" ${(type eq 'study') or (type == null)?'checked':'' }/>
 	<label for="study">study</label>
 	<input type="radio" name="type" id="lecture"  ${type eq 'lecture'?'checked':'' } />
@@ -29,7 +32,7 @@
 		<option value="freq" ${searchKwd eq 'freq'?'selected':'' }>주기</option>
 	</select>
 	<form action="searchMyPageKwd.do" 
-		  method="post" id="formSearch" onsubmit="return fn_search();">
+		  method="post" id="formSearch" >
 		<c:if test="${kwd != null and searchKwd != null and searchKwd != 'term' and searchKwd != 'freq' }">
 			<input type='text' name='kwd' value="${kwd }" />
 			<input type='hidden' name='searchKwd' value='${searchKwd }' />
@@ -67,9 +70,15 @@
 		
 		
 		<input type="hidden" name="type" value="${type }" />
+		<%-- <input type="hidden" name="leader" value="${leader }" /> --%>
 		<button type='submit' id='btn-search'>검색</button>
 	</form>
-	<p>총 ${count }의 스터디 신청 건이 있습니다.</p> <!--  스터디 가져올 경우 기간 마감된 것도 표시해줌. -->
+	<c:if test="${leader eq 'n' }"> <!-- 나중에 처리해줘야함 -->
+		<p>총 ${count }의 스터디 팀원 건이 있습니다.</p> <!--  스터디 가져올 경우 기간 마감된 것도 표시해줌. -->
+	</c:if>
+	<c:if test="${leader eq 'y'}">
+		<p>총 ${leaderCount }의 스터디 팀장 건이 있습니다.</p> <!--  스터디 가져올 경우 기간 마감된 것도 표시해줌. -->
+	</c:if>
 	<table>
 		<tr>
 			<th>번호</th>
@@ -83,7 +92,7 @@
 			<th>스터디 기간 및 시간</th> <!-- 18/5/6 ~ 18/6/6(시간) -->
 			<th>보기</th>
 		</tr>
-		<c:if test="${myStudyList != null}">
+		<c:if test="${myStudyList != null and leader eq 'y'}">
 			<c:forEach var="ms" items="${myStudyList}" varStatus="vs" >
 				<tr>
 					<td>${vs.index+1 }</td>
@@ -101,22 +110,36 @@
 				</tr>
 			</c:forEach>
 		</c:if>
-		<c:if test="${myStudyList == null and searchKwd != null}">
-			<tr>
-				<td>검색 결과가 없습니다</td>
-			</tr>
+		<c:if test="${leaderList != null and leader eq 'y'}">
+			<c:forEach var="ms" items="${leaderList}" varStatus="vs" >
+				<tr>
+					<td>${vs.index+1 }</td>
+					<td>${ms.title }</td>
+					<td>${ms.captain}</td>
+					<td>${ms.type }</td>
+					<td>${ms.subject }</td>
+					<td>${ms.place}</td>
+					<td>${ms.diff}</td>
+					<td>${ms.freq}</td>
+					<td>${ms.sdate} ~ ${ms.edate}(${ms.time })</td>
+					<td>
+						<button type=button>자세히</button>
+					</td>
+				</tr>
+			</c:forEach>
 		</c:if>
-		<c:if test="${myStudyList == null and searchKw != null}">
-			<tr>
-				<td>내 스터디가 없습니다.</td>
-			</tr>
-		</c:if>
+		
 	</table>
 	<br />
 	<!-- 페이지바 -->
 	<%
 		int totalContents = Integer.parseInt(String.valueOf(request.getAttribute("count")));
 		int numPerPage = Integer.parseInt(String.valueOf(request.getAttribute("numPerPage")));
+		String searchKwd = String.valueOf(request.getAttribute("searchKwd"));
+		String kwd = String.valueOf(request.getAttribute("kwd"));
+		String type = String.valueOf(request.getAttribute("type"));
+		String leader = String.valueOf(request.getAttribute("leader"));
+		
 		int cPage = 1;
 		try{
 			cPage = Integer.parseInt(request.getParameter("cPage"));
@@ -124,7 +147,7 @@
 			
 		}
 	%>
-	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"memberMyStudyList.do") %>
+	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"searchMyPageKwd.do?searchKwd="+searchKwd+"&kwd="+kwd+"&type="+type+"leader"+leader) %>
 	
 	<script>
 		var exec = 0;
@@ -233,12 +256,7 @@
 		
 			
 		});
-		function fn_search(){
-			console.log($("#formSearch > input").val());
-			var search = $("#formSearch > input").val();
-			
-			return true;
-		}
+	
 	</script>
 	
 	

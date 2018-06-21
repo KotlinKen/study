@@ -304,8 +304,10 @@ public class MemberController {
 			msg = "존재하지 않는 아이디입니다.";
 		} else {
 			if (bcryptPasswordEncoder.matches(pwd, m.getPwd())) {
-				msg = "로그인성공!";
+				//msg = "로그인성공!";
 				mav.addObject("memberLoggedIn", m);
+				mav.setViewName("redirect:/");
+				return mav;
 			} else {
 				msg = "비밀번호가 틀렸습니다.";
 			}
@@ -814,12 +816,12 @@ public class MemberController {
 	/*개인 정보 수정 끝**********************************/
 	
 	/**************************내 스터디 목록 시작*/
-	@RequestMapping(value="/member/memberMyStudy.do")
+	/*@RequestMapping(value="/member/memberMyStudy.do")
 	public ModelAndView memberMyStudy(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
 			, @ModelAttribute("memberLoggedIn") Member m) {
 		ModelAndView mav = new ModelAndView();
 		
-		int numPerPage = 10;
+		int numPerPage = 5;
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("mno", String.valueOf(m.getMno()));
@@ -840,18 +842,19 @@ public class MemberController {
 		
 		return mav;
 	}
-	
+	*/
 	@RequestMapping("/member/searchMyPageKwd.do")
 	@ResponseBody
 	public ModelAndView searchMyPage (@RequestParam(value="cPage", required=false, defaultValue="1") int cPage
-									, @RequestParam("searchKwd") String searchKwd
-									, @RequestParam(value="kwd") String kwd
-									, @RequestParam(value="type") String type									
+									, @RequestParam(value="searchKwd", defaultValue="title") String searchKwd
+									, @RequestParam(value="kwd", required=false, defaultValue="") String kwd
+									, @RequestParam(value="type", defaultValue="study") String type									
+									, @RequestParam(value="leader", defaultValue="y") String leader									
 									, @ModelAttribute("memberLoggedIn") Member m
 									) {
 		ModelAndView mav = new ModelAndView();
 		
-		int numPerPage = 10;
+		int numPerPage = 5;
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("mno", String.valueOf(m.getMno()));
@@ -870,14 +873,39 @@ public class MemberController {
 		}
 		map.put("searchKwd", searchKwd);
 		map.put("type", type);
-		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
 		
-		int count = memberService.selectMyStudyListCnt(map);
+		//팀원일 때, 내 스터디
+		List<Map<String,String>> list = null;
+		int count = 0;
+		if ("n".equals(leader)) {
+			 list = memberService.selectMyStudyList(map, numPerPage, cPage);
+			count = memberService.selectMyStudyListCnt(map);
+		}
+		
+		//팀장일 때, 내 스터디
+		List<Map<String,String>> leaderList = null;
+		int leaderCount = 0;
+		if ("y".equals(leader)) {
+			leaderList = memberService.selectLeaderList(map, numPerPage, cPage);
+			leaderCount = memberService.selectLeaderListCnt(map);
+		}
+		
+		
+		/*
+		Map<String,String> mapLeader = list.get(0);
+		//팀장일 때, 내 스터디
+		if(String.valueOf(m.getMno()).equals(mapLeader.get((Object)mapLeader))) {
+			System.out.println("어떤 값이 나올까?"+mapLeader.get((Object)mapLeader));
+		}
+		*/
 		
 		mav.addObject("type", type);
 		mav.addObject("kwd", kwd);
 		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("myStudyList", list);
+		mav.addObject("leaderList", leaderList);
+		mav.addObject("leaderCount", leaderCount);
+		mav.addObject("leader", leader);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
 		mav.addObject("memberLoggedIn", m);
@@ -891,41 +919,107 @@ public class MemberController {
 	/*내 스터디 목록 끝*******************************/
 	
 	/**************************스터디 신청 목록 시작*/
-	@RequestMapping(value="/member/memberApplyList.do")
-	public ModelAndView memberApply(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
-									, @ModelAttribute("memberLoggedIn") Member m) {
+	
+	@RequestMapping("/member/searchMyApplyKwd.do")
+	@ResponseBody
+	public ModelAndView searchMyApply (@RequestParam(value="cPage", required=false, defaultValue="1") int cPage
+										, @RequestParam(value="searchKwd", defaultValue="title") String searchKwd
+										, @RequestParam(value="kwd", required=false, defaultValue="") String kwd
+										, @RequestParam(value="type", defaultValue="study") String type
+										, @RequestParam(value="applyDate",required=false, defaultValue="present") String applyDate
+										, @ModelAttribute("memberLoggedIn") Member m
+									) {
 		ModelAndView mav = new ModelAndView();
 		
-		int numPerPage = 10;
+		int numPerPage = 5;
 		
-		List<Map<String,String>> list = memberService.selectApplyList(m.getMno(), numPerPage, cPage);
+		Map<String,String> map = new HashMap<>();
+		map.put("mno", String.valueOf(m.getMno()));
+		map.put("applyDate", applyDate);
+		System.out.println("확인:"+kwd);
+		if("term".equals(searchKwd) || "freq".equals(searchKwd)) { 
+			String[] termKwd = kwd.split(",");
+			map.put("kwd", termKwd[0]);
+			if(termKwd.length>1) {	
+				for(int i=1; i<termKwd.length; i++) {
+					map.put("kwd"+i, termKwd[i]);	
+					System.out.println(termKwd[i]);
+				}
+			}
+		} else if(kwd==null ){
+			map.put("kwd", null);			
+		} else{
+			map.put("kwd", kwd);			
+		}
+		map.put("searchKwd", searchKwd);
+		map.put("type", type);
+		List<Map<String,String>> list = memberService.selectApplyList(map, numPerPage, cPage);
 		
-		int count = memberService.selectApplyListCnt(m.getMno());
+		int count = memberService.selectApplyListCnt(map);
+		
+		mav.addObject("type", type);
+		mav.addObject("applyDate", applyDate);
+		mav.addObject("kwd", kwd);
+		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("applyList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("member/memberApply");
 		
 		return mav;
 	}
 	
+	
 	/*스터디 신청 목록 끝*******************************/
 	
 	/**************************스터디 찜 목록 시작*/
-	@RequestMapping(value="/member/memberWish.do")
-	public ModelAndView memberWish(@RequestParam(value="cPage", required=false, defaultValue="1") int cPage 
-			, @ModelAttribute("memberLoggedIn") Member m) {
+
+	@RequestMapping("/member/searchMyWishKwd.do")
+	@ResponseBody
+	public ModelAndView searchMyWish (@RequestParam(value="cPage", required=false, defaultValue="1") int cPage
+									, @RequestParam(value="searchKwd", defaultValue="title") String searchKwd
+									, @RequestParam(value="kwd", required=false, defaultValue="") String kwd
+									, @RequestParam(value="type", defaultValue="study") String type									
+									, @RequestParam(value="applyDate",required=false, defaultValue="present") String applyDate
+									, @ModelAttribute("memberLoggedIn") Member m
+									) {
 		ModelAndView mav = new ModelAndView();
 		
-		int numPerPage = 10;
+		int numPerPage = 5;
 		
-		List<Map<String,String>> list = memberService.selectWishList(m.getMno(), numPerPage, cPage);
+		Map<String,String> map = new HashMap<>();
+		map.put("mno", String.valueOf(m.getMno()));
+		map.put("applyDate", applyDate);
+		System.out.println("확인:"+kwd);
+		if("term".equals(searchKwd) || "freq".equals(searchKwd)) { 
+			String[] termKwd = kwd.split(",");
+			map.put("kwd", termKwd[0]);
+			if(termKwd.length>1) {	
+				for(int i=1; i<termKwd.length; i++) {
+					map.put("kwd"+i, termKwd[i]);	
+					System.out.println(termKwd[i]);
+				}
+			}
+		} else if(kwd==null ){
+			map.put("kwd", null);			
+		} else{
+			map.put("kwd", kwd);			
+		}
+		map.put("searchKwd", searchKwd);
+		map.put("type", type);
+		List<Map<String,String>> list = memberService.selectWishList(map, numPerPage, cPage);
 		
-		int count = memberService.selectWishListCnt(m.getMno());
+		int count = memberService.selectWishListCnt(map);
 		
+		mav.addObject("type", type);
+		mav.addObject("applyDate", applyDate);
+		mav.addObject("kwd", kwd);
+		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("wishList", list);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("memberLoggedIn", m);
 		mav.setViewName("member/memberWish");
 		
 		return mav;

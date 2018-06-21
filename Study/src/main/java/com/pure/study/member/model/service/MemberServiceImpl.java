@@ -101,23 +101,24 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectApplyList(int mno, int numPerPage, int cPage) {
-		return memberDAO.selectApplyList(mno, numPerPage, cPage);
+	public List<Map<String, String>> selectApplyList(Map<String, String> map, int numPerPage, int cPage) {
+		return memberDAO.selectApplyList(map, numPerPage, cPage);
+	}
+	
+	@Override
+	public int selectApplyListCnt(Map<String, String> map) {
+		return memberDAO.selectApplyListCnt(map);
+	}
+	
+
+	@Override
+	public List<Map<String, String>> selectWishList(Map<String, String> map, int numPerPage, int cPage) {
+		return memberDAO.selectWishList(map, numPerPage, cPage);
 	}
 
 	@Override
-	public int selectApplyListCnt(int mno) {
-		return memberDAO.selectApplyListCnt(mno);
-	}
-
-	@Override
-	public List<Map<String, String>> selectWishList(int mno, int numPerPage, int cPage) {
-		return memberDAO.selectWishList(mno, numPerPage, cPage);
-	}
-
-	@Override
-	public int selectWishListCnt(int mno) {
-		return memberDAO.selectWishListCnt(mno);
+	public int selectWishListCnt(Map<String, String> map) {
+		return memberDAO.selectWishListCnt(map);
 	}
 
 	@Override
@@ -144,6 +145,22 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, String>> informationagree() {
 		return memberDAO.informationagree();
 	}
+
+	@Override
+	public List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage) {
+		return memberDAO.selectLeaderList(map,numPerPage, cPage);
+	}
+
+	@Override
+	public int selectLeaderListCnt(Map<String, String> map) {
+		return memberDAO.selectLeaderListCnt(map);
+	}
+
+	
+
+	
+
+	
 
 	
 	
