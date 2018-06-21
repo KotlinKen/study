@@ -917,6 +917,7 @@ public class MemberController {
 			mav.setViewName("member/memberWish");
 		}
 		
+		
 		System.out.println("값이 잘 있나용?"+list);
 		System.out.println("값이 잘 있나용?"+count);
 		
