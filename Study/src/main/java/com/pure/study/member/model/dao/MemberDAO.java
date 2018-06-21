@@ -60,4 +60,8 @@ public interface MemberDAO {
 
 	int selectApplyListCnt(Map<String, String> map);
 
+	List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage);
+
+	int selectLeaderListCnt(Map<String, String> map);
+
 }

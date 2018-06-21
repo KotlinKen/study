@@ -146,6 +146,16 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.informationagree();
 	}
 
+	@Override
+	public List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage) {
+		return memberDAO.selectLeaderList(map,numPerPage, cPage);
+	}
+
+	@Override
+	public int selectLeaderListCnt(Map<String, String> map) {
+		return memberDAO.selectLeaderListCnt(map);
+	}
+
 	
 
 	

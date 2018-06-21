@@ -849,6 +849,7 @@ public class MemberController {
 									, @RequestParam(value="searchKwd", defaultValue="title") String searchKwd
 									, @RequestParam(value="kwd", required=false, defaultValue="") String kwd
 									, @RequestParam(value="type", defaultValue="study") String type									
+									, @RequestParam(value="leader", defaultValue="y") String leader									
 									, @ModelAttribute("memberLoggedIn") Member m
 									) {
 		ModelAndView mav = new ModelAndView();
@@ -872,14 +873,39 @@ public class MemberController {
 		}
 		map.put("searchKwd", searchKwd);
 		map.put("type", type);
-		List<Map<String,String>> list = memberService.selectMyStudyList(map, numPerPage, cPage);
 		
-		int count = memberService.selectMyStudyListCnt(map);
+		//팀원일 때, 내 스터디
+		List<Map<String,String>> list = null;
+		int count = 0;
+		if ("n".equals(leader)) {
+			 list = memberService.selectMyStudyList(map, numPerPage, cPage);
+			count = memberService.selectMyStudyListCnt(map);
+		}
+		
+		//팀장일 때, 내 스터디
+		List<Map<String,String>> leaderList = null;
+		int leaderCount = 0;
+		if ("y".equals(leader)) {
+			leaderList = memberService.selectLeaderList(map, numPerPage, cPage);
+			leaderCount = memberService.selectLeaderListCnt(map);
+		}
+		
+		
+		/*
+		Map<String,String> mapLeader = list.get(0);
+		//팀장일 때, 내 스터디
+		if(String.valueOf(m.getMno()).equals(mapLeader.get((Object)mapLeader))) {
+			System.out.println("어떤 값이 나올까?"+mapLeader.get((Object)mapLeader));
+		}
+		*/
 		
 		mav.addObject("type", type);
 		mav.addObject("kwd", kwd);
 		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("myStudyList", list);
+		mav.addObject("leaderList", leaderList);
+		mav.addObject("leaderCount", leaderCount);
+		mav.addObject("leader", leader);
 		mav.addObject("count", count);
 		mav.addObject("numPerPage", numPerPage);
 		mav.addObject("memberLoggedIn", m);
@@ -955,6 +981,7 @@ public class MemberController {
 									, @RequestParam(value="searchKwd", defaultValue="title") String searchKwd
 									, @RequestParam(value="kwd", required=false, defaultValue="") String kwd
 									, @RequestParam(value="type", defaultValue="study") String type									
+									, @RequestParam(value="applyDate",required=false, defaultValue="present") String applyDate
 									, @ModelAttribute("memberLoggedIn") Member m
 									) {
 		ModelAndView mav = new ModelAndView();
@@ -963,6 +990,7 @@ public class MemberController {
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("mno", String.valueOf(m.getMno()));
+		map.put("applyDate", applyDate);
 		System.out.println("확인:"+kwd);
 		if("term".equals(searchKwd) || "freq".equals(searchKwd)) { 
 			String[] termKwd = kwd.split(",");
@@ -985,6 +1013,7 @@ public class MemberController {
 		int count = memberService.selectWishListCnt(map);
 		
 		mav.addObject("type", type);
+		mav.addObject("applyDate", applyDate);
 		mav.addObject("kwd", kwd);
 		mav.addObject("searchKwd", searchKwd);
 		mav.addObject("wishList", list);

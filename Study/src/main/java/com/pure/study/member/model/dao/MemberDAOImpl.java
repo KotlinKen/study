@@ -146,6 +146,16 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectList("member.informationagree");
 	}
 
+	@Override
+	public List<Map<String, String>> selectLeaderList(Map<String, String> map, int numPerPage, int cPage) {
+		return sqlSession.selectList("member.selectLeaderList", map, new RowBounds(numPerPage*(cPage-1),numPerPage));
+	}
+
+	@Override
+	public int selectLeaderListCnt(Map<String, String> map) {
+		return sqlSession.selectOne("member.selectLeaderListCnt",map);
+	}
+
 
 	
 

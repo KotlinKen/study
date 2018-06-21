@@ -19,6 +19,11 @@
 	<input type="radio" name="type" id="lecture"  ${type eq 'lecture'?'checked':'' } />
 	<label for="lecture">lecture</label>
 	<br />
+	<input type="radio" name="applyDate" id="present" value="present" ${(applyDate eq 'present') or (applyDate == null)?'checked':'' }/>
+	<label for="present">현재 신청 중인 스터디</label>
+	<input type="radio" name="applyDate" id="last" value="last"  ${applyDate eq 'last'?'checked':'' } />
+	<label for="last">신청이 지난 스터디</label>
+	<br />
 	<select id="searchKwd">
 		<option value="title" ${searchKwd eq 'title'?'selected':'' }>강의/스터디명</option>
 		<option value="captain" ${searchKwd eq 'captain'?'selected':'' }>팀장/강사명</option>
@@ -64,9 +69,11 @@
 			<input type='hidden' name='searchKwd' value='freq' />
 			<input type='hidden' name='kwd' value='none' />
 		</c:if>
-		
-		
 		<input type="hidden" name="type" value="${type }" />
+		<c:if test="${applyDate != null }">
+			<input type="hidden" name="applyDate" value="${applyDate }" />
+		</c:if>
+		
 		<button type='submit' id='btn-search'>검색</button>
 	</form>
 	<p>총 ${count }의 스터디 신청 건이 있습니다.</p> <!-- 스터디 가져올 경우 기간 마감된 것도 표시해줌. -->
@@ -116,6 +123,7 @@
 		String searchKwd = String.valueOf(request.getAttribute("searchKwd"));
 		String kwd = String.valueOf(request.getAttribute("kwd"));
 		String type = String.valueOf(request.getAttribute("type"));
+		String applyDate = String.valueOf(request.getAttribute("applyDate"));
 		
 		int cPage = 1;
 		try{
@@ -124,7 +132,7 @@
 			
 		}
 	%>
-	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"searchMyWishKwd.do?searchKwd="+searchKwd+"&kwd="+kwd+"&type="+type) %>
+	<%=com.pure.study.common.util.Utils.getPageBar(totalContents, cPage, numPerPage,"searchMyWishKwd.do?searchKwd="+searchKwd+"&kwd="+kwd+"&type="+type+"&applyDate="+applyDate) %>
 	<script>
 		var exec = 0;
 		$(function(){
@@ -209,6 +217,12 @@
 					html+="<input type='hidden' name='kwd' value='none' />";
 					console.log('freq');
 				}
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
+				}
 				html+="<button type='submit' id='btn-search'>검색</button>";
 				html+="<input type='hidden' name='type' value='${type}' />";
 				$("form#formSearch").html(html);
@@ -219,13 +233,54 @@
 				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
 				html+="<input type='hidden' name='searchKwd' value='title' />";
 				html+="<input type='hidden' name='type' value='study' />";
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
+				}
 				$("#formSearch").html(html);
 				$("#formSearch").submit();
 			});
+			
 			$("[type=radio]#lecture").on("click",function(){
 				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
 				html+="<input type='hidden' name='searchKwd' value='title' />";
 				html+="<input type='hidden' name='type' value='lecture' />";
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
+				}
+				$("#formSearch").html(html);
+				$("#formSearch").submit();
+			});
+			
+			$("[type=radio]#present").on("click",function(){
+				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
+				html+="<input type='hidden' name='searchKwd' value='title' />";
+				if(<%="lecture".equals(type)%>){
+					html+="<input type='hidden' name='type' value='lecture' />";					
+				} 
+				if(<%="study".equals(type)%>){
+					html+="<input type='hidden' name='type' value='study' />";					
+				}
+				$("#formSearch").html(html);
+				$("#formSearch").submit(); 
+				
+			});
+			
+			$("[type=radio]#last").on("click",function(){
+				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
+				html+="<input type='hidden' name='searchKwd' value='title' />";
+				if(<%="lecture".equals(type)%>){
+					html+="<input type='hidden' name='type' value='lecture' />";					
+				} 
+				if(<%="study".equals(type)%>){
+					html+="<input type='hidden' name='type' value='study' />";					
+				}
+				html+="<input type='hidden' name='applyDate' value='last' />";			
 				$("#formSearch").html(html);
 				$("#formSearch").submit();
 			});

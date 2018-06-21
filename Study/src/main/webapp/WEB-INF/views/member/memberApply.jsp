@@ -149,7 +149,6 @@
 					html="<input type='text' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
 					html+="<input type='hidden' name='searchKwd' value='title' />";
 					
-					
 					console.log('title');
 				} 
 				if($(this).val()=='captain'){
@@ -223,6 +222,12 @@
 					html+="<input type='hidden' name='searchKwd' value='freq' />";
 					html+="<input type='hidden' name='kwd' value='none' />";
 					console.log('freq');
+				}
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
 				}
 				html+="<button type='submit' id='btn-search'>검색</button>";
 				html+="<input type='hidden' name='type' value='${type}' />";
