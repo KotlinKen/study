@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.pure.study.adversting.model.dao.AdverstingDao;
@@ -22,7 +23,11 @@ public class AdverstingServiceImpl implements AdverstingService {
 
 	@Override
 	public int insertAdversting(Adversting adversting) {
-		return adverstingDao.insertAdversting(adversting);
+		try {
+			return adverstingDao.insertAdversting(adversting);
+		}catch(DuplicateKeyException  e) {
+			return -1;
+		}
 	}
 
 	@Override
