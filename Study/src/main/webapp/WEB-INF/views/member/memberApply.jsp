@@ -74,7 +74,11 @@
 		
 		
 		<input type="hidden" name="type" value="${type }" />
-		<%-- <input type="hidden" name="applyDate" value="${applyDate }" /> --%>
+		<c:if test="${applyDate != null }">
+			<input type="hidden" name="applyDate" value="${applyDate }" />
+		</c:if>
+		
+		
 		<button type='submit' id='btn-search'>검색</button>
 	</form>
 	<p>총 ${count }의 스터디 신청 건이 있습니다.</p> <!-- 스터디 가져올 경우 기간 마감된 것도 표시해줌. -->
@@ -232,6 +236,12 @@
 				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
 				html+="<input type='hidden' name='searchKwd' value='title' />";
 				html+="<input type='hidden' name='type' value='study' />";
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
+				}
 				$("#formSearch").html(html);
 				$("#formSearch").submit();
 			});
@@ -239,6 +249,12 @@
 				var html="<input type='hidden' name='kwd' id='titleKwd' placeholder='강의/스터디명' />";
 				html+="<input type='hidden' name='searchKwd' value='title' />";
 				html+="<input type='hidden' name='type' value='lecture' />";
+				if(<%="present".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='present' />";					
+				} 
+				if(<%="last".equals(applyDate)%>){
+					html+="<input type='hidden' name='applyDate' value='last' />";					
+				}
 				$("#formSearch").html(html);
 				$("#formSearch").submit();
 			});
@@ -251,7 +267,6 @@
 				if(<%="study".equals(type)%>){
 					html+="<input type='hidden' name='type' value='study' />";					
 				}
-				html+="<input type='hidden' name='applyDate' value='present' />";
 				$("#formSearch").html(html);
 				$("#formSearch").submit(); 
 				
@@ -265,11 +280,11 @@
 				if(<%="study".equals(type)%>){
 					html+="<input type='hidden' name='type' value='study' />";					
 				}
-				html+="<input type='hidden' name='applyDate' value='last' />";
+				html+="<input type='hidden' name='applyDate' value='last' />";			
 				$("#formSearch").html(html);
 				$("#formSearch").submit();
 			});
-		
+			
 			
 		});
 		$(function(){
