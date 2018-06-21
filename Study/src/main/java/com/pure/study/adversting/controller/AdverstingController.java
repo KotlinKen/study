@@ -319,7 +319,7 @@ public class AdverstingController {
 	@ResponseBody
 	public void popupClose( HttpServletResponse response)  throws JsonProcessingException {
 		Cookie setCookie = new Cookie("popupValue", ""); // 쿠키 생성
-		setCookie.setMaxAge(60*60*24); // 기간을 하루로 지정
+		setCookie.setMaxAge(10); // 기간을 하루로 지정
 		response.addCookie(setCookie);
 		
 	}
