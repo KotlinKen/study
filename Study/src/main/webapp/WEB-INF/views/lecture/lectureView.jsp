@@ -13,7 +13,7 @@
 
 	// 삭제버튼
 	function deleteLecture(){
-		location.href="${pageContext.request.contextPath}/lecture/deleteLecture.do?sno=" + ${lecture.SNO};
+		location.href="${rootPath}/lecture/deleteLecture.do?sno=" + ${lecture.SNO};
 	}
 	
 	//참여신청 버튼 클릭 이벤트

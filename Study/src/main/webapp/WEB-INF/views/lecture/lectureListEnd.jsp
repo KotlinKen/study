@@ -7,13 +7,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
+<script src="${rootPath }/resources/js/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
 	$(document).ready(function(){
 		$(".lectureTr").click(function(){
 			var sno = $(this).attr("sno");			
-			location.href="${pageContext.request.contextPath}/lecture/lectureView.do?sno=" + sno;
+			location.href="${rootPath}/lecture/lectureView.do?sno=" + sno;
 		});
 	});	
 	
@@ -72,7 +72,7 @@
 	});
 </script>
 <body>
-	<button type="button" onclick="location.href='${pageContext.request.contextPath}/lecture/insertLecture.do'">강의
+	<button type="button" onclick="location.href='${rootPath}/lecture/insertLecture.do'">강의
 	작성</button>
 	<div id="lectureList-container">	
 		<!-- 지역 -->
