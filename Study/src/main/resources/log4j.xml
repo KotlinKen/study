@@ -49,7 +49,7 @@
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="DEBUG" />
+		<level value="INFO" />
 	</logger>
 
 	<!-- Root Logger -->
