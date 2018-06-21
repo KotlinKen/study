@@ -150,6 +150,18 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.preinsertApply(map);
 	}
 
+	@Override
+	public int isWishStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return studyDAO.isWishStudy(map);
+	}
+
+	@Override
+	public int deletewishStudy(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return studyDAO.deletewishStudy(map);
+	}
+
 	
 
 

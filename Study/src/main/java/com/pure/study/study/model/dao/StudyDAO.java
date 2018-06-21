@@ -53,6 +53,10 @@ public interface StudyDAO {
 
 	int preinsertApply(Map<String, Integer> map);
 
+	int isWishStudy(Map<String, Integer> map);
+
+	int deletewishStudy(Map<String, Integer> map);
+
 	
 
 }

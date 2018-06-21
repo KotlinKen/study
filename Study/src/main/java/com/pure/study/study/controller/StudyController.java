@@ -275,8 +275,17 @@ public class StudyController {
 		Map<String,Object> study = studyService.selectStudyOne(sno);
 		System.out.println("study="+study);
 		
+		
+		//이미 찜했는지 여부 검사 
+		Map<String,Integer> map = new HashMap<>();
+		map.put("mno", m.getMno());
+		map.put("sno", sno);
+		int isWish = studyService.isWishStudy(map);
+		
+		
 		mav.addObject("study", study);
 		mav.addObject("memberLoggedIn", m);
+		mav.addObject("isWish",isWish);
 		mav.setViewName("study/studyView");
 		return mav;
 	}
@@ -310,6 +319,22 @@ public class StudyController {
 		
 		return result;
 	}
+	
+	
+	@RequestMapping("/study/deletewishStudy.do")
+	@ResponseBody
+	public int deletewishStudy(@RequestParam(value="sno") int sno,@RequestParam(value="mno") int mno) {
+		Map<String,Integer> map = new HashMap<>();
+		map.put("sno", sno);
+		map.put("mno", mno);
+		
+		int result = studyService.deletewishStudy(map);
+		
+		return result;
+		
+	}
+	
+	
 	
 	@RequestMapping("/study/studyUpdate.do")
 	public ModelAndView studyUpdate(@RequestParam(value="sno") int sno) {

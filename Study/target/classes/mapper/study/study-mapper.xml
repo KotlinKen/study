@@ -190,5 +190,12 @@
   	SELECT COUNT(*) FROM APPLY WHERE SNO = #{sno} AND MNO = #{mno}
   </select>
   
+  <select id="isWishStudy" resultType="_int">
+  	select count(*) from wish where sno=#{sno} and mno=#{mno}
+  </select>
+  
+  <delete id="deletewishStudy">
+  	delete from wish where sno=#{sno} and mno=#{mno}
+  </delete>
   
 </mapper>

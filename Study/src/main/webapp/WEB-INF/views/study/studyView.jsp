@@ -22,6 +22,14 @@ div.carousel-item img{
 	width:500px;
 	height:600px;
 } 
+img.profile{
+	width:180px;
+	height:250px;
+}
+img.wish{
+	width:100px;
+	height:50px;
+}
 </style>
 
 <script>
@@ -52,16 +60,41 @@ function studyApply(sno){
 function studyWish(sno){
 	//세션에서 멤버의 mno 받아옴 로그인 안한상태에 대해서도 분기 처리.
 	//찜하기를 이미 선택했다면 다시 누르면 찜하기에서 삭제됨.
-	$.ajax({
-		url:"wishStudy.do",
-		data:{sno:sno,mno:${memberLoggedIn.getMno()}},
-		success:function(data){
-			console.log("찜했다");
-			//신청 완료 후 button에 스타일 주어서 이미 신청했음을 표시하게 한다.
-		},error:function(){
-			
+	
+	if(${memberLoggedIn!=null}){//로그인을 한 상황
+		
+		if(${isWish==0}){//사용자는 전에 찜하지 않았음.
+			$.ajax({
+				url:"wishStudy.do",
+				data:{sno:sno,mno:${memberLoggedIn.getMno()}},
+				success:function(data){
+					console.log("찜했다");
+					$("img.wish").attr("src","${pageContext.request.contextPath }/resources/upload/study/nowish.png");
+					if(confirm("찜한 목록으로 가시겠습니까?")){
+						location.href="${pageContext.request.contextPath}/member/memberWish.do?mno="+${memberLoggedIn.getMno()};
+					}
+				},error:function(){
+					
+				}
+			});
+		}else{
+			if(confirm("이미 찜했습니다. 취소하겠습니까?")){
+				$.ajax({
+					url:"deletewishStudy.do",
+					data:{sno:sno,mno:${memberLoggedIn.getMno()}},
+					success:function(data){
+						$("img.wish").attr("src","${pageContext.request.contextPath }/resources/upload/study/wish.png");
+					},error:function(){
+						
+					}
+				});
+			}
 		}
-	});
+		
+	}else{
+		alert("로그인 후 이용가능합니다");
+	}
+	
 }
 $(function(){
 	
@@ -128,12 +161,12 @@ $(function(){
 <span>수업 기간 : ${study.SDATE }~${study.EDATE }</span>
 <span>협의비 : ${study.PRICE }</span>
 <hr />
-<label for="">리더 소개</label>
+<label for="">리더 소개</label><br /><br />
 <c:if test="${study.MPROFILE!=null }">
-<img src="${pageContext.request.contextPath}/resources/upload/member/${study.MPROFILE}" alt="" />
+<img src="${pageContext.request.contextPath}/resources/upload/member/${study.MPROFILE}" class="profile" alt="" />
 </c:if>
 <c:if test="${study.MPROFILE==null }">
-<img src="${pageContext.request.contextPath}/resources/upload/member/basicprofile.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/upload/member/basicprofile.png"  class="profile" alt="" />
 </c:if>
 
 <span>${study.COVER }</span>
@@ -153,7 +186,17 @@ $(function(){
 <span>${study.TITLE }</span><br />
 <span>${study.SDATE }~${study.EDATE }</span>
 <button type="button" onclick="studyApply('${study.SNO}');"><span>참여신청하기</span></button>
-<button type="button" onclick="studyWish('${study.SNO}');"><span>찜하기</span></button>
+<button type="button" onclick="studyWish('${study.SNO}');">
+<c:if test="${isWish!=0 }">
+<img class="wish" src="${pageContext.request.contextPath }/resources/upload/study/nowish.png">
+</c:if>
+<c:if test="${isWish==0 }">
+<img class="wish" src="${pageContext.request.contextPath }/resources/upload/study/wish.png">
+</c:if>
+<span>찜하기</span>
+
+</button>
+
 
 
 </div>
