@@ -120,6 +120,36 @@ public class StudyServiceImpl implements StudyService {
 		return studyDAO.deleteStudy(sno);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectByDeadline(int cPage, int numPerPage) {
+		// TODO Auto-generated method stub
+		return studyDAO.selectByDeadline(cPage,numPerPage);
+	}
+
+	@Override
+	public int studyDeadlineCount() {
+		// TODO Auto-generated method stub
+		return studyDAO.studyDeadlineCount();
+	}
+
+	@Override
+	public List<Map<String, Object>> selectByApply(int cPage, int numPerPage) {
+		// TODO Auto-generated method stub
+		return studyDAO.selectByApply(cPage,numPerPage);
+	}
+
+	@Override
+	public int studyByApplyCount() {
+		// TODO Auto-generated method stub
+		return studyDAO.studyByApplyCount();
+	}
+
+	@Override
+	public int preinsertApply(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return studyDAO.preinsertApply(map);
+	}
+
 	
 
 

@@ -3,9 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%-- <jsp:include page="/WEB-INF/views/common/header.jsp" --%>
-<%-- 	<jsp:param value="" name="pageTitle"/>
-</jsp:include>	 --%>
+ <jsp:include page="/WEB-INF/views/common/header.jsp">
+ 	<jsp:param value="" name="pageTitle"/>
+</jsp:include>	 
 <style>
 .notLeader{
 	display:none;
@@ -14,8 +14,16 @@
 div.sideInfo{
 
 }
+div#carouselExampleControls{
+	width:500px;
+	height:600px;
+}
+div.carousel-item img{
+	width:500px;
+	height:600px;
+} 
 </style>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+
 <script>
 //참여신청 버튼 클릭 이벤트
 function studyApply(sno){
@@ -25,9 +33,13 @@ function studyApply(sno){
 	if(confirm("신청하시겠습니까")) {
 		$.ajax({
 			url:"applyStudy.do",
-			data:{sno:sno,mno:2},
+			data:{sno:sno,mno:${memberLoggedIn.getMno()}},
 			success:function(data){
-				console.log("신청했다");
+				if(data!=0){
+					alert("신청되었습니다.");
+				}else{
+					alert("이미 신청한 스터디입니다.");
+				}
 				//신청 완료 후 button에 스타일 주어서 이미 신청했음을 표시하게 한다.
 			},error:function(){
 				
@@ -42,7 +54,7 @@ function studyWish(sno){
 	//찜하기를 이미 선택했다면 다시 누르면 찜하기에서 삭제됨.
 	$.ajax({
 		url:"wishStudy.do",
-		data:{sno:sno,mno:2},
+		data:{sno:sno,mno:${memberLoggedIn.getMno()}},
 		success:function(data){
 			console.log("찜했다");
 			//신청 완료 후 button에 스타일 주어서 이미 신청했음을 표시하게 한다.
@@ -73,8 +85,33 @@ $(function(){
 
 </script>
 <div id="study-detail">
+	<c:set var="imgs" value="${fn:split(study.UPFILE,',')}"/>
+	
 <button type="button" class="editStudy">스터디 수정</button> <!-- 팀장일때만 나타날 것임. -->
 <button type="button" class="removeStudy">스터디 삭제</button><!-- 팀장일때만 나타날 것임. -->
+
+<!-- 사진 뷰 -->
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+	   <c:forEach var="img" items="${imgs }" varStatus="vs"> 
+			<div class="carousel-item ${vs.first? 'active':'' }">
+		     	<img class="d-block w-100" src="${pageContext.request.contextPath }/resources/upload/study/${img }" alt="Second slide">
+		     </div> 
+  		</c:forEach> 
+  </div>
+  
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  
+</div>
+<!-- 사진 뷰 끝 -->
+
 
 <span>LEVEL : ${study.DNAME }</span>
 <span>${study.LNAME }-${study.TNAME }</span>
@@ -122,5 +159,5 @@ $(function(){
 </div>
 
 
-
-<%-- <jsp:include page="/WEB-INF/views/common/footer.jsp"/>	 --%>
+</section>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>	

@@ -43,6 +43,16 @@ public interface StudyDAO {
 
 	int deleteStudy(int sno);
 
+	List<Map<String, Object>> selectByDeadline(int cPage, int numPerPage);
+
+	int studyDeadlineCount();
+
+	List<Map<String, Object>> selectByApply(int cPage, int numPerPage);
+
+	int studyByApplyCount();
+
+	int preinsertApply(Map<String, Integer> map);
+
 	
 
 }

@@ -14,21 +14,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.pure.study.adversting.model.vo.Adversting;
+import com.pure.study.member.model.vo.Member;
 import com.pure.study.study.model.service.StudyService;
 import com.pure.study.study.model.vo.Study;
 
 
 
-@SessionAttributes({"cPage","total","case","numPerPage"})
+@SessionAttributes({"cPage","total","case","numPerPage","memberLoggedIn"})
 @Controller
 public class StudyController {
 	
@@ -57,25 +57,11 @@ public class StudyController {
 		List<Map<String,Object>> diffList=studyService.selectLv();
 		mav.addObject("diffList",diffList);
 		
-		
-		/*int numPerPage = 6; // => limit
-*/		
-		//1. 현재 페이지 컨텐츠 구하기 
-		/*List<Map<String,String>> list = studyService.selectStudyList(cPage,numPerPage);
-		logger.debug("list="+list);
-		//2. 페이지바 처리를 위한 전체 컨텐츠 수 구하기 
-		int total = studyService.studyTotalCount();
-		logger.debug("total="+total);
-		*/
-		//mav.addObject("total",total);
-		//mav.addObject("list",list);
-		
-	/*	mav.addObject("numPerPage",numPerPage);
-		mav.addObject("cPage",cPage);*/
 		mav.setViewName("study/study");
 		
 		return mav;
 	}
+	
 	
 	@RequestMapping("/study/selectStudyList.do")
 	public ModelAndView selectStudyList() {
@@ -90,7 +76,7 @@ public class StudyController {
 		System.out.println("selectStudyList.do cPage="+cPage);
 		mav.addObject("list",list);
 		mav.addObject("numPerPage",numPerPage);
-		mav.addObject("cPage",cPage);
+		mav.addObject("cPage",cPage+1);
 		mav.addObject("total",total);
 		
 		return mav;
@@ -102,7 +88,7 @@ public class StudyController {
 	}
 	@RequestMapping("/study/studyFormEnd.do") 
 	public ModelAndView insertStudy(Study study, @RequestParam(value="freq") String[] freq, @RequestParam(value="upFile", required=false) MultipartFile[] upFiles,
-			HttpServletRequest request) {
+			HttpServletRequest request, @ModelAttribute("memberLoggedIn") Member m) {
 		
 		ModelAndView mav= new ModelAndView();
 		String dayname="";
@@ -120,7 +106,8 @@ public class StudyController {
 
 		if(study.getPrice()==null) study.setPrice(0+"원");
 		System.out.println("study="+study);
-		study.setMno(2); //임시로
+		study.setMno(m.getMno()); 
+		System.out.println("study.mno"+study.getMno());
 		//스터디 생성하기 
 		int result = studyService.insertStudy(study);
 		
@@ -207,7 +194,7 @@ public class StudyController {
 		terms.put("kno", kno);
 		terms.put("dno", dno);
 		terms.put("leadername", leadername);
-		terms.put("cPage", cPage);
+		terms.put("cPage", cPage+1);
 		terms.put("numPerPage", numPerPage);
 		System.out.println("map="+terms);
 		
@@ -227,14 +214,14 @@ public class StudyController {
 		return mav;
 	}
 	
-	//검색결과에서 무한스크롤시 리스트를 페이징 처리해서 더 가져옴.
-	
+	//검색결과에서 무한스크롤시 리스트를 페이징 처리해서 더 가져오기.
 	@RequestMapping("/study/searchStudyAdd.do")
 	public ModelAndView selectSearchStudyAdd(@RequestParam(value="lno") int lno,@RequestParam(value="tno", defaultValue="null") int tno, @RequestParam(value="subno") int subno,
 			@RequestParam(value="kno") int kno,@RequestParam(value="dno") int dno,@RequestParam(value="leadername") String leadername
-			,@RequestParam(value="cPage", required=false, defaultValue="1") int cPage,@RequestParam(value="numPerPage") int numPerPage){
+			,@RequestParam(value="cPage", required=false) int cPage){
 		
 		ModelAndView mav = new ModelAndView("jsonView");
+		
 		
 		if(leadername.trim().length()<1) leadername=null;
 		
@@ -260,12 +247,12 @@ public class StudyController {
 		
 	}
 	
-	
+	//스터디 리스트 추가로 페이징해서 가져오기 - 처음에 아무 조건 없을 때
 	@RequestMapping("/study/studyListAdd.do")
-	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam(value="numPerPage") int numPerPage){
+	public ModelAndView selectStudyAdd(@RequestParam(value="cPage",defaultValue="1") int cPage){
 		ModelAndView mav = new ModelAndView("jsonView");
 		List<Map<String,Object>> studyList= studyService.selectStudyAdd(cPage,numPerPage);
-		mav.addObject("addList",studyList);
+		mav.addObject("list",studyList);
 		mav.addObject("cPage",cPage+1);
 		
 		
@@ -297,7 +284,12 @@ public class StudyController {
 		Map<String,Integer> map = new HashMap<>();
 		map.put("sno", sno);
 		map.put("mno", mno);
-		int result = studyService.insertApplyStudy(map);
+		
+		int result =0;
+		//먼저 이미 신청했는지 검사한다.
+		int cnt = studyService.preinsertApply(map);
+		if(cnt == 0 )
+	         result = studyService.insertApplyStudy(map);
 		return result;
 	}
 	
@@ -466,7 +458,63 @@ public class StudyController {
 		return mav;
 	}
 		
+	//마감임박순 첫 페이징 처리.
+	@RequestMapping("/study/selectByDeadline.do")
+	public ModelAndView selectByDeadline() {
 		
+		ModelAndView mav = new ModelAndView("jsonView");
+		
+		int cPage=1;
+		List<Map<String,Object>> list = studyService.selectByDeadline(cPage,numPerPage);
+		int total = studyService.studyDeadlineCount();
+	
+		System.out.println("selectStudyList.do numPerPage="+numPerPage);
+		System.out.println("selectStudyList.do cPage="+cPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		mav.addObject("total",total);
+		
+		return mav;
+	}
+	
+	//마감임박순 스크롤 페이징 처리. 
+	@RequestMapping("/study/studyDeadlinAdd.do")
+	public ModelAndView selectByDeadlineAdd(@RequestParam(value="cPage") int cPage) {
+		ModelAndView mav = new ModelAndView("jsonView");
+		
+		List<Map<String,Object>> list= studyService.selectByDeadline(cPage,numPerPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		return mav;
+	}
+	
+	//인기스터디순 첫 페이징 처리.
+	@RequestMapping("/study/selectByApply.do")
+	public ModelAndView selectByApply() {
+		ModelAndView mav=  new ModelAndView("jsonView");
+		int cPage=1;
+		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
+		int total = studyService.studyByApplyCount();
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		mav.addObject("total", total);
+		
+		return mav;
+		
+	}
+	//인기스터디순 스크롤 페이징 처리. 
+	@RequestMapping("/study/studyApplyAdd.do")
+	public ModelAndView selectByApplyAdd(@RequestParam(value="cPage") int cPage) {
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<Map<String,Object>> list = studyService.selectByApply(cPage,numPerPage);
+		mav.addObject("list",list);
+		mav.addObject("cPage",cPage+1);
+		return mav;
+	}
+	
+	
+	
 	
 	
 	/* ---------------------------------------study form에 필요한 select ------------------------------------------------*/
@@ -488,21 +536,7 @@ public class StudyController {
 		return list;
 		
 	}
-	//@ResponseBody
-/*	@RequestMapping("/study/selectLocal.do")
-	public ModelAndView selectLocal(){
-		
-		List<Map<String,Object>> list = studyService.selectLocal();
-		System.out.println("@@@@@@@localList="+list);
-		Map<String,Object> resultMap = new HashMap<>();
-		resultMap.put("list", list);
-		resultMap.put("cPage", 1);
-		
-		
-		ModelAndView mav = new ModelAndView("jsonView",resultMap);
-		return mav;
-	}*/
-	
+
 	@ResponseBody
 	@RequestMapping("/study/selectLocal.do")
 	public List<Map<String,Object>> selectLocal(){
