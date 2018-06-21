@@ -121,13 +121,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int selectMyStudyListCnt(int mno) {
-		return memberDAO.selectMyStudyListCnt(mno);
+	public List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage) {
+		return memberDAO.selectMyStudyList(map, numPerPage, cPage);
 	}
 
 	@Override
-	public List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage) {
-		return memberDAO.selectMyStudyList(mno, numPerPage, cPage);
+	public int selectMyStudyListCnt(Map<String, String> map) {
+		return memberDAO.selectMyStudyListCnt(map);
 	}
 
 	@Override
@@ -144,5 +144,7 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, String>> informationagree() {
 		return memberDAO.informationagree();
 	}
+
+	
 	
 }

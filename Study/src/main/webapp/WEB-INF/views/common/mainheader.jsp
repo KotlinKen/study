@@ -222,7 +222,3 @@ $(function(){
 	</div>	
 	</div> --%>
 		</header>
-
-		<div id="container" class="container">
-
-			<section id="content">

@@ -9,10 +9,10 @@ public class Adversting {
 	private String advImg;
 	private String url;
 	private String position;
-	private Date startAd;
-	private Date endAd;
 	private String status;
 	private String backColor;
+	private Date startAd;
+	private Date endAd;
 	private Date regDate;
 	
 	public Adversting() {

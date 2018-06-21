@@ -35,29 +35,7 @@ function validate(){
 	if(diff==""){
 		alert("난이도를 선택해주세요");
 		return false;
-	}
-	
-	// 유효성 검사 - 마감일
-	var ldate = $("#ldate").val();
-	var lArray = ldate.split("-");
-	var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
-	
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = new String(date.getMonth()+1);
-	var day = new String(date.getDate());
-	
-	if(month.length == 1 )
-		month = "0" + month;
-	if( day.length == 1 )
-		day = "0" + day;
-	
-	var today = new Date(year, month, day);
-	
-	if( (deadline-today.getTime()) < 0 ){
-		alert("과거가 마감일이 될 수 없습니다.");
-		return false;	
-	}
+	}	
 	
 	// 유효성 검사 - 일정, 빈도
 	if( $(".day:checked").length == 0 ){
@@ -69,9 +47,7 @@ function validate(){
 	var startTime = $("#startTime option:checked").val();
 	var endTime = $("#endTime option:checked").val();	
 	
-	$("#time").val(startTime + "~" + endTime);
-	
- 	
+	$("#time").val(startTime + "~" + endTime);	
 	
 	return true;
 }
@@ -91,6 +67,7 @@ $(function(){
 		}
 		
 		$("#town").show();
+		
 		$.ajax({
 			url: "selectTown.do",
 			data: {localNo : localNo},
@@ -145,8 +122,7 @@ $(function(){
 		console.log("adddd");
 		if($("div.fileWrapper").length<10){
 			$("div.fileWrapper:last").after($("div.forCopy").clone().removeClass("forCopy").addClass("fileWrapper"));
-		}
-			
+		}			
 	});
 	
 	//첨부파일 - 버튼 클릭시  해당 첨부파일 영역이 사라진다.
@@ -158,39 +134,126 @@ $(function(){
 	});	
 	
 	// 날짜를 조정해보자... 유효성 검사 포함.
+	// 유효성 검사 - 마감일
+	$("#ldate").on("change", function(){		
+		var ldate = $(this);
+		var ldateVal = ldate.val();
+		var lArray = ldateVal.split("-");
+		var deadline = new Date(lArray[0], lArray[1], lArray[2]).getTime();
+		
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = new String(date.getMonth()+1);
+		var day = new String(date.getDate());
+		
+		if(month.length == 1 )
+			month = "0" + month;
+		if( day.length == 1 )
+			day = "0" + day;
+		
+		var today = new Date(year, month, day);
+		
+		if( (deadline-today.getTime()) < 0 ){
+			alert("과거가 마감일이 될 수 없습니다.");
+			ldate.val("");
+		}
+		
+		var sdate = $("#sdate");		
+		var edate = $("#edate");
+		sdate.val("");
+		edate.val("");
+		
+		$("input[class=day]").prop("checked", false);
+		$("input[class=day]").attr("disabled", true);
+		
+		sdate.attr("min", $(this).val());
+		edate.attr("min", $(this).val());		
+	});
+	
+	// 유효성 검사 - 강의기간
 	$("input[class=changeDate]").on("change", function(){
 		$("input[class=day]").prop("checked", false);
+		$("input[class=day]").attr("disabled", true);
 		
-		var sdate = $("#sdate").val();
-		var sday = new Date(sdate).getDay();
-		var startArray = sdate.split("-");
-		var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+		// 시작하는 날
+		var sdate = $("#sdate");
+		var sdateVal = sdate.val();
+		var sday = new Date(sdateVal).getDay();
+		var startArray = sdateVal.split("-");
+		var start_date = new Date(startArray[0], startArray[1], startArray[2]).getTime();
 		
-		var edate = $("#edate").val();
-		var endArray = edate.split("-");
-		var end_date = new Date(endArray[0], endArray[1], endArray[2]);	
+		// 끝나는 날
+		var edate = $("#edate");
+		var edateVal = edate.val();
+		var endArray = edateVal.split("-");
+		var end_date = new Date(endArray[0], endArray[1], endArray[2]).getTime();	
 		
-		var difference = (end_date.getTime()-start_date.getTime())/1000/24/60/60;
+		// 신청 마감일
+		var ldateVal = $("#ldate").val();
 		
-		if( difference >= 0 && difference < 7 ){			
-			$("input[class=day]").attr("disabled", true);
-		 	for( var i = 0; i < difference+1; i++ ){
-		 		if( sday + i < 7)			
-		 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
-		 		else
-		 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
-		 	}
+		if( ldateVal == "" ){
+			alert("마감일 먼저 설정해주세요.");
+			sdate.val("");
+			edate.val("");
+		}			
+		
+		// 날짜 차이
+		var difference = (end_date - start_date)/1000/24/60/60;			
+		
+		// 알고리즘
+		if( sdateVal != "" && edateVal != "" ){
+			if( difference >= 0 && difference < 7 ){			
+				$("input[class=day]").attr("disabled", true);
+			 	for( var i = 0; i < difference+1; i++ ){
+			 		if( sday + i < 7)			
+			 			$("input[class=day]").eq(sday+i).attr("disabled", false);		 		
+			 		else
+			 			$("input[class=day]").eq(sday+i-7).attr("disabled", false);	
+			 	}
+			}
+			else if( difference > 7 )
+				$(".day").attr("disabled", false);
+			// 강의 끝나는 날이 시작하는 날보다 빠를 경우 초기화.
+			else if( difference < 0 ){
+				alert("강의가 끝나는 날이 시작하는 날보다 빠를 수 없습니다.");
+				sdate.val("");
+				edate.val("");
+			}
+			else
+				$(".day").attr("disabled", false);	
 		}
-		else if( difference > 7 )
-			$(".day").attr("disabled", false);
-		else
-			$(".day").attr("disabled", false);
+		else{
+			$(".day").attr("disabled", true);	
+		}		
+	});
+	
+	$(".time").on("change", function(){
+		// 시작 시간
+		var startTime = $("#startTime");
+		var startTimeVal = startTime.val();
+		var startTimeArray = startTimeVal.split(":");
+		var start = Number(startTimeArray[0]);		
+		
+		// 마감 시간
+		var endTime = $("#endTime");
+		var endTimeVal = $("#endTime").val();
+		var endTimeArray = endTimeVal.split(":");
+		var end = Number(endTimeArray[0]);	
+		
+		// 시작시간이 마감시간보다 클 경우.
+		if( start > end ){
+			alert("시작하는 시간이 끝나는 시간보다 클 수 없습니다.");
+			startTime.val("6:00");
+			endTime.val("7:00");
+		}
 	});
 });
 </script>
+
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div id="lecture-container">
-	<form action="lectureFormEnd.do" id="lectureFrm" method="post" enctype="multipart/form-data" onsubmit="return validate();">
-	
+	<form action="lectureFormEnd.do" id="lectureFrm" name="lectureFrm" method="post" enctype="multipart/form-data" onsubmit="return validate();">
+	<input type="hidden" name="mno" value="${memberLoggedIn.getMno()}"/>
 	<!-- 지역 -->
 	<label for="local">지역 : </label>
 	<select name="local" id="local">
@@ -253,13 +316,12 @@ $(function(){
     <label>토 </label><input type="checkbox" class="day" name="freqs" value="토" />
 	    
 	<label for="starttime">스터디 시간</label>
-	<select name="startTime" id="startTime">
+	<select name="startTime" id="startTime" class="time">
 		<c:forEach var="i" begin="6" end="23">
-		<option value="${i }:00">${i }:00</option>
-		
+			<option value="${i }:00">${i }:00</option>		
 		</c:forEach>
 	</select>
-	<select name="endTime" id="endTime">
+	<select name="endTime" id="endTime" class="time">
 		<c:forEach var="j" begin="7" end="24">
 			<option value="${j }:00">${j }:00</option>		
 		</c:forEach>
@@ -274,7 +336,7 @@ $(function(){
 	<label for="recruit">모집 인원 : </label>
 	<select name="recruit" id="recruit">
 		<c:forEach var="i" begin="2" end="10">
-		<option value="${i }">${i }명</option>
+			<option value="${i }">${i }명</option>
 		</c:forEach>
 	</select>
 	<br /> 
@@ -311,3 +373,4 @@ $(function(){
 	<input type="submit" value="등록"/>
 	</form>	
 </div>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
