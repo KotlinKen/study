@@ -56,42 +56,92 @@
 		
 		<hr />
 		<div id="study-list">
-			 <%-- <c:forEach var="study" items="${list}">
-			 	<div class="studyone">
-			 		<span>신청기간 :~ ${study.LDATE} </span><br />
-			 		<span>${study.LNAME}-${study.TNAME} │ ${study.DNAME}</span><br />
-			 		<span>${study.SUBNAME }/${study.KNAME }</span>
-			 		<span>${study.TITLE }</span><br />
-			 		<span>${study.SDATE }~${study.EDATE }</span><br />
-			 		<span>${study.PROFILE }</span> <!-- 팀장사진 <--><br /></-->
-			 		<span>${study.UPFILE }<!-- 스터디 사진 하나만 가져와서 set --></span><br />
-			 		<span>${study.STATUS }</span>
-			 		<input type="hidden" id="studyNo" value="${study.SNO }" /> 
-			 	</div>
-			 </c:forEach> --%>
 		
 		</div>
 	
-	
-	<input type="hidden" name="case" value="0" /> <!-- 조건없이 리스트를 가져오나, 조건있이 리스트를 가져오나 여부. 임시방편. -->
+	<input type="hidden" id="cPageNo" value="1" />
+	<input type="hidden" id="total" value="0" />
+	<input type="hidden" id="numPerPage" />
+	<input type="hidden" name="case" value="none" /> <!-- 조건없이 리스트를 가져오나, 조건있이 리스트를 가져오나 여부. 임시방편. -->
 	<!-- <input type="hidden" name="cPageNo" value="1"/>cPage 번호 저장. -->
-
+	
+	
 
 </div>
 <script>
 $(function(){
-	console.log("cPage="+${cPage});
-	console.log("numPerPage="+${numPerPage}); 
+	
 	
 	$.ajax({
 		url:"selectStudyList.do",
-		dataType:"html",
+		dataType:"json",
 		success:function(data){
-			$("div#study-list").html(data);
+			$("input#total").val(data.total);
+			$("input#numPerPage").val(data.numPerPage);
+			$("input#cPageNo").val(data.cPage);
+			var html="";
+        	for(index in data.list){
+        	    html+="<div class='studyone'>";
+        		html+="<span class='studyinfo'>신청기간 : ~"+data.list[index].LDATE+"</span><br/>";
+        		html+="<span class='studyinfo'>"+data.list[index].LNAME+"-"+data.list[index].TNAME+data.list[index].DNAME+"</span><br/>";
+        		html+="<span class='studyinfo'>"+data.list[index].KNAME+ data.list[index].SUBNAME+"</span><br/>";
+        		html+="<span class='studyinfo'>"+ data.list[index].TITLE +"</span><br/>";
+        		html+="<span class='studyinfo'>"+ data.list[index].SDATE+"~"+data.list[index].EDATE+"</span><br/>";
+        		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
+        		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
+        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/><hr>";
+        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
+        		html+="</div>";
+        	}
+			$("div#study-list").html(html); 
 		},error:function(){
 			
 		}
 	});
+	
+	//카테고리를 선택하면 그에 맞는 과목들을 가져온다.
+	$("select#kind").on("change",function(){
+		var html="";
+		if($(this).val()!="0"){
+			$.ajax({
+				url:"selectSubject.do",
+				data:{kno:$(this).val()},
+				dataType:"json",
+				success:function(data){
+					for(var index in data){
+						html +="<option value='"+data[index].SUBNO+"'>"+data[index].SUBJECTNAME+"</option><br/>";
+						$("select#subject").html(html);
+					}
+				}
+			});
+		}else{
+			html ="<option value='0'>카테고리를 선택하세요</option><br/>";
+			$("select#subject").html(html);
+		}
+	});
+	
+	//지역을 선택하면 그에 맞는 도시들을 가져온다.
+	$("select#local").on("change",function(){
+		var html="";
+		if($(this).val()!="0"){
+			$.ajax({
+				url:"selectTown.do",
+				data:{lno:$(this).val()},
+				dataType:"json",
+				success:function(data){
+					for(var index in data){
+						html +="<option value='"+data[index].TNO+"'>"+data[index].TOWNNAME+"</option><br/>";
+						$("select#town").html(html);
+					}
+				}
+			});
+		}else{
+			html ="<option value='0'>지역을 선택하세요</option><br/>";
+			$("select#town").html(html);
+		}
+	});
+	
+	
 	
 	$("div#study-list").on("click","div.studyone",function(){
 		console.log("되나");
@@ -99,32 +149,43 @@ $(function(){
 	});//스터디를 클릭하면..
 	
 	
+	//필터 조건 정하고 검색 버튼을 누른 이벤트
 	$("input#filterSearch").on("click",function(){
 		var filter={lno:$("select#local option:selected").val(),tno:$("select#town option:selected").val(),
 				subno:$("select#subject option:selected").val(),kno:$("select#kind option:selected").val(),
 				dno:$("select#diff option:selected").val(),leadername:$("input#leadername").val(),cPage:1};
-		$("input[name=case]").val(1); //검색인 경우 case 설정
+		
+		$("input[name=case]").val("search"); //검색인 경우 case 설정
+		
 		$.ajax({
 			url:"searchStudy.do",
 			data:filter,
-			dataType:"html",
+			dataType:"json",
 			success:function(data){
-				
-				/* var html="<div class='studyone'>";
-	        	for(index in data){
-	        		html+="<span class='studyinfo'>신청기간 : ~"+data[index].LDATE+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+data[index].LNAME+"-"+data[index].TNAME+data[index].DNAME+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+data[index].SUBNAME+ data[index].KNAME+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].TITLE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].SDATE+"~"+data[index].EDATE+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].PROFILE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].UPFILE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].STATUS +"</span><br/>";
-	        		
-	        		
-	        	}
-	        	html+="</div>"; */
-	        	$("div#study-list").html(data);
+				console.log(data);
+			 	
+				var html="";
+	        	for(index in data.list){
+	        		html+="<div class='studyone'>";
+	        		html+="<span class='studyinfo'>신청기간 : ~"+data.list[index].LDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].LNAME+"-"+data.list[index].TNAME+data.list[index].DNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+data.list[index].SUBNAME+ data.list[index].KNAME+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].TITLE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].SDATE+"~"+data.list[index].EDATE+"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].MPROFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].UPFILE +"</span><br/>";
+	        		html+="<span class='studyinfo'>"+ data.list[index].STATUS +"</span><br/>";
+	        		html+="<input type='hidden' value='"+data.list[index].SNO+"'/>";
+	        		html+="</div>"; 
+	        	} 
+	        	
+	         	
+	        	$("div#study-list").html(html); 
+	        	
+	        	//새로 cPage 1로 설정
+	        	$("input#cPageNo").val(data.cPage);
+	        	$("input#total").val(data.total);
+	        	
 			},error:function(){
 				
 			}
@@ -134,46 +195,78 @@ $(function(){
 	//무한 스크롤.
 	//내려갈 때 계속 해당하는 스터디 리스트가 나옴
 	//내용이 없을 때도 내려가는데 그건 어떻게 막지? --나중 우선순위
-	 $(document).scroll(function() {
-	    var maxHeight = $(document).height();
+	
+	var scrollTime=500;
+	var timer = null;
+	
+	$(window).on('scroll',function(){
+		var maxHeight = $(document).height();
 	    var currentScroll = $(window).scrollTop() + $(window).height();
+		if(maxHeight <= currentScroll-200){
+			clearTimeout(timer);
+			timer = setTimeout(listAddbyPaging,scrollTime);
+		}
+		
+	});
+	
+	function listAddbyPaging(){
+		console.log("페이징되어서 가져옴");
+		
 	    var urlPath="";
-		var cPage=Number($("input[name=cPageNo]").val());
-	    if($("input[name=case]").val()==0) urlPath="studyListAdd.do";
-		else urlPath="searchStudyAdd.do";
+		var cPage=Number($("input#cPageNo").val());
+		var total =Number($("input#total").val());
+		var numPerPage= Number($("input#numPerPage").val());
+		var listCase=$("input[name=case]").val();
+		
+		//아무 조건없이 페이징 하느냐, 있이 하느냐, 마감임박순으로 하느냐, 인기스터디 순으로 하느냐에 따라 분기.
+	    if(listCase=="none"){
+	    	urlPath="studyListAdd.do";
+	    }else if(listCase=="search"){
+	    	urlPath="searchStudyAdd.do";
+	    }else if(listCase=="deadline"){
+			urlPath="";	    	
+	    }else{
+	    	
+	    } 
+	    
 		console.log("cPage="+cPage);
-		var isPage=Math.floor(8/${numPerPage})+1;
+		var isPage=Math.floor(total/numPerPage)+1;
 		console.log("isPage="+isPage);
-	    if (maxHeight <= currentScroll+100 &&cPage<=isPage) {
-	      $.ajax({
-	        url:urlPath,
-	        dataType:"json",
-	        data:{cPage:cPage,total:8,numPerPage:${numPerPage}},
-	        success:function(data){
-	        	console.log(data);
-	        	var html="<div class='studyone'>";
-	        	for(index in data){
-	        		html+="<span class='studyinfo'>신청기간 : ~"+data[index].LDATE+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+data[index].LNAME+"-"+data[index].TNAME+data[index].DNAME+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+data[index].SUBNAME+ data[index].KNAME+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].TITLE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].SDATE+"~"+data[index].EDATE+"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].PROFILE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].UPFILE +"</span><br/>";
-	        		html+="<span class='studyinfo'>"+ data[index].STATUS +"</span><br/>";
-	        		
-	        		
-	        	}
-	        	html+="</div>";
-	        	$("div#study-list").append(html);
-	        },error:function(){
-	        	
-	        }
-	       
-	      });
-	      $("input[name=cPageNo]").val(cPage+Number(1));
-	    }
-	 }); 
+		
+		 //최대 가져올 수 있는 cPage 검사. 
+		 if (cPage<=isPage) {
+		      $.ajax({
+		        url:urlPath,
+		        dataType:"json",
+		        data:{cPage:cPage,total:total,numPerPage:numPerPage},
+		        success:function(data){
+		        	console.log(data);
+		        	var html="";
+		        	
+		        	for(index in data.addList){
+		        		html+="<div class='studyone'>";
+		        		html+="<span class='studyinfo'>신청기간 : ~"+data.addList[index].LDATE+"</span><br/>";
+		        		html+="<span class='studyinfo'>"+data.addList[index].LNAME+"-"+data.addList[index].TNAME+data.addList[index].DNAME+"</span><br/>";
+		        		html+="<span class='studyinfo'>"+data.addList[index].SUBNAME+ data.addList[index].KNAME+"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].TITLE +"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].SDATE+"~"+data.addList[index].EDATE+"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].PROFILE +"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].UPFILE +"</span><br/>";
+		        		html+="<span class='studyinfo'>"+ data.addList[index].STATUS +"</span><br/>";
+		        		html+="<input type='hidden' value='"+data.addList[index].SNO+"'/>";
+		        		html+="</div>";
+		        	}
+		        	
+		        	
+		        	$("input#cPageNo").val(data.cPage);
+		        	$("div#study-list").append(html);
+		        },error:function(){
+		        	
+		        }
+		      });//ajax 끝
+		  }//if문 끝
+		
+	}
 });
 
 

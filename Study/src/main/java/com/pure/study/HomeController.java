@@ -26,7 +26,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		System.out.println("함께불러요 라랄라@@@@@@@@@@@");
-		logger.debug("새로운내용추가");
+		logger.debug("===================================================================");
 		System.out.println("dmdmdmg");
 		System.out.println("ddddd");
 		Date date = new Date();

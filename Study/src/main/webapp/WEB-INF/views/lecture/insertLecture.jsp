@@ -109,13 +109,12 @@ $(function(){
 	});
 	
 	//첨부파일 선택하면 파일 이름이 input창에 나타나게한다.
-	//첨부파일이름 표시
-	$("[name=upFile]").on("change",function(){
-		//var fileName= $(this).val();
-		var fileName= $(this).prop("files")[0].name;
-		
-		$(this).next(".custom-file-label").html(fileName);
-	});	
+   //첨부파일이름 표시
+   $("form[name=lectureFrm]").on("change","[name=upFile]",function(){
+      var fileName= $(this).prop("files")[0].name;
+      
+      $(this).next(".custom-file-label").html(fileName);
+   });
 	
 	//첨부파일 + 버튼 클릭시 첨부파일창이 밑에 더 생긴다.
 	$("form[name=lectureFrm]").on("click","button.addFile",function(){
@@ -227,6 +226,7 @@ $(function(){
 		}		
 	});
 	
+	// 유효성 검사 - 시간
 	$(".time").on("change", function(){
 		// 시작 시간
 		var startTime = $("#startTime");
@@ -350,7 +350,7 @@ $(function(){
 		    <span class="input-group-text">첨부파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
+		    <input type="file" class="custom-file-input" name="upFile">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		  <button type="button" class="addFile">+</button>
@@ -362,7 +362,7 @@ $(function(){
 		    <span class="input-group-text">첨부파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" id="upFile1" name="upFile">
+		    <input type="file" class="custom-file-input" name="upFile">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		  <button type="button" class="addFile">+</button>

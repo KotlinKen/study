@@ -50,14 +50,14 @@ public interface MemberDAO {
 
 	int selectWishListCnt(int mno);
 
-	int selectMyStudyListCnt(int mno);
-
-	List<Map<String, String>> selectMyStudyList(int mno, int numPerPage, int cPage);
-
 	List<Map<String, String>> selectKind();
 	
 	List<Map<String, String>> serviceagree();
 
 	List<Map<String, String>> informationagree();
+
+	List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage);
+
+	int selectMyStudyListCnt(Map<String, String> map);
 
 }
