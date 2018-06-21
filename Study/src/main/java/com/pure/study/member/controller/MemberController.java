@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +32,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pure.study.member.model.service.MemberService;
+import com.pure.study.member.model.vo.Instructor;
 import com.pure.study.member.model.vo.Member;
+import com.pure.study.study.model.service.StudyService;
 
 @SessionAttributes({ "memberLoggedIn" })
 @Controller
 public class MemberController {
 
 	// private Logger logger = LoggerFactory.getLogger(getClass());
-
+	@Autowired
+	private StudyService studyService;
 	@Autowired
 	private MemberService memberService;
 
@@ -57,11 +61,20 @@ public class MemberController {
 			logger.debug("회원동의홈페이지");
 		}
 		ModelAndView mav = new ModelAndView();
-		List <Map<String , String>> service = memberService.serviceagree();
-		List <Map<String , String>> information = memberService.informationagree();
-		System.out.println(service);
-		System.out.println(information);
-		
+		List <Map<String , String>> service =null;
+		List <Map<String , String>> information =null;
+		try {
+			service = memberService.serviceagree();
+			information = memberService.informationagree();
+		} catch (Exception e) {
+			String loc = "/";
+			String msg = "관리자에게 문의 바랍니다.";
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+	
 		mav.addObject("service", service);
 		mav.addObject("information", information);
 		return mav;
@@ -75,10 +88,8 @@ public class MemberController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("회원등록홈페이지");
 		}
-		System.out.println(check);
 		ModelAndView mav = new ModelAndView();
 		int c = check+agree1+agree2;
-		System.out.println(c);
 		if(c != 23) {
 			String loc = "/member/memberAgreement.do";
 			String msg = "회원가입을 실패했습니다.";
@@ -87,8 +98,18 @@ public class MemberController {
 			mav.setViewName("common/msg");
 			return mav;
 		}
-		List<Map<String, String>> list = memberService.selectCategory();
-		System.out.println(list);
+		List<Map<String, String>> list = null;
+		try {
+			list = memberService.selectCategory();
+			
+		} catch (Exception e) {
+			String loc = "/";
+			String msg = "관리자에게 문의 바랍니다.";
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("common/msg");
+			return mav;
+		}
 
 		mav.addObject("list", list);
 		return mav;
@@ -104,6 +125,21 @@ public class MemberController {
 		String title = "( 스터디 그룹트 ) 회원가입 인증번호 내역"; // 제목
 		String content = "회원님 \n인증번호는  "; // 내용
 		String ranstr = "";
+		
+		try {
+			int memberCheckEmail = memberService.memberCheckEmail(tomail);
+			System.out.println(memberCheckEmail);
+			if(memberCheckEmail ==2) {
+				map.put("check", false);
+				System.out.println("이메일이 있는 경우");
+				return map;
+			}
+		} catch (Exception e) {
+			map.put("check", false);
+			System.out.println("가져오는걸 실패");
+			return map;
+		}
+		
 		for (int i = 0; i < 4; i++) {
 			int ran = (int) (Math.random() * 10); 
 			ranstr += ran;
@@ -131,10 +167,10 @@ public class MemberController {
 			mailSender.send(message);
 		} catch (Exception e) {
 		}
+		map.put("check", true);
 		return map;
 	}
 
-	
 	/* mailSending 코드 검증 */
 	@RequestMapping(value = "/member/checkJoinCode.do")
 	@ResponseBody
@@ -145,7 +181,11 @@ public class MemberController {
 		System.out.println(email);
 		Map<String, String> cer = new HashMap<>();
 		System.out.println(cer);
-		cer = memberService.selectCheckJoinCode(email);
+		try {
+			cer = memberService.selectCheckJoinCode(email);
+		} catch (Exception e) {
+			cer.put("CERTIFICATION", "!!!!");
+		}
 		if (bcryptPasswordEncoder.matches(inputCode, cer.get("CERTIFICATION"))) {
 			map.put("result", true);
 		} else {
@@ -153,15 +193,6 @@ public class MemberController {
 		}
 		System.out.println(map);
 		return map;
-	}
-		
-
-
-	
-	/*주소입력*/
-	@RequestMapping(value="/member/jusoPopup.do")
-	public String jusoPopup() {
-		return "member/jusoPopup";
 	}
 	
 	/*파일 업로드 시작*/
@@ -208,8 +239,6 @@ public class MemberController {
 		return mav;
 	}
 	
-	
-	
 	/* 회원가입 시작 */
 	@RequestMapping(value = "/member/memberEnrollEnd.do", method = RequestMethod.POST)
 	public String memberEnrollEnd(Model model, Member member) {
@@ -220,43 +249,90 @@ public class MemberController {
 		String email = member.getEmail();
 		String[] emailArr = email.split(",");
 		email = emailArr[0] + "@" + emailArr[1];
-		System.out.println("member : " + member);
-		logger.debug(email);
 		member.setEmail(email);
-		Map<String, String> cer = memberService.selectCheckJoinCode(email);
-		System.out.println("email : " + email);
 		String loc = "/";
 		String msg = "";
-		if (cer == null) {
-			msg = "회원가입을 실패했습니다.";
+		/* 이메일  인증 여부 확인 */
+		Map<String, String> cer =null;
+		try {
+			cer = memberService.selectCheckJoinCode(email);
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
 			model.addAttribute("loc", loc);
 			model.addAttribute("msg", msg);
 			return "common/msg";
 		}
-
+		System.out.println("email : " + email);
+		
+		if (cer == null) {
+			msg = "회원가입을 실패했습니다.이메일 확인을 해주세요";
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
+			return "common/msg";
+		}
+		/**
+		 *  탈퇴 회원 여부 확인 
+		 *  탈퇴 회원일 경우 EXP/POINt/NPOINT 가져오고 set해준다 */ 
+		
+		try {
+			int memberCheckEmail = memberService.memberCheckEmail(email);
+			
+			if(memberCheckEmail == 2) {
+				msg = "회원가입을 실패했습니다. 탈퇴 확인을 해주세요";
+				model.addAttribute("loc", loc);
+				model.addAttribute("msg", msg);
+				return "common/msg";
+			}else if(memberCheckEmail ==1) {
+				
+				Member memberGetPoint = memberService.memberGetPoint(email);
+				
+				member.setExp(memberGetPoint.getExp());
+				member.setPoint(memberGetPoint.getPoint());
+				member.setNPoint(memberGetPoint.getNPoint());
+				
+			}else {
+				member.setExp(0);
+				member.setPoint(0);
+				member.setNPoint(0);
+			}
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
+			return "common/msg";
+		}
+		System.out.println("member : " + member);
+		logger.debug(email);
+		
 		String rawPassword = member.getPwd();
 		/******* password 암호화 시작 *******/
 		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
 		member.setPwd(encodedPassword);
-		/******* password 암호화 끝 *******/
-
+		
 		/* favor null일 경우 처리 */
 		if (member.getFavor() == null) {
 			String[] favor = new String[1];
 			favor[0] = "no";
 			member.setFavor(favor);
 		}
-
-		int result = memberService.memberEnrollEnd(member);
-
-		memberService.deleteCertification(email);
+		
+		int result = -1;
+		try {
+			result = memberService.memberEnrollEnd(member);
+			
+			memberService.deleteCertification(email);
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
+			return "common/msg";
+		}
 
 		// 2.처리결과에 따라 view단 분기처리
-
 		if (result > 0)
 			msg = "회원가입성공!";
 		else
-			msg = "회원가입성공!";
+			msg = "회원가입실패!";
 
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
@@ -935,5 +1011,242 @@ public class MemberController {
 	
 	/*로그인 및 마이페이지(김회진) 끝**********************************************/
 	
+	/* 정보 입력페이지 이동 시작 */
+	@RequestMapping(value = "/member/instructorEnroll.do")
+	public ModelAndView instructorEnroll(@RequestParam(value="check", required=false, defaultValue="1")  int check,
+			@RequestParam(value="agree1", required=false, defaultValue="2")  int agree1,
+			@RequestParam(value="agree2", required=false, defaultValue="2")  int agree2)  {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("회원등록홈페이지");
+		}
+		System.out.println(check);
+		ModelAndView mav = new ModelAndView();
+		int c = check+agree1+agree2;
+		System.out.println(c);
+		if(c != 23) {
+			String loc = "/member/memberAgreement.do";
+			String msg = "회원가입을 실패했습니다.";
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+		List<Map<String, String>> list = memberService.selectCategory();
+		System.out.println(list);
+
+		mav.addObject("list", list);
+		return mav;
+	}
+	@RequestMapping("/member/selectSubject.do")
+	@ResponseBody
+	public List<Map<String,Object>> selectSubject(@RequestParam(value="kno", required=true) int kno){
+		
+		List<Map<String,Object>> list = studyService.selectSubject(kno);
+		return list;
+		
+	}
 	
+	@RequestMapping("/member/selectKind.do")
+	@ResponseBody
+	public List<Map<String,Object>> selectKind(){
+		
+		List<Map<String,Object>> list = studyService.selectKind();
+		
+		return list;
+		
+	}
+	
+	/* 강사회원가입 시작 */
+	@RequestMapping(value = "/member/instructorEnrollEnd.do", method = RequestMethod.POST)
+	public ModelAndView instructorEnrollEnd( Member member,@RequestParam(value="psFile",required=false) MultipartFile[] psFiles
+			,@RequestParam(value="kno",required=false) int kno,@RequestParam(value="sno",required=false) int sno,HttpServletRequest request) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("회원가입완료");
+		}
+		ModelAndView mav = new ModelAndView();
+		/* 이메일 가져오기 */
+		String email = member.getEmail();
+		String[] emailArr = email.split(",");
+		email = emailArr[0] + "@" + emailArr[1];
+		member.setEmail(email);
+		String loc = "/";
+		String msg = "";
+		/* 이메일  인증 여부 확인 */
+		Map<String, String> cer =null;
+		try {
+			cer = memberService.selectCheckJoinCode(email);
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
+			mav.addObject("loc", loc);
+			mav.addObject("msg", msg);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+		System.out.println("email : " + email);
+		
+		if (cer == null) {
+			msg = "회원가입을 실패했습니다.이메일 확인을 해주세요";
+			mav.addObject("loc", loc);
+			mav.addObject("msg", msg);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+		/**
+		 *  탈퇴 회원 여부 확인 
+		 *  탈퇴 회원일 경우 EXP/POINt/NPOINT 가져오고 set해준다 */ 
+		
+		try {
+			int memberCheckEmail = memberService.memberCheckEmail(email);
+			if(memberCheckEmail == 2) {
+				msg = "회원가입을 실패했습니다. 탈퇴 확인을 해주세요";
+				mav.addObject("loc", loc);
+				mav.addObject("msg", msg);
+				mav.setViewName("common/msg");
+				return mav;
+			}else if(memberCheckEmail ==1) {
+				Member memberGetPoint = memberService.memberGetPoint(email);
+				member.setExp(memberGetPoint.getExp());
+				member.setPoint(memberGetPoint.getPoint());
+				member.setNPoint(memberGetPoint.getNPoint());
+				
+			}else {
+				member.setExp(0);
+				member.setPoint(0);
+				member.setNPoint(0);
+			}
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
+			mav.addObject("loc", loc);
+			mav.addObject("msg", msg);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+		System.out.println("member : " + member);
+		logger.debug(email);
+		
+		String rawPassword = member.getPwd();
+		/******* password 암호화 시작 *******/
+		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+		member.setPwd(encodedPassword);
+		
+		/* favor null일 경우 처리 */
+		if (member.getFavor() == null) {
+			String[] favor = new String[1];
+			favor[0] = "no";
+			member.setFavor(favor);
+		}
+		
+		/****** MultipartFile을 이용한 파일 업로드 처리로직 시작
+		파일이름변경 파일이름+ 아이디 + 날짜  */
+		List<String> list = new ArrayList<>();
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/instructor");
+		String renamedFileName ="";
+		for(MultipartFile f: psFiles) {
+			if(!f.isEmpty()) {
+				//파일명 재생성
+				String originalFileName = f.getOriginalFilename();
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rndNum = (int)(Math.random()*1000);
+				renamedFileName = member.getMid()+"_"+sdf.format(new Date(System.currentTimeMillis()))+
+										"_"+rndNum+"."+ext;
+				try {
+					f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				list.add(renamedFileName);
+			}
+		}
+		System.out.println("list : "+list);
+		Instructor instructor = new Instructor();
+		instructor.setPortpolio(list.get(0));
+		instructor.setSelfintroduction(list.get(1));
+		instructor.setKno(kno);
+		instructor.setSno(sno);
+		System.out.println(instructor);
+		/* 회원 가입  */
+		int result = -1;
+		try {
+			result = memberService.memberEnrollEnd(member);
+			int mno = member.getMno();
+			System.out.println("mno : "+mno);
+			instructor.setMno(mno);
+			System.out.println(instructor);
+			result =memberService.instructorEnrollEnd(instructor);
+			memberService.deleteCertification(email);
+		} catch (Exception e) {
+			msg = "회원가입을 실패했습니다. 관리자에게 문의 하세요";
+			mav.addObject("loc", loc);
+			mav.addObject("msg", msg);
+			mav.setViewName("common/msg");
+			return mav;
+		}
+
+		// 2.처리결과에 따라 view단 분기처리
+		if (result > 0)
+			msg = "회원가입성공!";
+		else
+			msg = "회원가입실패!";
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName("common/msg");
+		return mav;
+	}
+	
+	
+	@RequestMapping("/member/instructorApply.do")
+	public String instructorApply() {
+		
+		
+		return "member/instructorApply";
+	}
+	@RequestMapping("/member/instructorApplyEnd.do")
+	public ModelAndView instructorApplyEnd(@RequestParam(value="psFile",required=false) MultipartFile[] psFiles
+			,@RequestParam(value="mno",required=false) int mno,@RequestParam(value="mid",required=false) int mid
+			,@RequestParam(value="kno",required=false) int kno,@RequestParam(value="sno",required=false) int sno
+			,@RequestParam(value="cover",required=false) int cover,HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		/****** MultipartFile을 이용한 파일 업로드 처리로직 시작
+		파일이름변경 파일이름+ 아이디 + 날짜  */
+		List<String> list = new ArrayList<>();
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/instructor");
+		String renamedFileName ="";
+		for(MultipartFile f: psFiles) {
+			if(!f.isEmpty()) {
+				//파일명 재생성
+				String originalFileName = f.getOriginalFilename();
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rndNum = (int)(Math.random()*1000);
+				renamedFileName = mid+"_"+sdf.format(new Date(System.currentTimeMillis()))+
+										"_"+rndNum+"."+ext;
+				try {
+					f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				list.add(renamedFileName);
+			}
+		}
+		System.out.println("list : "+list);
+		Instructor instructor = new Instructor();
+		instructor.setPortpolio(list.get(0));
+		instructor.setSelfintroduction(list.get(1));
+		instructor.setKno(kno);
+		instructor.setSno(sno);
+		instructor.setMno(mno);
+		System.out.println(instructor);
+		
+		
+		
+		
+		return mav;
+	}
 }

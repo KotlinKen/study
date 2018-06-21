@@ -3,6 +3,7 @@ package com.pure.study.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.pure.study.member.model.vo.Instructor;
 import com.pure.study.member.model.vo.Member;
 
 public interface MemberDAO {
@@ -59,5 +60,11 @@ public interface MemberDAO {
 	List<Map<String, String>> selectMyStudyList(Map<String, String> map, int numPerPage, int cPage);
 
 	int selectMyStudyListCnt(Map<String, String> map);
+	
+	int memberCheckEmail(String em);
+
+	Member memberGetPoint(String email);
+
+	int instructorEnrollEnd(Instructor instructor);
 
 }

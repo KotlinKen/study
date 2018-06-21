@@ -1,3 +1,10 @@
+
+# Created by https://www.gitignore.io/api/java,maven,windows,eclipse,dotfilessh
+
+### DotfilesSh ###
+local-patch
+patched-src
+
 ### Eclipse ###
 
 .metadata
@@ -74,6 +81,7 @@ local.properties
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.ear
 *.zip
@@ -119,4 +127,4 @@ $RECYCLE.BIN/
 *.lnk
 
 
-# End of https://www.gitignore.io/api/java,maven,windows,eclipse
+# End of https://www.gitignore.io/api/java,maven,windows,eclipse,dotfilessh

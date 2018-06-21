@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.pure.study.member.model.vo.Instructor;
 import com.pure.study.member.model.vo.Member;
 
 @Repository
@@ -147,6 +148,26 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectList("member.informationagree");
 	}
 
-	
+	@Override
+	public int memberCheckEmail(String emil) {
+		System.out.println(emil);
+		return sqlSession.selectOne("member.memberCheckEmail",emil);
+	}
+
+	@Override
+	public Member memberGetPoint(String email) {
+		
+		return sqlSession.selectOne("member.memberGetPoint", email);
+	}
+
+	@Override
+	public int instructorEnrollEnd(Instructor instructor) {
+		System.out.println();
+		System.out.println();
+		System.out.println("instructor : "+instructor);
+		System.out.println();
+		System.out.println();
+		return sqlSession.insert("member.instructorEnrollEnd",instructor);
+	}
 
 }
