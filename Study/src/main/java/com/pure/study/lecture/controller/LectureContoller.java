@@ -174,21 +174,31 @@ public class LectureContoller {
 		return mav;
 	}
 	
-	@RequestMapping("/lecture/applyLecture.do")
+	@RequestMapping("/lecture/findLecture.do")
 	@ResponseBody
-	public int applyLecture(@RequestParam int sno, @RequestParam int mno) {
+	public int findLecture(@RequestParam int sno, @RequestParam int mno) {
 		int result = 0;
-		ModelAndView mav = new ModelAndView();
-		
 		Map<String, Integer> map = new HashMap<>();
 		
 		map.put("sno", sno);
 		map.put("mno", mno);
 		
-		int cnt = ls.preinsertApply(map);
+		result = ls.preinsertApply(map);
 		
-		if(cnt == 0 )
-			result = ls.applyLecture(map);
+		return result;
+	}
+	
+	@RequestMapping("/lecture/applyLecture.do")
+	@ResponseBody
+	public int applyLecture(@RequestParam int sno, @RequestParam int mno) {
+		int result = 0;
+		
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("sno", sno);
+		map.put("mno", mno);
+
+		result = ls.applyLecture(map);
 		
 		return result;
 	}
