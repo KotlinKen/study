@@ -10,7 +10,7 @@
 		<jsp:param value="메인" name="pageTitle"/>
 	</jsp:include>
 	sectiontest 
-	<a href="${pageContext.request.contextPath }/study/studyList.do">스터디</a>
+	<a href="${rootPath }/study/studyList.do">스터디</a>
 	
 	${serverTime}	
 	

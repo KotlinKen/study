@@ -22,7 +22,7 @@
 		<jsp:param value="내 정보 보기" name="pageTitle"/>
 	</jsp:include>
 			<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp"/>
-			<form id="update-form" action="${pageContext.request.contextPath }/member/updateUser.do" method="post" enctype="multipart/form-data">
+			<form id="update-form" action="${rootPath }/member/updateUser.do" method="post" enctype="multipart/form-data">
 				<c:if test="${memberLoggedIn != null }">
 						<input type="hidden" name="mno" id="mno" value="${memberLoggedIn.mno }" />
 						회원 아이디 : 
@@ -57,7 +57,7 @@
 						
 						사진 : 
 						<c:if test="${!memberLoggedIn.mprofile eq 'no'}">
-							<img src="${pageContext.request.contextPath }/resources/upload/member/${memberLoggedIn.mprofile}" alt="${memberLoggedIn.mprofile}" style="width:100px;" /> 
+							<img src="${rootPath }/resources/upload/member/${memberLoggedIn.mprofile}" alt="${memberLoggedIn.mprofile}" style="width:100px;" /> 
 						</c:if>
 						<c:if test="${memberLoggedIn.mprofile eq 'no'}">
 							<p>프로필 사진이 없습니다.</p>
@@ -100,7 +100,7 @@
 				</c:if>
 				
 			</form>
-			<form id="drop-form" action="${pageContext.request.contextPath }/member/memberDrop.do" onsubmit="return confirm('정말 탈퇴하시겠습니까?')">
+			<form id="drop-form" action="${rootPath }/member/memberDrop.do" onsubmit="return confirm('정말 탈퇴하시겠습니까?')">
 				<input type="hidden" name="mid" value="${memberLoggedIn.mid }" />
 				<button type="submit" id="drop">탈퇴하기</button>
 			</form>
@@ -114,7 +114,7 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <form action="${pageContext.request.contextPath }/member/newPwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
+		      <form action="${rootPath }/member/newPwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
 		      <div class="modal-body">
 		      	<input type="password" class="form-control" name="oldPwd" id="oldPwd" placeholder="기존 비밀번호" required/>
 		      	<br />
@@ -144,7 +144,7 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <form action="${pageContext.request.contextPath }/member/newEmail.do" method="post" onsubmit="return emailDuplicateCheck();">
+		      <form action="${rootPath }/member/newEmail.do" method="post" onsubmit="return emailDuplicateCheck();">
 		      <div class="modal-body">
 		      	<input type="email" class="form-control" name="email" id="newEmail" placeholder="이메일 변경" required/>
 		      	<button type="button" class="btn btn-outline-success" id="emailUpdate">인증번호 발송</button>

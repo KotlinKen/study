@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
+<script src="${rootPath }/resources/js/jquery-3.3.1.js"></script>
 <style>
 	span#check-no{
 		color: red;
@@ -19,7 +19,7 @@
 		<jsp:param value="비밀번호 변경" name="pageTitle"/>
 	</jsp:include>
 	<c:if test="${memberLoggedIn==null }">
-		<form action="${pageContext.request.contextPath }/member/memberUpdatePwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
+		<form action="${rootPath }/member/memberUpdatePwd.do" method="post" onsubmit="return pwdDuplicateCheck();">
 			<input type="password" name="pwd" id="pwd" placeholder="비밀번호" />
 			<br />
 			<input type="password" id="pwd-check" placeholder="비밀번호 확인" />

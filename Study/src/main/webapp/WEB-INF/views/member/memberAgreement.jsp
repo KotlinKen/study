@@ -8,18 +8,18 @@
 <head>
 <meta charset="UTF-8">
 <title>${param.pageTitle}</title>
-<script src="${pageContext.request.contextPath }/resources/js/jquery-3.3.1.js"></script>
+<script src="${rootPath }/resources/js/jquery-3.3.1.js"></script>
 <!-- 부트스트랩관련 라이브러리 -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 <!-- 사용자작성 css -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
+<link rel="stylesheet" href="${rootPath }/resources/css/style.css" />
 <style>
 p{width: 300px; height: 300px; overflow: scroll;}
 </style>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/member/memberEnroll.do" method="post" onsubmit="return validate();">
+<form action="${rootPath}/member/memberEnroll.do" method="post" onsubmit="return validate();">
 <input type="hidden" name="check" id="check" value="21" />
 <spen>서비스 이용약관 동의 (필수)<input type="checkbox" id="agree1" value="0" name="agree1" /></spen>
 <p>
@@ -36,7 +36,7 @@ p{width: 300px; height: 300px; overflow: scroll;}
 </p>
 
 
- <button type="button" onclick="location.href='${pageContext.request.contextPath}'">취소</button>
+ <button type="button" onclick="location.href='${rootPath}'">취소</button>
  <button type="submit" onclick="fn_agreement();">다음</button>
  </form>
  <script>

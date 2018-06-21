@@ -10,7 +10,7 @@
 	</jsp:include>
 		<c:if test="${mid==null and findType eq '아이디' }">
 			아이디 찾기
-			<form action="${pageContext.request.contextPath }/member/memberFindIdPwd.do">
+			<form action="${rootPath }/member/memberFindIdPwd.do">
 				<input type="text" name="mname" id="mname" placeholder="회원 이름"/>
 				<input type="email" name="email" id="email" placeholder="이메일"/>
 				<input type="hidden" name="findType" value="아이디" />
@@ -23,7 +23,7 @@
 		<c:if test="${pwd==null and findType eq '비밀번호' }">
 			비밀번호 찾기
 			<!-- 다시 써야함.(이메일에 임시 비밀번호 발송해야함.) -->
-			<form action="${pageContext.request.contextPath }/member/mailSending.do" method="post">
+			<form action="${rootPath }/member/mailSending.do" method="post">
 				<input type="text" name="mid" id="mid" placeholder="아이디" />
 				<input type="email" name="email" id="email" placeholder="이메일" />
 				<input type="hidden" name="findType" value="비밀번호" />

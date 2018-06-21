@@ -290,7 +290,7 @@
 		$(function(){
 			$("#btn-detail").click(function(){
 				console.log($(this).val());
-				location.href="${pageContext.request.contextPath}/study/studyView.do?sno="+$(this).val();
+				location.href="${rootPath}/study/studyView.do?sno="+$(this).val();
 			});
 		})
 		

@@ -290,6 +290,36 @@ public class MemberController {
 	/**********************************************로그인 및 마이페이지(김회진) 시작*/
 	/*******************************로그인&로그아웃 시작*/
 	@RequestMapping(value="/member/memberLogin.do", method = RequestMethod.POST)
+	public String memberLogin(HttpServletRequest request
+							, @RequestParam(value="userId") String userId
+							, @RequestParam(value="pwd") String pwd
+							, Model model) {
+
+		
+		Member m = memberService.selectOneMember(userId);
+
+		String msg = "";
+		String loc = "/";
+
+		if (m == null || m.getQdate() != null) {
+			msg = "존재하지 않는 아이디입니다.";
+		} else {
+			if (bcryptPasswordEncoder.matches(pwd, m.getPwd())) {
+				model.addAttribute("memberLoggedIn", m);
+				return "home";
+			} else {
+				msg = "비밀번호가 틀렸습니다.";
+			}
+
+		}
+		
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+		
+		return "common/msg";
+	}
+
+/*	@RequestMapping(value="/member/memberLogin.do", method = RequestMethod.POST)
 	public ModelAndView memberLogin(HttpServletRequest request, @RequestParam(value="userId") String userId, @RequestParam(value="pwd") String pwd) {
 		ModelAndView mav = new ModelAndView();
 
@@ -321,7 +351,7 @@ public class MemberController {
 
 		return mav;
 	}
-
+*/
 	@RequestMapping(value="/member/memberLogout.do")
 	public String memberLogout(SessionStatus sessionStatus) {
 
