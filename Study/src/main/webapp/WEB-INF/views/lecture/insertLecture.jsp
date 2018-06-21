@@ -109,13 +109,12 @@ $(function(){
 	});
 	
 	//첨부파일 선택하면 파일 이름이 input창에 나타나게한다.
-	//첨부파일이름 표시
-	$("[name=upFile]").on("change",function(){
-		//var fileName= $(this).val();
-		var fileName= $(this).prop("files")[0].name;
-		
-		$(this).next(".custom-file-label").html(fileName);
-	});	
+   //첨부파일이름 표시
+   $("form[name=lectureFrm]").on("change","[name=upFile]",function(){
+      var fileName= $(this).prop("files")[0].name;
+      
+      $(this).next(".custom-file-label").html(fileName);
+   });
 	
 	//첨부파일 + 버튼 클릭시 첨부파일창이 밑에 더 생긴다.
 	$("form[name=lectureFrm]").on("click","button.addFile",function(){
